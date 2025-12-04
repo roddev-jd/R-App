@@ -22,7 +22,8 @@
       "Bash(grep:*)",
       "Bash(git -C \"/Users/rjarad/Library/Mobile Documents/com~apple~CloudDocs/Apps/App_SUITE/R-App1\" remote -v)",
       "WebFetch(domain:www.rjresolve.cl)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []

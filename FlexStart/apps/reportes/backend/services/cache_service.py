@@ -50,6 +50,7 @@ class PersistentCache:
         # Peru (existentes)
         "UNIVERSO PERU",
         "INFO MARCA PROPIA PERU",
+        "C1 PERU",
 
         # Chile (NUEVO - HITO 1.4)
         "UNIVERSO CHILE",           # Corresponde a Chile_Wop en config.ini

@@ -14,9 +14,11 @@ import time
 import signal
 import logging
 import requests
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+from collections import deque
 import platform
 
 from .config_manager import ConfigManager
@@ -40,7 +42,31 @@ class ServerManager:
         self.start_time: Optional[datetime] = None
         self.project_root = Path(__file__).parent.parent
 
+        # Log capture
+        self.log_buffer = deque(maxlen=1000)  # Keep last 1000 log lines
+        self.log_threads = []
+        self.stop_log_capture = threading.Event()
+
         logger.info("ServerManager initialized")
+
+    def _capture_output(self, stream, prefix: str):
+        """
+        Capture output from stdout/stderr stream in background thread
+
+        Args:
+            stream: The stream to read from (stdout or stderr)
+            prefix: Prefix for log lines (e.g., "[STDOUT]" or "[STDERR]")
+        """
+        try:
+            for line in iter(stream.readline, ''):
+                if self.stop_log_capture.is_set():
+                    break
+                if line:
+                    timestamp = datetime.now().strftime("%H:%M:%S")
+                    log_line = f"[{timestamp}] {prefix} {line.rstrip()}"
+                    self.log_buffer.append(log_line)
+        except Exception as e:
+            logger.error(f"Error capturing output from {prefix}: {e}")
 
     def start_server(self, port: int) -> bool:
         """
@@ -80,6 +106,28 @@ class ServerManager:
             self.port = port
             self.start_time = datetime.now()
 
+            # Clear log buffer and reset stop event
+            self.log_buffer.clear()
+            self.stop_log_capture.clear()
+
+            # Start log capture threads
+            stdout_thread = threading.Thread(
+                target=self._capture_output,
+                args=(self.process.stdout, "[OUT]"),
+                daemon=True
+            )
+            stderr_thread = threading.Thread(
+                target=self._capture_output,
+                args=(self.process.stderr, "[ERR]"),
+                daemon=True
+            )
+
+            stdout_thread.start()
+            stderr_thread.start()
+
+            self.log_threads = [stdout_thread, stderr_thread]
+            logger.info("Log capture threads started")
+
             # Wait for server startup
             startup_delay = self.config.get_server_startup_delay()
             logger.info(f"Waiting {startup_delay}s for server startup...")
@@ -115,6 +163,9 @@ class ServerManager:
         try:
             logger.info(f"Stopping server (PID: {self.process.pid})...")
 
+            # Signal log capture threads to stop
+            self.stop_log_capture.set()
+
             # Send SIGTERM for graceful shutdown
             if platform.system() == "Windows":
                 self.process.terminate()
@@ -131,6 +182,12 @@ class ServerManager:
                 self.process.kill()
                 self.process.wait()
                 logger.info("Server force stopped")
+
+            # Wait for log threads to finish (with timeout)
+            for thread in self.log_threads:
+                thread.join(timeout=1)
+            self.log_threads.clear()
+            logger.info("Log capture threads stopped")
 
             self.process = None
             self.port = None
@@ -284,23 +341,28 @@ class ServerManager:
         # Start server again
         return self.start_server(port)
 
-    def get_server_logs(self, lines: int = 50) -> str:
+    def get_server_logs(self, lines: Optional[int] = None) -> list:
         """
         Get recent server output (stdout/stderr)
 
         Args:
-            lines: Number of recent lines to retrieve
+            lines: Number of recent lines to retrieve (None for all available)
 
         Returns:
-            Server log output
+            List of log lines
         """
-        if not self.process:
-            return "No server process running"
+        if lines is None:
+            return list(self.log_buffer)
+        else:
+            # Get last N lines
+            all_logs = list(self.log_buffer)
+            return all_logs[-lines:] if len(all_logs) > lines else all_logs
 
-        try:
-            # This is a simplified version - in production, you'd want to
-            # capture logs to a file and read from there
-            return "Server logs not available in this implementation"
-        except Exception as e:
-            logger.error(f"Failed to get server logs: {e}")
-            return f"Error retrieving logs: {e}"
+    def get_log_count(self) -> int:
+        """
+        Get total number of log lines in buffer
+
+        Returns:
+            Number of log lines
+        """
+        return len(self.log_buffer)
