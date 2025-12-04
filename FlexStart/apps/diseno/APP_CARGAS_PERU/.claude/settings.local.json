@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Read(//Users/rjarad/Desktop/Tests/**)",
+      "Read(//Users/rjarad/Desktop/tools/App_SUITE/SUITEV1.7.9/**)",
+      "Bash(python3:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "acceptEdits"
+  }
+}

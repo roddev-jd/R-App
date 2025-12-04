@@ -13,7 +13,16 @@
       "Bash(done)",
       "Bash(find:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: App_SUITE v2.0.2 (Ripley Apps)\n\n- Multi-app suite with FastAPI backend and Bootstrap frontend\n- Reportes: Business intelligence and analytics application\n- Diseno: 40+ design and image management tools\n- Prod Peru: Production declaration system\n- Complete documentation in CLAUDE.md\n- Configuration templates and .gitignore setup\n\nFeatures:\n- Central FastAPI gateway for all applications\n- Web-based interfaces with responsive design\n- Python desktop tools integration\n- Azure Blob Storage and SharePoint integration\n- Advanced data filtering and export capabilities\n- Real-time progress updates with SSE\n\nTechnology stack: FastAPI, Bootstrap, DuckDB, Pandas, Azure SDK\nEOF\n)\")",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(grep:*)",
+      "Bash(git -C \"/Users/rjarad/Library/Mobile Documents/com~apple~CloudDocs/Apps/App_SUITE/R-App1\" remote -v)",
+      "WebFetch(domain:www.rjresolve.cl)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
