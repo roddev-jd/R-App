@@ -1,0 +1,3912 @@
+/* frontend/css/style.css */
+
+/**
+ * ========================================
+ * DESIGN TOKENS - SISTEMA DE DISEÑO
+ * ========================================
+ *
+ * Sistema de variables CSS para consistencia visual en la aplicación de Reportes.
+ * Estos tokens definen todos los valores visuales reutilizables.
+ *
+ * TIPOGRAFÍA
+ * ----------
+ * - Escala tipográfica: Basada en ratio 1.25 (Major Third)
+ * - Base: 16px (1rem)
+ * - Tamaños: xs (0.64rem), sm (0.8rem), base (1rem), md (1.25rem), lg (1.563rem), xl (1.953rem), 2xl (2.441rem)
+ * - Line heights: tight (1.2), normal (1.5), relaxed (1.75)
+ * - Font weights: normal (400), medium (500), semibold (600), bold (700)
+ *
+ * ESPACIADO
+ * ---------
+ * - Sistema basado en múltiplos de 4px
+ * - Escala: 0, 4px, 8px, 12px, 16px, 20px, 24px, 32px, 40px, 48px, 64px
+ * - Uso: padding, margin, gaps en flexbox/grid
+ *
+ * COLORES
+ * -------
+ * - Primario: Azul Ripley #405580 con gradaciones 50-900
+ * - Acento: Púrpura #725993 con gradaciones 50-900
+ * - Semánticos: success, warning, danger, info (con variantes light)
+ * - Variables semánticas: --bg-primary, --text-primary, --border-primary (cambian en dark mode)
+ *
+ * SOMBRAS Y ELEVACIONES
+ * ---------------------
+ * - 5 niveles: sm, base, md, lg, xl
+ * - Uso: cards (md), modals (xl), botones elevados (base)
+ *
+ * BORDER RADIUS
+ * -------------
+ * - 6 niveles: sm (4px), base (6px), md (8px), lg (12px), xl (16px), full (circular)
+ *
+ * DARK MODE
+ * ---------
+ * - Activado con: [data-theme="dark"]
+ * - Colores ajustados automáticamente para mejor contraste
+ * - Sombras más sutiles
+ *
+ * DENSIDAD DE UI
+ * --------------
+ * - Normal (default): espaciado estándar
+ * - Compacta [data-density="compact"]: 75% del espaciado, fuentes más pequeñas
+ * - Espaciada [data-density="comfortable"]: 125% del espaciado, fuentes más grandes
+ *
+ * USO
+ * ---
+ * Ejemplo: padding: var(--spacing-4); font-size: var(--font-size-base);
+ *
+ * @version 2.0.0
+ * @author Equipo Ripley Publishing & Content
+ */
+
+:root {
+    /* === DESIGN TOKENS - COLORES === */
+
+    /* Primarios - Azul Ripley con gradaciones */
+    --color-primary-50: #e8ebf3;
+    --color-primary-100: #c6cde0;
+    --color-primary-200: #a0accd;
+    --color-primary-300: #7a8bba;
+    --color-primary-400: #5d72ac;
+    --color-primary-500: #405580;      /* Base - Azul pizarra oscuro */
+    --color-primary-600: #3a4d73;
+    --color-primary-700: #324263;
+    --color-primary-800: #2a3754;
+    --color-primary-900: #1c2538;
+
+    /* Acentos - Púrpura Ripley con gradaciones */
+    --color-accent-50: #ede8f1;
+    --color-accent-100: #d3c5db;
+    --color-accent-200: #b69ec4;
+    --color-accent-300: #9977ac;
+    --color-accent-400: #84599a;
+    --color-accent-500: #725993;       /* Base - Púrpura apagado */
+    --color-accent-600: #694f87;
+    --color-accent-700: #5d4478;
+    --color-accent-800: #52396a;
+    --color-accent-900: #3f2850;
+
+    /* Colores Semánticos */
+    --color-success: #198754;
+    --color-success-light: #d1e7dd;
+    --color-warning: #ffc107;
+    --color-warning-light: #fff3cd;
+    --color-danger: #dc3545;
+    --color-danger-light: #f8d7da;
+    --color-info: #0dcaf0;
+    --color-info-light: #cff4fc;
+
+    /* Colores de Fondo */
+    --app-bg-main: #f4f7fc;            /* Fondo general */
+    --app-bg-card: #ffffff;            /* Fondo de tarjetas */
+    --app-bg-info: #e6e0d1;            /* Beige cálido para alertas */
+    --app-bg-light-blue: #b8c9dd;      /* Azul pálido para alertas */
+
+    /* Colores de Texto */
+    --app-text-dark: #2f2a47;          /* Texto principal */
+    --app-text-light: #ffffff;         /* Texto claro */
+    --app-text-muted: #6c758b;         /* Texto apagado */
+
+    /* Colores Legacy (compatibilidad con código existente) */
+    --app-primary-blue: #405580;       /* = --color-primary-500 */
+    --app-primary-blue-dark: #2f2a47;  /* ≈ --color-primary-900 */
+    --app-accent-purple: #725993;      /* = --color-accent-500 */
+
+    /* Bordes */
+    --app-border-color: #e3e7f1;
+
+    /* Tipografía */
+    --app-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* === DESIGN TOKENS - TIPOGRAFÍA === */
+    /* Escala tipográfica basada en ratio 1.25 (Major Third) */
+    --font-size-xs: 0.64rem;      /* 10.24px */
+    --font-size-sm: 0.8rem;       /* 12.8px */
+    --font-size-base: 1rem;       /* 16px - base */
+    --font-size-md: 1.25rem;      /* 20px */
+    --font-size-lg: 1.563rem;     /* 25px */
+    --font-size-xl: 1.953rem;     /* 31.25px */
+    --font-size-2xl: 2.441rem;    /* 39px */
+
+    /* Line heights semánticos */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Font weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* === DESIGN TOKENS - ESPACIADO === */
+    /* Escala de espaciado basada en 8px (múltiplos de 4) */
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;     /* 4px */
+    --spacing-2: 0.5rem;      /* 8px */
+    --spacing-3: 0.75rem;     /* 12px */
+    --spacing-4: 1rem;        /* 16px */
+    --spacing-5: 1.25rem;     /* 20px */
+    --spacing-6: 1.5rem;      /* 24px */
+    --spacing-8: 2rem;        /* 32px */
+    --spacing-10: 2.5rem;     /* 40px */
+    --spacing-12: 3rem;       /* 48px */
+    --spacing-16: 4rem;       /* 64px */
+
+    /* === DESIGN TOKENS - SOMBRAS Y ELEVACIONES === */
+    /* Sombras con diferentes niveles de profundidad */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+                   0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    /* Border radius */
+    --radius-sm: 0.25rem;     /* 4px */
+    --radius-base: 0.375rem;  /* 6px */
+    --radius-md: 0.5rem;      /* 8px */
+    --radius-lg: 0.75rem;     /* 12px */
+    --radius-xl: 1rem;        /* 16px */
+    --radius-full: 9999px;    /* Circular */
+
+    /* Sombra y radio legacy (compatibilidad) */
+    --app-border-radius: 0.4rem;       /* = --radius-md */
+    --app-box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.04);  /* ≈ --shadow-base */
+
+    /* === DESIGN TOKENS - VARIABLES SEMÁNTICAS (Light Mode por defecto) === */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f4f7fc;
+    --bg-tertiary: #f8f9fc;
+    --text-primary: #2f2a47;
+    --text-secondary: #6c758b;
+    --text-tertiary: #a0a4b8;
+    --border-primary: #e3e7f1;
+    --border-secondary: #dee2e6;
+
+    /* Variables para Bootstrap */
+    --bs-primary-rgb: 64, 85, 128;     /* Corresponde a --app-primary-blue */
+}
+
+/* === DARK MODE === */
+[data-theme="dark"] {
+    /* === VARIABLES DE COLOR - PALETA AZULADA FRÍA === */
+
+    /* Fondos - Navy-black profundo con tonos azulados */
+    --bg-primary: #141925;           /* Slate oscuro - cards */
+    --bg-secondary: #1e2433;         /* Elevated surfaces */
+    --bg-tertiary: #2a3142;          /* Hover states */
+    --app-bg-main: #0a0e17;          /* Navy-black profundo - fondo principal */
+    --app-bg-card: #141925;          /* Card backgrounds */
+
+    /* Texto - Casi blanco con tinte azul */
+    --text-primary: #e8edf5;         /* Casi blanco con tinte azul - texto principal */
+    --text-secondary: #b4bdd0;       /* Gris-azul claro - texto secundario */
+    --text-tertiary: #8891a8;        /* Gris-azul medio - texto terciario */
+    --app-text-dark: #e8edf5;        /* Texto principal */
+    --app-text-muted: #b4bdd0;       /* Texto muted pero legible */
+
+    /* Bordes - Visible pero sutil */
+    --border-primary: #364155;       /* Bordes visibles */
+    --border-secondary: #2a3342;     /* Bordes sutiles */
+    --app-border-color: #364155;     /* Borde por defecto */
+
+    /* Colores primarios - Slate blue vibrante */
+    --color-primary-500: #5b8cd6;    /* Slate blue vibrante */
+    --color-primary-600: #709dd9;    /* Slate blue medio */
+    --color-primary-700: #85aedc;    /* Slate blue claro */
+
+    /* Colores de acento - Púrpura claro */
+    --color-accent-500: #a688d4;     /* Púrpura claro */
+    --color-accent-600: #b698db;     /* Púrpura medio */
+
+    /* Colores semánticos - Vibrantes para dark mode */
+    --color-success-dark: #3dd68c;   /* Verde emerald */
+    --color-warning-dark: #fbbf24;   /* Amarillo amber */
+    --color-danger-dark: #f87171;    /* Rojo coral */
+    --color-info-dark: #60a5fa;      /* Azul sky */
+
+    /* Colores de prioridad - Para bordes laterales */
+    --priority-1-border: #ef4444;    /* Rojo vibrante */
+    --priority-2-border: #fbbf24;    /* Amarillo vibrante */
+    --priority-3-border: #3dd68c;    /* Verde vibrante */
+
+    /* Sombras con tinte azul */
+    --shadow-sm: 0 1px 2px 0 rgba(10, 20, 40, 0.4);
+    --shadow-base: 0 1px 3px 0 rgba(10, 20, 40, 0.5),
+                   0 1px 2px 0 rgba(10, 20, 40, 0.4);
+    --shadow-md: 0 4px 6px -1px rgba(10, 20, 40, 0.5),
+                 0 2px 4px -1px rgba(10, 20, 40, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(10, 20, 40, 0.6),
+                 0 4px 6px -2px rgba(10, 20, 40, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(10, 20, 40, 0.7),
+                 0 10px 10px -5px rgba(10, 20, 40, 0.5);
+    --app-box-shadow: 0 0.2rem 0.6rem rgba(10, 20, 40, 0.4);
+
+    /* Glow effect para elementos interactivos */
+    --glow-primary: 0 0 0 0.25rem rgba(91, 140, 214, 0.15);
+    --glow-accent: 0 0 0 0.25rem rgba(166, 136, 212, 0.15);
+    --glow-success: 0 0 0 0.25rem rgba(61, 214, 140, 0.15);
+    --glow-danger: 0 0 0 0.25rem rgba(248, 113, 113, 0.15);
+
+    /* === OVERRIDES DE COMPONENTES === */
+
+    /* === 1. COMPONENTES GLOBALES === */
+
+    /* Header y Footer */
+    .app-header,
+    .app-header-red,
+    .app-header-purple {
+        background-color: var(--bg-secondary) !important;
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    .app-footer {
+        background-color: var(--bg-secondary) !important;
+        border-top: 1px solid var(--border-primary);
+    }
+
+    /* Scrollbar personalizado */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--bg-tertiary);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-primary-500);
+    }
+
+    /* === 2. TABLAS === */
+
+    /* Table headers */
+    .app-table-header th {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-secondary) !important;
+        border-bottom: 2px solid var(--border-primary) !important;
+    }
+
+    /* Table rows */
+    #data-table tbody tr {
+        background-color: var(--bg-primary);
+        border-bottom: 1px solid var(--border-secondary);
+        transition: background-color 0.2s ease;
+    }
+
+    #data-table tbody tr:hover {
+        background-color: var(--bg-tertiary);
+    }
+
+    #data-table tbody td {
+        color: var(--text-primary);
+        border-color: var(--border-secondary);
+    }
+
+    /* Priority rows con borde lateral de color */
+    .priority-row-1 {
+        background-color: var(--bg-primary) !important;
+        border-left: 4px solid var(--priority-1-border) !important;
+        color: var(--text-primary) !important;
+    }
+
+    .priority-row-2 {
+        background-color: var(--bg-primary) !important;
+        border-left: 4px solid var(--priority-2-border) !important;
+        color: var(--text-primary) !important;
+    }
+
+    .priority-row-3 {
+        background-color: var(--bg-primary) !important;
+        border-left: 4px solid var(--priority-3-border) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Priority rows hover */
+    .priority-row-1:hover,
+    .priority-row-2:hover,
+    .priority-row-3:hover {
+        background-color: var(--bg-tertiary) !important;
+    }
+
+    /* === BOOTSTRAP TABLE OVERRIDES === */
+
+    /* Base table con variables Bootstrap personalizadas */
+    .table {
+        --bs-table-color: var(--text-primary);
+        --bs-table-bg: transparent;
+        --bs-table-border-color: var(--border-secondary);
+        --bs-table-striped-bg: rgba(42, 49, 66, 0.5);
+        --bs-table-striped-color: var(--text-primary);
+        --bs-table-hover-bg: var(--bg-tertiary);
+        --bs-table-hover-color: var(--text-primary);
+        color: var(--text-primary);
+        border-color: var(--border-secondary);
+    }
+
+    /* Bordes de tabla - todos los elementos */
+    .table-bordered > :not(caption) > * {
+        border-color: var(--border-secondary) !important;
+    }
+
+    .table-bordered > :not(caption) > * > * {
+        border-color: var(--border-secondary) !important;
+    }
+
+    /* Filas alternadas (striped) con contraste adecuado */
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        --bs-table-bg-type: rgba(42, 49, 66, 0.5);
+        background-color: rgba(42, 49, 66, 0.5) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Hover en filas */
+    .table-hover > tbody > tr:hover > * {
+        --bs-table-bg-state: var(--bg-tertiary);
+        background-color: var(--bg-tertiary) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Headers genéricos de tabla */
+    .table thead th {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-secondary) !important;
+        border-color: var(--border-primary) !important;
+    }
+
+    /* Celdas con contraste fuerte */
+    .table tbody td,
+    .table tbody th {
+        color: var(--text-primary) !important;
+        border-color: var(--border-secondary) !important;
+    }
+
+    /* === 3. MODALS === */
+
+    .modal-content {
+        background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .modal-header {
+        background-color: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-primary);
+    }
+
+    .modal-title {
+        color: var(--text-primary);
+    }
+
+    .modal-body {
+        background-color: transparent;
+        color: var(--text-primary);
+    }
+
+    .modal-footer {
+        background-color: var(--bg-secondary);
+        border-top: 1px solid var(--border-primary);
+    }
+
+    /* Modal específico - Column Selector */
+    .column-selector-modal .modal-body {
+        background-color: transparent;
+    }
+
+    .column-selector-modal .form-check-label {
+        color: var(--text-primary);
+    }
+
+    /* === 4. FORMS === */
+
+    /* Form controls con glow en focus */
+    .form-control,
+    .form-select {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--color-primary-500);
+        box-shadow: var(--glow-primary);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-tertiary);
+    }
+
+    .form-control:disabled,
+    .form-select:disabled {
+        background-color: var(--bg-primary);
+        color: var(--text-tertiary);
+        opacity: 0.6;
+    }
+
+    /* Checkboxes y radios */
+    .form-check-input {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-primary);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+    }
+
+    .form-check-input:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: var(--glow-primary);
+    }
+
+    .form-check-label {
+        color: var(--text-primary);
+    }
+
+    /* Textarea */
+    textarea.form-control {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+
+    /* === 5. DROPDOWNS === */
+
+    .dropdown-menu {
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-primary);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .dropdown-item {
+        color: var(--text-primary);
+        transition: background-color 0.2s ease;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+    }
+
+    .dropdown-item.active,
+    .dropdown-item:active {
+        background-color: var(--color-primary-500);
+        color: white;
+    }
+
+    .dropdown-divider {
+        border-color: var(--border-secondary);
+    }
+
+    /* Dropdown descriptions en blanco */
+    .dropdown-item small {
+        color: white !important;
+    }
+
+    /* === 6. BUTTONS === */
+
+    /* Botones primarios con glow */
+    .btn-primary {
+        background-color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+        color: white;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: var(--color-primary-600);
+        border-color: var(--color-primary-600);
+        box-shadow: var(--glow-primary);
+    }
+
+    .btn-primary:active {
+        background-color: var(--color-primary-700);
+    }
+
+    /* Botones secundarios */
+    .btn-secondary {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    .btn-secondary:hover,
+    .btn-secondary:focus {
+        background-color: var(--bg-tertiary);
+        border-color: var(--border-primary);
+        color: var(--text-primary);
+        box-shadow: var(--glow-primary);
+    }
+
+    /* Botones outline */
+    .btn-outline-primary {
+        color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus {
+        background-color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+        color: white;
+        box-shadow: var(--glow-primary);
+    }
+
+    /* Botones de estado */
+    .btn-success,
+    .btn-success-custom {
+        background-color: var(--color-success-dark);
+        border-color: var(--color-success-dark);
+        color: var(--bg-primary);
+    }
+
+    .btn-success:hover,
+    .btn-success-custom:hover {
+        background-color: #2fc77d;
+        border-color: #2fc77d;
+        box-shadow: var(--glow-success);
+    }
+
+    .btn-warning,
+    .btn-warning-custom {
+        background-color: var(--color-warning-dark);
+        border-color: var(--color-warning-dark);
+        color: var(--bg-primary);
+    }
+
+    .btn-warning:hover,
+    .btn-warning-custom:hover {
+        background-color: #f5b200;
+        border-color: #f5b200;
+        box-shadow: 0 0 0 0.25rem rgba(251, 191, 36, 0.15);
+    }
+
+    .btn-danger,
+    .btn-danger-custom {
+        background-color: var(--color-danger-dark);
+        border-color: var(--color-danger-dark);
+        color: white;
+    }
+
+    .btn-danger:hover,
+    .btn-danger-custom:hover {
+        background-color: #f55a5a;
+        border-color: #f55a5a;
+        box-shadow: var(--glow-danger);
+    }
+
+    .btn-outline-danger,
+    .btn-outline-danger-custom {
+        color: var(--color-danger-dark);
+        border-color: var(--color-danger-dark);
+    }
+
+    .btn-outline-danger:hover,
+    .btn-outline-danger-custom:hover {
+        background-color: var(--color-danger-dark);
+        border-color: var(--color-danger-dark);
+        color: white;
+        box-shadow: var(--glow-danger);
+    }
+
+    /* === 7. CARDS === */
+
+    .card {
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        border: 1px solid var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    .card-header {
+        background-color: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    .card-body {
+        background-color: transparent;
+        color: var(--text-primary);
+    }
+
+    .card-footer {
+        background-color: var(--bg-secondary);
+        border-top: 1px solid var(--border-primary);
+        color: var(--text-secondary);
+    }
+
+    /* Filter select cards */
+    .filter-select-card {
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        border: 1px solid var(--border-primary);
+    }
+
+    /* Left panel card footer (área de botones de filtros) */
+    #left-panel .card-footer {
+        background-color: var(--bg-secondary) !important;
+        border-top: 1px solid var(--border-primary);
+        box-shadow: 0 -2px 4px rgba(10, 20, 40, 0.3);
+    }
+
+    /* === 8. ALERTS === */
+
+    .alert {
+        border: 1px solid var(--border-primary);
+    }
+
+    .alert-app-status {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border-left: 4px solid var(--color-info-dark);
+    }
+
+    .alert-app-count {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+    }
+
+    .alert-app-info {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border-left: 4px solid var(--color-warning-dark);
+    }
+
+    .alert-success {
+        background-color: rgba(61, 214, 140, 0.1);
+        border-color: var(--color-success-dark);
+        color: var(--color-success-dark);
+    }
+
+    .alert-warning {
+        background-color: rgba(251, 191, 36, 0.1);
+        border-color: var(--color-warning-dark);
+        color: var(--color-warning-dark);
+    }
+
+    .alert-danger {
+        background-color: rgba(248, 113, 113, 0.1);
+        border-color: var(--color-danger-dark);
+        color: var(--color-danger-dark);
+    }
+
+    .alert-info {
+        background-color: rgba(96, 165, 250, 0.1);
+        border-color: var(--color-info-dark);
+        color: var(--color-info-dark);
+    }
+
+    /* === 9. TAB NAVIGATION === */
+
+    .tab-bar {
+        background-color: var(--bg-primary);
+        border-bottom: 2px solid var(--border-primary);
+    }
+
+    .tab-bar .tab-button {
+        background-color: transparent;
+        color: var(--text-secondary);
+        border: none;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .tab-bar .tab-button:hover {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+    }
+
+    .tab-bar .tab-button.active {
+        background-color: var(--bg-secondary);
+        color: var(--color-primary-500);
+        border-bottom: 2px solid var(--color-primary-500);
+    }
+
+    /* === 10. FILTER SECTIONS === */
+
+    .filter-collapse-toggle {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-primary);
+        transition: all 0.2s ease;
+    }
+
+    .filter-collapse-toggle:hover {
+        background-color: var(--bg-tertiary);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .filter-collapse-toggle.collapsed {
+        background-color: var(--bg-primary);
+    }
+
+    /* === 11. LOADING & PROGRESS === */
+
+    .loading-overlay {
+        background-color: rgba(10, 14, 23, 0.85);
+    }
+
+    .loading-content-modern {
+        background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-accent-500) 100%);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .event-card {
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    .event-card.current {
+        background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-accent-500) 100%);
+        color: white;
+        box-shadow: var(--glow-primary);
+    }
+
+    .event-card.completed {
+        background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%) !important;
+        opacity: 1 !important;
+    }
+
+    .event-card.completed .event-message {
+        color: #1b5e20 !important;
+        opacity: 1 !important;
+    }
+
+    .event-card.completed .event-icon {
+        opacity: 0.8;
+    }
+
+    /* Progress bars */
+    .progress {
+        background-color: var(--bg-secondary);
+    }
+
+    .progress-bar {
+        background-color: var(--color-primary-500);
+    }
+
+    /* === 12. FAVORITES LIST === */
+
+    .favorite-item {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
+
+    .favorite-item:hover {
+        background-color: var(--bg-tertiary);
+        border-color: var(--color-primary-500);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .favorite-item.active {
+        background-color: var(--bg-tertiary);
+        border-color: var(--color-primary-500);
+        box-shadow: var(--glow-primary);
+    }
+
+    /* === 13. BADGES === */
+
+    .badge {
+        color: var(--bg-primary);
+    }
+
+    .badge.bg-primary {
+        background-color: var(--color-primary-500) !important;
+    }
+
+    .badge.bg-secondary {
+        background-color: var(--text-secondary) !important;
+    }
+
+    .badge.bg-success {
+        background-color: var(--color-success-dark) !important;
+    }
+
+    .badge.bg-warning {
+        background-color: var(--color-warning-dark) !important;
+    }
+
+    .badge.bg-danger {
+        background-color: var(--color-danger-dark) !important;
+    }
+
+    .badge.bg-info {
+        background-color: var(--color-info-dark) !important;
+    }
+
+    /* === 14. TOOLTIPS & POPOVERS === */
+
+    .tooltip-inner {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        box-shadow: var(--shadow-md);
+    }
+
+    .tooltip.bs-tooltip-top .tooltip-arrow::before {
+        border-top-color: var(--bg-secondary);
+    }
+
+    .tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+        border-bottom-color: var(--bg-secondary);
+    }
+
+    .tooltip.bs-tooltip-start .tooltip-arrow::before {
+        border-left-color: var(--bg-secondary);
+    }
+
+    .tooltip.bs-tooltip-end .tooltip-arrow::before {
+        border-right-color: var(--bg-secondary);
+    }
+
+    /* === 15. PAGINATION === */
+
+    .pagination .page-link {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    .pagination .page-link:hover {
+        background-color: var(--bg-tertiary);
+        border-color: var(--border-primary);
+        color: var(--color-primary-500);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+        color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        background-color: var(--bg-primary);
+        border-color: var(--border-secondary);
+        color: var(--text-tertiary);
+    }
+
+    /* === 16. CONTEXT MESSAGES === */
+
+    .context-message {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    /* === 17. SUGGESTION FAB === */
+
+    #suggestion-fab {
+        background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-accent-500) 100%);
+        box-shadow: var(--shadow-lg);
+        transition: all 0.2s ease;
+    }
+
+    #suggestion-fab:hover {
+        box-shadow: var(--shadow-xl), var(--glow-primary);
+        transform: scale(1.05);
+    }
+
+    /* === 18. LIST GROUPS === */
+
+    .list-group-item {
+        background-color: var(--bg-primary);
+        border-color: var(--border-primary);
+        color: var(--text-primary);
+    }
+
+    .list-group-item:hover {
+        background-color: var(--bg-tertiary);
+    }
+
+    .list-group-item.active {
+        background-color: var(--color-primary-500);
+        border-color: var(--color-primary-500);
+        color: white;
+    }
+
+    /* === 19. BREADCRUMBS === */
+
+    .breadcrumb {
+        background-color: var(--bg-secondary);
+    }
+
+    .breadcrumb-item {
+        color: var(--text-secondary);
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+    }
+
+    .breadcrumb-item a {
+        color: var(--color-primary-500);
+    }
+
+    .breadcrumb-item a:hover {
+        color: var(--color-primary-600);
+    }
+
+    /* === 20. INPUTS ESPECIALES === */
+
+    /* Input groups */
+    .input-group-text {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-primary);
+        color: var(--text-secondary);
+    }
+
+    /* Select multiple */
+    select[multiple].form-control option {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+
+    select[multiple].form-control option:checked {
+        background-color: var(--color-primary-500);
+        color: white;
+    }
+}
+
+/* === DENSIDAD DE UI === */
+/* Normal (default) - ya definido en :root */
+:root {
+    --ui-density: 1;
+}
+
+/* Compacta */
+[data-density="compact"] {
+    --ui-density: 0.75;
+
+    --spacing-2: 0.375rem;    /* 6px en lugar de 8px */
+    --spacing-3: 0.5625rem;   /* 9px en lugar de 12px */
+    --spacing-4: 0.75rem;     /* 12px en lugar de 16px */
+    --spacing-5: 0.9375rem;   /* 15px en lugar de 20px */
+    --spacing-6: 1.125rem;    /* 18px en lugar de 24px */
+
+    --font-size-xs: 0.56rem;   /* Más pequeño */
+    --font-size-sm: 0.7rem;
+    --font-size-base: 0.875rem;
+    --font-size-md: 1.09rem;
+}
+
+/* Espaciada */
+[data-density="comfortable"] {
+    --ui-density: 1.25;
+
+    --spacing-2: 0.625rem;    /* 10px en lugar de 8px */
+    --spacing-3: 0.9375rem;   /* 15px en lugar de 12px */
+    --spacing-4: 1.25rem;     /* 20px en lugar de 16px */
+    --spacing-5: 1.5625rem;   /* 25px en lugar de 20px */
+    --spacing-6: 1.875rem;    /* 30px en lugar de 24px */
+
+    --font-size-xs: 0.72rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1.125rem;
+    --font-size-md: 1.406rem;
+}
+
+body {
+    font-family: var(--app-font-family);
+    background-color: var(--app-bg-main);
+    color: var(--app-text-dark);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-header {
+    background-color: #292929;
+    transition: background-color 0.5s ease-in-out;
+}
+.app-header h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.app-header-red {
+    background-color: #292929; /* Rojo para XLSX */
+}
+
+.app-header-purple { /* NUEVA CLASE PARA EL ESTADO INICIAL/DESELECCIONADO */
+    background-color: #292929; /* Un tono de morado, puedes ajustarlo */
+}
+
+/* Estilos para el span del texto del título y su animación */
+#header-title-text {
+    display: inline-block; /* Para que la opacidad y transiciones funcionen bien */
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out; /* Duración del fundido, ajústala si quieres */
+}
+
+/* Clase para activar el fundido de salida (hacer transparente) */
+#header-title-text.fade-out {
+    opacity: 0;
+}
+
+.app-header-red {
+    background-color: #292929;
+}
+
+.app-footer {
+    background-color: #292929; 
+    font-size: 12px;
+}
+
+.card {
+    border-radius: var(--app-border-radius);
+    border-color: var(--app-border-color);
+    box-shadow: var(--app-box-shadow);
+}
+.app-card-header {
+    background-color: var(--app-bg-card); 
+    border-bottom: 1px solid var(--app-border-color);
+    padding: 0.75rem 1rem;
+}
+.card-title-custom {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--app-text-dark);
+}
+.filter-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--app-text-muted);
+    margin-bottom: 0.75rem;
+}
+hr.custom-hr {
+    border-top-color: var(--app-border-color);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    opacity: 0.15;
+}
+
+/* === PANEL DE CONTROLES - ESPACIADO MEJORADO === */
+#data-source-section .card-body {
+    padding: var(--spacing-4) var(--spacing-5);
+    gap: var(--spacing-4);
+}
+
+#data-source-section .form-select,
+#data-source-section .btn {
+    margin-bottom: var(--spacing-0);
+}
+
+#data-source-section .flex-grow-1 {
+    min-width: 180px;
+}
+
+/* Agrupación visual de controles relacionados */
+.control-group {
+    background: var(--color-primary-50);
+    padding: var(--spacing-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-4);
+    border: 1px solid var(--color-primary-100);
+}
+
+.control-group-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary-700);
+    margin-bottom: var(--spacing-2);
+    display: block;
+}
+
+.control-group-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.btn {
+    border-radius: var(--app-border-radius) !important; 
+    font-weight: 500;
+    padding: 0.375rem 0.85rem; 
+    font-size: 0.75rem;
+    transition: all 0.2s ease-in-out; /* Transición suave para todos los botones */
+}
+
+.btn-action { 
+    background-color: var(--app-accent-purple); /* Cambiado */
+    border-color: var(--app-accent-purple);     /* Cambiado */
+    color: var(--app-text-light);
+}
+.btn-action:hover {
+    background-color: var(--app-primary-blue-dark); /* Cambiado */
+    border-color: var(--app-primary-blue-dark);     /* Cambiado */
+    color: var(--app-text-light);
+    transform: translateY(-1px);
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.btn-outline-action {
+    color: var(--app-primary-blue);
+    border-color: var(--app-primary-blue);
+}
+.btn-outline-action:hover {
+    background-color: var(--app-primary-blue);
+    color: var(--app-text-light);
+}
+.btn-outline-action-secondary { 
+    color: var(--app-secondary-blue);
+    border-color: var(--app-secondary-blue);
+}
+.btn-outline-action-secondary:hover {
+    background-color: var(--app-secondary-blue);
+    color: var(--app-text-light);
+}
+.btn-success-custom { 
+    background-color: #198754; 
+    border-color: #198754;
+    color: var(--app-text-light);
+}
+.btn-success-custom:hover {
+    background-color: #157347;
+    border-color: #146c43;
+}
+.btn-warning-custom { 
+    background-color: #ffc107; 
+    border-color: #ffc107;
+    color: var(--app-text-dark); 
+}
+.btn-warning-custom:hover {
+    background-color: #ffca2c;
+    border-color: #ffc720;
+}
+.btn-outline-danger-custom {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-outline-danger-custom:hover {
+    background-color: #dc3545;
+    color: var(--app-text-light);
+}
+
+/* === NUEVA JERARQUÍA DE BOTONES === */
+
+/* PRIMARIOS - Acción principal de la pantalla */
+.btn-primary-action {
+    background: var(--color-accent-500);
+    color: white;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-3) var(--spacing-6);
+    box-shadow: var(--shadow-md);
+    border: none;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary-action:hover {
+    background: var(--color-accent-600);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+    color: white;
+}
+
+.btn-primary-action:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--shadow-base);
+}
+
+.btn-primary-action:focus-visible {
+    outline: 3px solid var(--color-accent-200);
+    outline-offset: 2px;
+}
+
+.btn-primary-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+    transform: none;
+}
+
+/* SECUNDARIOS - Acciones importantes pero no críticas */
+.btn-secondary-action {
+    background: white;
+    color: var(--color-primary-500);
+    border: 2px solid var(--color-primary-500);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary-action:hover {
+    background: var(--color-primary-50);
+    color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+    transform: translateY(-1px);
+}
+
+.btn-secondary-action:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-secondary-action:focus-visible {
+    outline: 3px solid var(--color-primary-200);
+    outline-offset: 2px;
+}
+
+.btn-secondary-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+    transform: none;
+}
+
+/* TERCIARIOS - Acciones de apoyo */
+.btn-tertiary-action {
+    background: transparent;
+    color: var(--color-primary-500);
+    border: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    padding: var(--spacing-2) var(--spacing-3);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    border-radius: var(--radius-base);
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-tertiary-action:hover {
+    color: var(--color-primary-600);
+    text-decoration-color: var(--color-primary-600);
+    background: var(--color-primary-50);
+}
+
+.btn-tertiary-action:active {
+    transform: scale(0.98);
+}
+
+.btn-tertiary-action:focus-visible {
+    outline: 3px solid var(--color-primary-200);
+    outline-offset: 2px;
+}
+
+.btn-tertiary-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+}
+
+.form-select-sm, .form-control-sm {
+    font-size: 11px;
+    border-radius: var(--app-border-radius);
+}
+.form-select:focus, .form-control:focus {
+    border-color: var(--app-primary-blue-light); /* Un color más suave para el foco */
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.20); /* Sombra de foco más sutil */
+}
+.form-check-input {
+    border-radius: 0.25em; 
+}
+.form-check-input:checked {
+    background-color: var(--app-primary-blue);
+    border-color: var(--app-primary-blue);
+}
+#columns-listbox-container .form-check {
+    margin-bottom: 0.3rem; 
+    padding-left: 1.75em; 
+}
+#columns-listbox-container .form-check-label {
+    font-size: 0.85rem;
+    cursor: pointer; /* Mejor UX para labels de checkbox */
+}
+/* Estilo para form-check más pequeño para columnas */
+.form-check.form-check-sm .form-check-input { /* No es una clase Bootstrap real, pero la usamos en JS */
+    /* Podrías intentar reducir tamaño si es necesario, pero puede ser complejo */
+}
+.form-check.form-check-sm .form-check-label {
+    font-size: 0.8rem; /* Etiqueta más pequeña */
+    padding-top: 0.1rem; /* Alinear mejor con checkbox más pequeño si se reduce */
+}
+
+
+.alert-app-status {
+    background-color: var(--app-bg-light-blue);
+    color: var(--app-text-dark);
+    border-color: var(--app-primary-blue);
+    font-size: 0.8rem; /* Un poco más grande para legibilidad */
+}
+.alert-app-count {
+    background-color: #e9ecef; 
+    color: var(--app-text-dark);
+    border-color: #dee2e6;
+    font-size: 0.7rem;
+}
+
+.app-table-header th {
+    background-color: #f8f9fc; /* Fondo muy claro para encabezados */
+    color: var(--app-text-muted);
+    font-weight: 600;
+    font-size: 0.65rem;       /* 10.4px - ligeramente más pequeño que datos */
+    padding: var(--spacing-2) var(--spacing-2);  /* Reducido para compactar */
+    border-bottom-width: 2px;
+    border-top: none; /* Quitar borde superior de th si la tabla tiene borde */
+    border-color: var(--app-border-color);
+}
+
+#data-table td {
+    font-size: 0.7rem;        /* 11.2px - igual que pestañas de filtros */
+    padding: var(--spacing-2) var(--spacing-2);  /* Reducido para compactar */
+    line-height: 1.3;         /* Reducido para menor altura de filas */
+    vertical-align: middle;
+    white-space: nowrap;      /* Evita que el texto se divida en múltiples líneas */
+    overflow: hidden;         /* Oculta el contenido que desborda el ancho de la celda */
+    text-overflow: ellipsis;  /* Muestra "..." cuando el texto se oculta */
+    max-width: 250px;         /* OPCIONAL: Define un ancho máximo para las celdas.*/
+}
+
+#data-table-container {
+    max-height: calc(100vh - 420px); 
+    min-height: 800px; 
+}
+
+/* Estilos para el botón de colapso y el icono */
+.btn-link-custom {
+    color: var(--app-text-dark); 
+    font-weight: 600;
+    font-size: 1rem; /* Coincide con card-title-custom */
+    box-shadow: none !important; /* Quitar sombra si la hereda de .btn */
+}
+.btn-link-custom:hover, .btn-link-custom:focus {
+    color: var(--app-primary-blue); 
+    text-decoration: none;
+}
+.collapse-icon {
+    transition: transform 0.2s ease-in-out;
+    font-size: 0.8em; /* Hacer el icono un poco más pequeño */
+    display: inline-block; /* Para que la transformación funcione bien */
+}
+button[aria-expanded="true"] .collapse-icon {
+    transform: rotate(180deg);
+}
+
+.console-output-custom {
+    background-color: #1e1e1e;
+    color: #d4d4d4; /* Texto claro tema VSCode */
+    border: 1px solid #333333;
+    border-radius: var(--app-border-radius);
+    height: 150px; 
+    overflow-y: scroll; 
+    font-family: "Consolas", "SFMono-Regular", "Liberation Mono", Menlo, Courier, monospace;
+    line-height: 1.5;
+}
+.console-output-custom div {
+    padding: 1px 5px; /* Reducir padding vertical */
+    border-bottom: 1px solid #2a2a2a; /* Borde más sutil */
+    white-space: pre-wrap; /* Para que respete saltos de línea y espacios */
+    word-break: break-all; /* Para que no desborde horizontalmente */
+}
+.console-output-custom div:last-child {
+    border-bottom: none;
+}
+.console-output-custom div.text-danger, 
+.console-output-custom div[class*="text-danger"] { /* Para logs de error del backend */
+    color: #f48771 !important; /* Rojo de VSCode para errores */
+}
+.console-output-custom div.text-warning,
+.console-output-custom div[class*="text-warning"] { /* Para logs de warning del backend */
+    color: #cca700 !important; /* Amarillo/Naranja de VSCode para warnings */
+}
+
+#filter-controls .mb-2 label.form-label { 
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--app-text-muted);
+}
+
+@media (min-width: 992px) { 
+    #left-panel .card.sticky-top {
+        max-height: calc(100vh - 2rem); 
+        overflow-y: auto;
+    }
+}
+
+/* Ajuste adicional para pantallas medianas */
+@media (min-width: 768px) and (max-width: 1199px) {
+    #left-panel {
+        flex: 0 0 33.333333%; /* Asegura que tome 1/3 del ancho en pantallas medianas */
+        max-width: 33.333333%;
+    }
+}
+
+/* Ajuste para pantallas grandes - dar más ancho al panel izquierdo */
+@media (min-width: 1200px) {
+    #left-panel {
+        flex: 0 0 30%; /* Un poco más ancho que col-lg-3 (25%) pero menos que col-lg-4 (33%) */
+        max-width: 30%;
+    }
+    
+    #right-panel {
+        flex: 0 0 70%; /* El resto del espacio */
+        max-width: 70%;
+    }
+}
+
+/* === IGUALAR ALTURA DEL PANEL DERECHO CON EL IZQUIERDO === */
+/* Hacer que el card del panel derecho tenga la misma altura que el izquierdo */
+#right-panel > .card.shadow-sm {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+}
+
+#right-panel .card-body {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+/* Estilos para los filtros colapsables */
+.filter-item {
+    /* Puedes añadir más margen si es necesario */
+}
+
+.filter-collapse-toggle {
+    font-size: 0.8rem; /* Un poco más pequeño para el botón */
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    display: flex; /* Para alinear ícono y texto */
+    align-items: center;
+    font-weight: 500; /* O normal si prefieres */
+    border-color: var(--app-border-color) !important; /* Un borde más sutil */
+    color: var(--app-text-dark) !important;
+}
+
+.filter-collapse-toggle:hover,
+.filter-collapse-toggle:focus {
+    background-color: #e9ecef; /* Un ligero hover */
+    border-color: var(--app-primary-blue-light) !important;
+}
+
+.filter-collapse-toggle strong {
+    margin-left: 0.1rem; /* Pequeño espacio después del icono */
+}
+
+.filter-collapse-icon {
+    transition: transform 0.25s ease-in-out;
+    font-size: 0.9em; /* Tamaño del icono un poco más pequeño */
+}
+
+/* Rotar el icono cuando el colapsable está expandido */
+.filter-collapse-toggle[aria-expanded="true"] .filter-collapse-icon {
+    transform: rotate(90deg); /* O 180deg si usas bi-chevron-down inicialmente */
+}
+
+.filter-select-card {
+    border-radius: var(--app-border-radius);
+    border-top: none !important; /* Quitar el borde superior del card si el botón ya tiene uno abajo */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    /* background-color: #fdfdff; */ /* Un fondo ligeramente distinto si se desea */
+}
+
+#top-scrollbar-container {
+    height: 18px; /* Altura aproximada de un scrollbar, ajústala si es necesario */
+    margin-bottom: 2px; /* Pequeño espacio o ajuste visual */
+    /* Opcional: un borde para separarlo visualmente si lo deseas */
+    /* border-bottom: 1px solid var(--app-border-color); */
+}
+
+#top-scrollbar-content {
+    /* El ancho será establecido por JavaScript */
+    /* La altura ya está inline (1px), lo que es suficiente */
+}
+
+/* ELIMINADO: CSS obsoleto de #data-table-container (ID no existe en HTML actual) */
+
+/* Forzamos al panel izquierdo a ocupar la altura disponible de la pantalla */
+#left-panel .card.sticky-top {
+    display: flex; /* Habilita Flexbox */
+    flex-direction: column; /* Apila los elementos verticalmente */
+    max-height: calc(100vh - 2rem); /* Altura máxima = 100% del alto de la pantalla, menos los márgenes */
+}
+
+/* El card-body ahora solo es un contenedor flex, sin padding propio */
+#left-panel .card-body {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+/* Este es el contenedor que ahora tiene el scroll */
+.scrollable-filters {
+    overflow-y: auto; /* Habilita el scroll vertical SOLO para esta sección */
+    height: 100%; /* Ocupa toda la altura que le da su padre (.card-body) */
+}
+
+/* Estilos para el nuevo footer de los botones */
+#left-panel .card-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 10;
+    flex-shrink: 0; /* Evita que el footer se encoja */
+    border-top: 1px solid var(--app-border-color); /* Línea de separación bonita */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil hacia arriba */
+}
+
+/* --- ESTILOS PARA LA NUEVA INTERFAZ DE PESTAÑAS --- */
+
+/* Contenedor de la barra de pestañas */
+.tab-bar {
+    display: flex;
+    overflow: hidden;
+    border-bottom: 1px solid #dee2e6; /* Borde sutil de bootstrap */
+}
+
+/* Estilo de los botones de las pestañas */
+.tab-bar .tab-button {
+    background-color: #f8f9fa; /* Un gris muy claro */
+    border: none;
+    border-bottom: 3px solid transparent; /* Borde inferior para la pestaña activa */
+    outline: none;
+    cursor: pointer;
+    padding: 12px 16px; /* Aumentado el padding para más espacio */
+    transition: background-color 0.3s, border-color 0.3s;
+    font-size: 0.7rem; /* Ligeramente más pequeño */
+    font-weight: 500;
+    color: #495057;
+    flex-grow: 1; /* Ocupan el mismo espacio */
+    text-align: center;
+    min-width: 80px; /* Ancho mínimo para evitar que se compriman demasiado */
+    white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+}
+
+/* Efecto al pasar el mouse por encima */
+.tab-bar .tab-button:hover {
+    background-color: #e9ecef;
+}
+
+/* Estilo para el botón de la pestaña activa */
+.tab-bar .tab-button.active {
+    background-color: #ffffff; /* Fondo blanco */
+    border-bottom: 3px solid var(--app-primary-blue, #0d6efd); /* Usa la variable o un azul por defecto */
+    font-weight: bold;
+    color: var(--app-primary-blue, #0d6efd);
+}
+
+/* Estilo especial para la pestaña de Producción */
+.tab-bar .tab-button[data-tab="TabProduccion"] {
+    background: linear-gradient(135deg, #ff6b35, #f7931e); /* Gradiente naranja llamativo */
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+    border-bottom: 3px solid #ff6b35;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto hover para la pestaña de Producción */
+.tab-bar .tab-button[data-tab="TabProduccion"]:hover {
+    background: linear-gradient(135deg, #ff5722, #ff9800);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+/* Estilo activo para la pestaña de Producción */
+.tab-bar .tab-button[data-tab="TabProduccion"].active {
+    background: linear-gradient(135deg, #ff5722, #ff9800);
+    color: white;
+    border-bottom: 3px solid #ff5722;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Efecto de brillo para la pestaña de Producción */
+.tab-bar .tab-button[data-tab="TabProduccion"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.tab-bar .tab-button[data-tab="TabProduccion"]:hover::before {
+    left: 100%;
+}
+
+/* Contenedor para el contenido de las pestañas */
+.tab-content {
+    display: none; /* Oculto por defecto */
+    animation: fadeIn 0.5s; /* Animación sutil */
+}
+
+/* Animación de Fade In */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- ESTILOS PARA EL DOBLE SCROLL DE LA TABLA --- */
+
+#table-view-container {
+    width: 100%;
+    position: relative; /* Necesario para algunos contextos de layout */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0; /* Permite que flexbox funcione correctamente */
+}
+
+/* Contenedor del scroll superior */
+.top-scroll-container {
+    width: 100%;
+    overflow-x: auto;  /* Habilita el scroll horizontal */
+    overflow-y: hidden; /* Oculta el scroll vertical (muy importante) */
+    display: none; /* Estará oculto por defecto y JS lo mostrará si es necesario */
+    margin-bottom: 8px; /* Espacio entre el scroll superior y la tabla */
+    padding-bottom: 4px; /* Padding para dar más altura visual al scroll */
+}
+
+/* Elemento 'fantasma' dentro del scroll superior que tendrá el ancho real de la tabla */
+.top-scroll-container .scroll-dummy {
+    height: 1px; /* Solo necesita tener 1px de alto */
+}
+
+/* Contenedor de la tabla principal */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Este es el scroll inferior que ya funcionaba */
+}
+
+/* Aseguramos que la tabla pueda expandirse más allá de su contenedor */
+#data-table {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 0;
+}
+
+/*
+========================================
+REGLA PARA LA VISIBILIDAD DE LA DESCRIPCIÓN
+========================================
+*/
+#description-section {
+    /* No se define 'display' aquí para que JavaScript lo controle */
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+    overflow: visible;
+}
+
+/* Estilo para la caja de la descripción */
+.alert-app-info {
+    background-color: var(--app-bg-info);
+    border: 1px solid #d8d2c5;
+    color: var(--app-text-dark);
+    border-radius: var(--app-border-radius);
+    transition: all 0.3s ease-in-out;
+}
+
+#data-table-wrapper {
+    flex: 1; /* Expande para llenar el espacio disponible en lugar de altura fija */
+    overflow-y: auto;
+    min-height: 0; /* Permite que flexbox funcione correctamente */
+}
+
+.app-header-red {
+    background-color: var(--app-accent-purple);
+}
+
+/* Header para estado inicial (antes morado), ahora usará el azul oscuro principal */
+.app-header-purple {
+    background-color: var(--app-primary-blue-dark);
+}
+
+#app-logo {
+    height: 50px; /* Ajusta esta altura según el tamaño de tu logo */
+    margin-right: 1.5rem; /* Espacio entre el logo y el borde derecho */
+}
+
+/* Agrega espacio entre botones dentro de un btn-group */
+.btn-group > .btn + .btn {
+  margin-left: 0.5rem;
+}
+
+/*
+========================================
+BARRA DE ESTADO DE AUTO-REFRESCO
+========================================
+*/
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 2s linear infinite;
+}
+
+#auto-refresh-status-bar {
+    font-size: 0.9rem;
+}
+
+/* ========================================= */
+/* NUEVO: Estilos para Botón de Sugerencias  */
+/* ========================================= */
+#suggestion-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    z-index: 1050; /* Para que esté por encima de otros elementos */
+}
+
+.force-reflow {
+  /* Esta clase se deja vacía intencionadamente. */
+}
+
+.filter-item .form-select {
+    height: 180px; /* Cambia este valor por la altura que desees */
+}
+
+/* Overlay de Carga */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(47, 42, 71, 0.7); /* Color base con transparencia */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+}
+
+/* ========================================= */
+/* NUEVO DISEÑO: VISOR DE EVENTOS (CARDS)   */
+/* ========================================= */
+
+.loading-content-modern {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 500px;
+    max-width: 95vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Stack de eventos - contenedor scrolleable */
+.events-stack {
+    flex: 1;
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Scrollbar personalizado para el stack */
+.events-stack::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events-stack::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.events-stack::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.events-stack::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Card individual de evento */
+.event-card {
+    background: white;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUpFade 0.4s ease-out forwards;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Card completada - verde suave */
+.event-card.completed {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    opacity: 0.8;
+}
+
+.event-card.completed .event-icon {
+    opacity: 0.7;
+}
+
+.event-card.completed .event-message {
+    opacity: 0.7;
+}
+
+/* Card actual - destacada con gradient y pulse */
+.event-card.current {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    animation: slideUpFade 0.4s ease-out forwards, pulse 2s infinite;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+    font-weight: 500;
+}
+
+/* Card de error - rojo */
+.event-card.error {
+    background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+    color: white;
+    box-shadow: 0 4px 20px rgba(239, 83, 80, 0.5);
+}
+
+/* Icono de la card */
+.event-icon {
+    font-size: 24px;
+    min-width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mensaje de la card */
+.event-message {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Spinner animado de procesamiento */
+.event-spinner {
+    margin-left: 8px;
+    font-size: 16px;
+    display: inline-block;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Spinner visible solo en cards activas (current) */
+.event-card.current .event-spinner {
+    opacity: 1;
+    animation: spin 1.5s linear infinite;
+}
+
+/* Spinner oculto en cards completadas */
+.event-card.completed .event-spinner {
+    opacity: 0;
+}
+
+/* Spinner oculto en cards de error */
+.event-card.error .event-spinner {
+    opacity: 0;
+}
+
+/* Botón de cancelar */
+.btn-cancel-load {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-cancel-load:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancel-load:active {
+    transform: translateY(0);
+}
+
+/* Animaciones */
+@keyframes slideUpFade {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+    }
+    50% {
+        box-shadow: 0 6px 30px rgba(102, 126, 234, 0.8);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .loading-content-modern {
+        width: 95vw;
+        padding: 1.5rem;
+    }
+
+    .loading-title {
+        font-size: 1.25rem;
+    }
+
+    .events-stack {
+        max-height: 350px;
+    }
+
+    .event-card {
+        padding: 0.875rem 1rem;
+    }
+
+    .event-icon {
+        font-size: 20px;
+        min-width: 24px;
+    }
+
+    .event-message {
+        font-size: 13px;
+    }
+}
+
+/* ========================================= */
+/* ESTILOS ANTIGUOS (mantener por compatibilidad) */
+/* ========================================= */
+
+.loading-content {
+    background-color: var(--app-bg-card);
+    padding: 2rem;
+    border-radius: var(--app-border-radius);
+    box-shadow: var(--app-box-shadow);
+    text-align: center;
+    max-width: 90%;
+    width: auto;
+}
+
+/* ========================================= */
+/* NUEVA ANIMACIÓN DE PESCERA CON AGUA      */
+/* ========================================= */
+
+.loading-spinner {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.1),
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 0 0 3px rgba(255, 255, 255, 0.8);
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Contenedor del agua */
+.water-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(180deg, 
+        rgba(33, 150, 243, 0.8) 0%,
+        rgba(33, 150, 243, 0.6) 50%,
+        rgba(33, 150, 243, 0.4) 100%);
+    border-radius: 50%;
+    transition: height 0.3s ease-out;
+    animation: waterRise 2s ease-in-out infinite;
+}
+
+/* Olas en la superficie del agua */
+.water-surface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 25%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0.3) 75%,
+        transparent 100%);
+    animation: waveMove 1.5s ease-in-out infinite;
+}
+
+/* Ondas adicionales cuando el agua está alta */
+.water-ripples {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: rippleEffect 3s ease-in-out infinite;
+}
+
+.water-ripples::before,
+.water-ripples::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rippleExpand 2s ease-out infinite;
+}
+
+.water-ripples::after {
+    animation-delay: 0.5s;
+}
+
+@keyframes rippleEffect {
+    0%, 70% {
+        opacity: 0;
+    }
+    80%, 100% {
+        opacity: 1;
+    }
+}
+
+@keyframes rippleExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+    }
+}
+
+/* Burbujas flotantes */
+.bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: bubbleFloat 3s ease-in-out infinite;
+}
+
+.bubble:nth-child(1) {
+    width: 8px;
+    height: 8px;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+    width: 6px;
+    height: 6px;
+    left: 60%;
+    animation-delay: 0.5s;
+}
+
+.bubble:nth-child(3) {
+    width: 10px;
+    height: 10px;
+    left: 80%;
+    animation-delay: 1s;
+}
+
+.bubble:nth-child(4) {
+    width: 5px;
+    height: 5px;
+    left: 40%;
+    animation-delay: 1.5s;
+}
+
+/* Animación del agua subiendo */
+@keyframes waterRise {
+    0% {
+        height: 0%;
+        opacity: 0.3;
+    }
+    25% {
+        height: 30%;
+        opacity: 0.6;
+    }
+    50% {
+        height: 60%;
+        opacity: 0.8;
+    }
+    75% {
+        height: 80%;
+        opacity: 0.9;
+    }
+    90% {
+        height: 95%;
+        opacity: 1;
+    }
+    95% {
+        height: 98%;
+        opacity: 1;
+    }
+    100% {
+        height: 95%;
+        opacity: 1;
+    }
+}
+
+/* Animación de las olas */
+@keyframes waveMove {
+    0%, 100% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+}
+
+/* Animación de las burbujas */
+@keyframes bubbleFloat {
+    0% {
+        transform: translateY(100px) scale(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Indicador de porcentaje */
+.loading-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--app-text-dark);
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.9),
+        0 0 10px rgba(255, 255, 255, 0.5);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de cancelación en el overlay */
+#cancel-load-overlay-btn {
+    background: rgba(220, 53, 69, 0.9);
+    border-color: rgba(220, 53, 69, 0.9);
+    color: white;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+#cancel-load-overlay-btn:hover {
+    background: rgba(220, 53, 69, 1);
+    border-color: rgba(220, 53, 69, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Reflejo en la superficie del agua */
+.water-reflection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 25%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.1) 75%,
+        transparent 100%);
+    animation: reflectionMove 4s ease-in-out infinite;
+}
+
+@keyframes reflectionMove {
+    0%, 100% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+    50% {
+        transform: translateX(100%) translateY(100%);
+    }
+}
+
+.loading-message {
+    color: var(--app-text-dark);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+.loading-submessage {
+    color: var(--app-text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estado Deshabilitado Mejorado */
+.btn:disabled,
+select:disabled,
+input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.btn:disabled::after,
+select:disabled::after,
+input:disabled::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+/* Animación suave para cambios de estado */
+.btn,
+select,
+input,
+.form-control {
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#loaded-bases-section .card-header .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Responsive para el header de bases cargadas */
+@media (max-width: 768px) {
+    #loaded-bases-section .card-header {
+        padding: 0.4rem 0.6rem;
+    }
+    
+    #loaded-bases-section .card-header h6 {
+        font-size: 0.8rem;
+    }
+    
+    .clear-all-bases-btn {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.65rem;
+    }
+    
+    #loaded-bases-section .card-header .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+/* ⚡ ESTILOS DE OPTIMIZACIÓN - PERFORMANCE MEJORADO */
+
+/* Lazy Loading Styles */
+.loading-more {
+    text-align: center;
+    padding: 1rem;
+    color: var(--app-text-muted);
+    font-style: italic;
+    background: linear-gradient(90deg, transparent, rgba(64, 85, 128, 0.1), transparent);
+    animation: shimmer 1.5s infinite;
+}
+
+.load-error {
+    text-align: center;
+    padding: 0.8rem;
+    color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.load-more-trigger {
+    height: 1px !important;
+    background: transparent;
+    border: none;
+}
+
+/* Filter Update States */
+#data-table.filter-updating {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    position: relative;
+}
+
+#data-table.filter-updating::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(64, 85, 128, 0.1) 50%, transparent 70%);
+    animation: scanning 2s infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.filter-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(64, 85, 128, 0.95);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Performance Optimized Table */
+#data-table {
+    will-change: scroll-position;
+    transform: translateZ(0); /* Forzar aceleración por hardware */
+}
+
+#data-table tbody tr {
+    will-change: auto;
+    backface-visibility: hidden;
+}
+
+/* Optimización para renderizado de texto */
+#data-table td {
+    text-rendering: optimizeSpeed;
+    font-variant-ligatures: none;
+}
+
+/* Animaciones optimizadas */
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+}
+
+@keyframes scanning {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Mejoras para campos de filtro con indicadores visuales */
+.filter-input-pending {
+    border-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.1);
+    box-shadow: 0 0 0 0.1rem rgba(255, 193, 7, 0.25);
+    transition: all 0.15s ease-in-out;
+}
+
+.filter-input-pending:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.35);
+}
+
+/* Estilo para el botón de aplicar filtros con cambios pendientes */
+.has-pending-filters {
+    animation: pulse-warning 2s infinite;
+    border-color: #ffc107 !important;
+}
+
+@keyframes pulse-warning {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    }
+    70% { 
+        transform: scale(1.02);
+        box-shadow: 0 0 0 5px rgba(255, 193, 7, 0);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
+
+.filter-input-updating {
+    background-color: rgba(64, 85, 128, 0.05);
+}
+
+/* Optimización para scroll suave en tablas grandes */
+.table-responsive {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mejora de performance para elementos grandes */
+.large-data-table {
+    contain: layout;
+    content-visibility: auto;
+}
+
+/* === ESTILOS PARA BOTÓN OPTIMIZADO (CARGA RÁPIDA CON CACHÉ) === */
+.btn-cache-optimized {
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
+    border-color: #28a745 !important;
+    color: white !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cache-optimized:hover {
+    background: linear-gradient(135deg, #218838, #1ba085) !important;
+    border-color: #1e7e34 !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(40, 167, 69, 0.3);
+}
+
+.btn-cache-optimized:focus {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5) !important;
+}
+
+.btn-cache-optimized::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-cache-optimized:hover::before {
+    left: 100%;
+}
+
+.btn-cache-optimized .bi-arrow-clockwise {
+    animation: cache-ready-spin 2s ease-in-out infinite;
+}
+
+@keyframes cache-ready-spin {
+    0%, 90%, 100% { 
+        transform: rotate(0deg); 
+    }
+    45% { 
+        transform: rotate(180deg); 
+    }
+}
+
+/* === CARD DE ESTADO DE CACHÉ (Indicador visual de carga) === */
+.cache-status-card {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    min-width: 320px;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease-out;
+    overflow: hidden;
+}
+
+/* Estado: Usando Caché (Verde) */
+.cache-status-card.using-cache {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: 2px solid #047857;
+}
+
+/* Estado: Descargando Fresco (Azul) */
+.cache-status-card.downloading-fresh {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: 2px solid #1d4ed8;
+}
+
+/* Estado: Sin Caché (Gris) */
+.cache-status-card.no-cache {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    border: 2px solid #374151;
+}
+
+/* Estado: Verificando (Amarillo) */
+.cache-status-card.verifying {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 2px solid #b45309;
+}
+
+.cache-status-content {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+}
+
+.cache-status-card i {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.cache-status-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cache-status-text strong {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+.cache-status-text small {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.4;
+}
+
+/* Animación de entrada */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px) translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animación de salida */
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px) translateY(100px);
+        opacity: 0;
+    }
+}
+
+.cache-status-card.hiding {
+    animation: slideOutRight 0.3s ease-in forwards;
+}
+
+/* Spinner para estado de verificación */
+.cache-status-card.verifying i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* === ESTILOS PARA COLOREADO POR PRIORIDAD === */
+
+/* Clases para las filas con diferentes prioridades (colores suavizados) */
+.priority-row-1 {
+    background-color: #FFCDD2 !important; /* Rojo suave */
+    color: #B71C1C !important; /* Texto rojo oscuro */
+}
+
+.priority-row-1 td {
+    background-color: #FFCDD2 !important;
+    color: #B71C1C !important;
+}
+
+.priority-row-2 {
+    background-color: #FFF9C4 !important; /* Amarillo suave */
+    color: #F57F17 !important; /* Texto amarillo oscuro */
+}
+
+.priority-row-2 td {
+    background-color: #FFF9C4 !important;
+    color: #F57F17 !important;
+}
+
+.priority-row-3 {
+    background-color: #C8E6C9 !important; /* Verde suave */
+    color: #1B5E20 !important; /* Texto verde oscuro */
+}
+
+.priority-row-3 td {
+    background-color: #C8E6C9 !important;
+    color: #1B5E20 !important;
+}
+
+/* Mantener el hover effect pero con colores ajustados según la prioridad (suavizados) */
+.priority-row-1:hover {
+    background-color: #FFABAF !important; /* Rojo suave más intenso en hover */
+    color: #B71C1C !important;
+}
+
+.priority-row-1:hover td {
+    background-color: #FFABAF !important;
+    color: #B71C1C !important;
+}
+
+.priority-row-2:hover {
+    background-color: #FFF59D !important; /* Amarillo suave más intenso en hover */
+    color: #F57F17 !important;
+}
+
+.priority-row-2:hover td {
+    background-color: #FFF59D !important;
+    color: #F57F17 !important;
+}
+
+.priority-row-3:hover {
+    background-color: #A5D6A7 !important; /* Verde suave más intenso en hover */
+    color: #1B5E20 !important;
+}
+
+.priority-row-3:hover td {
+    background-color: #A5D6A7 !important;
+    color: #1B5E20 !important;
+}
+
+/* === ESTILOS PARA LA LEYENDA DE PRIORIDAD === */
+
+.priority-legend {
+    display: flex !important;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.priority-legend-item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.priority-legend-item:last-child {
+    margin-right: 0;
+}
+
+.priority-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    margin-right: 0.4rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.priority-indicator-1 {
+    background-color: #FFCDD2; /* Mismo color que priority-row-1 */
+}
+
+.priority-indicator-2 {
+    background-color: #FFF9C4; /* Mismo color que priority-row-2 */
+}
+
+.priority-indicator-3 {
+    background-color: #C8E6C9; /* Mismo color que priority-row-3 */
+}
+
+.priority-text {
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.priority-percent {
+    font-weight: 400;
+    color: #868e96;
+    font-size: 0.75rem;
+}
+
+/* Responsive: Ocultar la leyenda en pantallas pequeñas */
+@media (max-width: 768px) {
+    .priority-legend {
+        display: none !important;
+    }
+}
+/* =====================================================================
+   SELECTOR DE COLUMNAS - Estilos ultra compactos y optimizados
+   ===================================================================== */
+
+/* Modal general - ultra compacto */
+.column-selector-modal {
+    border-radius: 0.375rem;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.column-selector-modal .modal-header {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.column-selector-modal .modal-body {
+    background-color: #f8f9fa;
+}
+
+.column-selector-modal .modal-dialog {
+    max-width: 550px;
+}
+
+/* Grid de columnas - ultra compacto con mejor spacing */
+.columns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.25rem;
+    padding: 0.625rem;
+    background-color: white;
+    border-radius: 0.25rem;
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
+/* Contenedor scrollable - altura reducida */
+.columns-scrollable {
+    max-height: 180px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Scrollbar ultra delgado */
+.columns-scrollable::-webkit-scrollbar {
+    width: 4px;
+}
+
+.columns-scrollable::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 10px;
+}
+
+.columns-scrollable::-webkit-scrollbar-thumb {
+    background: #adb5bd;
+    border-radius: 10px;
+}
+
+.columns-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #868e96;
+}
+
+/* Checkboxes - ultra compactos con mejor contenedor */
+#columnSelectorModal .form-check {
+    /*padding: 0.3rem 0.4rem;*/
+    margin: 0;
+    border-radius: 0.2rem;
+    transition: all 0.12s ease-in-out;
+    min-height: 26px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 100%;
+}
+
+#columnSelectorModal .form-check:hover {
+    background-color: rgba(13, 110, 253, 0.06);
+}
+
+/* Labels ultra compactos con word wrap */
+#columnSelectorModal .form-check-label {
+    font-size: 0.75rem;
+    user-select: none;
+    cursor: pointer;
+    line-height: 1.2;
+    margin-left: 0.25rem;
+    color: #495057;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Input de checkbox - tamaño reducido */
+#columnSelectorModal .form-check-input {
+    margin-top: 0;
+    flex-shrink: 0;
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-right: 0.25rem;
+}
+
+#columnSelectorModal .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Input de búsqueda - ultra compacto */
+#column-search-input {
+    font-size: 0.75rem;
+    border-color: #dee2e6;
+    padding: 0.25rem 0.5rem;
+}
+
+#column-search-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.15);
+}
+
+/* Card de información - ultra compacta */
+.selection-info-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.selection-info-card small {
+    font-size: 0.7rem;
+}
+
+/* Badge ultra compacto */
+#selected-columns-count {
+    font-size: 0.65rem;
+    padding: 0.2em 0.4em;
+    font-weight: 600;
+}
+
+/* Estimación de RAM */
+#estimated-ram {
+    color: #198754;
+    font-size: 0.75rem;
+}
+
+/* Alert ultra compacto */
+.column-selector-modal .alert {
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1.3;
+}
+
+/* Footer ultra compacto */
+.column-selector-modal .modal-footer {
+    padding: 0.4rem 0.75rem;
+    gap: 0.25rem;
+}
+
+.column-selector-modal .modal-footer .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Divisor vertical */
+.column-selector-modal .vr {
+    width: 1px;
+    background-color: #dee2e6;
+    opacity: 0.5;
+    height: 20px;
+}
+
+/* Iconos - mejor alineación */
+.column-selector-modal h6 i {
+    vertical-align: middle;
+}
+
+/* Botón cerrar más pequeño */
+.column-selector-modal .btn-close {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+}
+
+/* Separador horizontal más delgado */
+.column-selector-modal hr {
+    margin: 0.5rem 0;
+    opacity: 0.2;
+}
+
+/* Responsive - ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .columns-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .column-selector-modal .modal-footer {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .column-selector-modal .modal-dialog {
+        max-width: 95%;
+        margin: 0.5rem auto;
+    }
+}
+
+/* =====================================================================
+   MEJORAS UX - DROPDOWNS Y MENÚS
+   ===================================================================== */
+
+/* Dropdown items con descripción */
+.dropdown-item small {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
+    color: var(--app-text-muted);
+    line-height: 1.2;
+}
+
+/* Dropdown items deshabilitados */
+.dropdown-item.disabled,
+.dropdown-item[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: transparent !important;
+}
+
+/* Dropdown items con indicador de éxito (caché disponible) */
+.dropdown-item.text-success {
+    font-weight: 600;
+}
+
+.dropdown-item.text-success::before {
+    content: "✓ ";
+    color: #198754;
+    font-weight: bold;
+}
+
+/* Espaciado mejorado en dropdowns */
+.dropdown-menu {
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.dropdown-item:hover:not(.disabled) {
+    background-color: rgba(64, 85, 128, 0.08);
+}
+
+/* Botón de grupo de carga */
+.btn-load-group {
+    position: relative;
+}
+
+/* Mejora visual del split button */
+.dropdown-toggle-split {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.dropdown-toggle-split::after {
+    margin-left: 0;
+}
+
+/* Tooltips de notificación - posicionamiento relativo al grupo */
+.btn-load-group .cache-tooltip,
+.btn-load-group .update-notification {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* ====================
+   TABLA - OPCIONES DE VISUALIZACIÓN
+   ==================== */
+
+/* Menú de opciones de tabla */
+.table-options-menu {
+    min-width: 280px;
+    padding: 0.5rem 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Items del menú con switch */
+.table-options-menu .dropdown-item-text {
+    padding: 0.5rem 1rem;
+    cursor: default;
+}
+
+.table-options-menu .dropdown-item-text:hover {
+    background-color: transparent;
+}
+
+/* Label clickeable para el switch */
+.table-options-menu label {
+    cursor: pointer;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+/* Switch personalizado */
+.table-options-menu .form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.table-options-menu .form-switch .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.table-options-menu .form-switch .form-check-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Texto descriptivo pequeño */
+.table-options-menu small {
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+/* Botón de opciones deshabilitado */
+#table-options-dropdown:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===================================
+   SHEPHERD.JS TOUR - ESTILOS PERSONALIZADOS
+   =================================== */
+
+/* Overlay del tour con mejor transparencia */
+.shepherd-modal-overlay-container {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Elemento resaltado durante el tour */
+.shepherd-enabled.shepherd-element {
+    z-index: 9999 !important;
+}
+
+/* Estilos del tooltip del tour */
+.shepherd-element {
+    z-index: 10000 !important;
+    max-width: 400px;
+}
+
+.shepherd-element .shepherd-content {
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.shepherd-element .shepherd-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.shepherd-element .shepherd-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: white;
+}
+
+.shepherd-element .shepherd-cancel-icon {
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.shepherd-element .shepherd-cancel-icon:hover {
+    opacity: 1;
+}
+
+.shepherd-element .shepherd-text {
+    padding: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.shepherd-element .shepherd-text p:last-child {
+    margin-bottom: 0;
+}
+
+.shepherd-element .shepherd-text ul {
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.shepherd-element .shepherd-text ul li {
+    margin-bottom: 0.25rem;
+}
+
+.shepherd-element .shepherd-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.shepherd-element .shepherd-button {
+    margin: 0;
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+/* Flecha del tooltip */
+.shepherd-element[data-popper-placement^='top'] > .shepherd-arrow {
+    bottom: -8px;
+}
+
+.shepherd-element[data-popper-placement^='bottom'] > .shepherd-arrow {
+    top: -8px;
+}
+
+.shepherd-element[data-popper-placement^='left'] > .shepherd-arrow {
+    right: -8px;
+}
+
+.shepherd-element[data-popper-placement^='right'] > .shepherd-arrow {
+    left: -8px;
+}
+
+/* Animación de entrada del tour */
+.shepherd-element {
+    animation: shepherdFadeIn 0.3s ease-out;
+}
+
+@keyframes shepherdFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Resaltar mejor el elemento durante el tour */
+.shepherd-target {
+    position: relative;
+}
+
+.shepherd-target::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    pointer-events: none;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(var(--primary-color-rgb, 13, 110, 253), 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(var(--primary-color-rgb, 13, 110, 253), 0);
+    }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .shepherd-element {
+        max-width: 90vw !important;
+    }
+
+    .shepherd-element .shepherd-text {
+        font-size: 0.85rem;
+    }
+
+    .shepherd-element .shepherd-title {
+        font-size: 1rem;
+    }
+}
+
+/* ===================================
+   MENSAJES CONTEXTUALES
+   =================================== */
+
+/* Contenedor de mensajes (esquina inferior derecha) */
+.context-messages-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 380px;
+    pointer-events: none;
+}
+
+/* Mensaje individual */
+.context-message {
+    pointer-events: all;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    animation: slideInRight 0.3s ease-out;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+.context-message:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Variantes por tipo */
+.context-message-info {
+    border-left-color: #0dcaf0;
+}
+
+.context-message-success {
+    border-left-color: #198754;
+}
+
+.context-message-warning {
+    border-left-color: #ffc107;
+}
+
+.context-message-error {
+    border-left-color: #dc3545;
+}
+
+/* Icono del mensaje */
+.context-message .bi {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.context-message-info .bi {
+    color: #0dcaf0;
+}
+
+.context-message-success .bi {
+    color: #198754;
+}
+
+.context-message-warning .bi {
+    color: #ffc107;
+}
+
+.context-message-error .bi {
+    color: #dc3545;
+}
+
+/* Título del mensaje */
+.context-message strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+/* Texto del mensaje */
+.context-message p {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Botón de acción en el mensaje */
+.context-message .btn {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+}
+
+/* Botón de cerrar */
+.context-message .btn-close {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    margin: -0.5rem -0.5rem -0.5rem 0.5rem;
+}
+
+/* Animación de entrada */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animación de salida */
+.context-message.fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .context-messages-container {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .context-message {
+        font-size: 0.85rem;
+    }
+}
+
+/* ===================================
+   INDICADORES DE PROGRESO INLINE
+   =================================== */
+
+/* Estado de loading para botones */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-loading .btn-content {
+    opacity: 0;
+}
+
+.btn-loading .btn-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Spinner para botones */
+.btn-spinner .spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Progreso inline en texto */
+.progress-percent {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+/* Animación de pulso para botones procesando */
+@keyframes btnPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(13, 110, 253, 0);
+    }
+}
+
+.btn-processing {
+    animation: btnPulse 2s infinite;
+}
+
+/* ===================================
+   SKELETON SCREENS
+   =================================== */
+
+/* Contenedor del skeleton */
+.skeleton-table {
+    width: 100%;
+}
+
+/* Fila de skeleton */
+.skeleton-row {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Celda de skeleton */
+.skeleton-cell {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Variantes de ancho */
+.skeleton-cell-sm {
+    flex: 0 0 80px;
+}
+
+.skeleton-cell-md {
+    flex: 0 0 120px;
+}
+
+.skeleton-cell-lg {
+    flex: 1;
+}
+
+.skeleton-cell-xl {
+    flex: 2;
+}
+
+/* Animación del skeleton */
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Skeleton para tabla */
+.table-skeleton tbody {
+    display: block;
+}
+
+.table-skeleton tbody tr {
+    display: flex;
+    padding: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-skeleton tbody td {
+    height: 18px;
+    flex: 1;
+    margin: 0 0.5rem;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    border: none !important;
+}
+
+/* Primera y última columna más estrechas */
+.table-skeleton tbody td:first-child {
+    flex: 0 0 60px;
+}
+
+.table-skeleton tbody td:last-child {
+    flex: 0 0 100px;
+}
+
+/* Mensaje de carga con skeleton */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.loading-state .loading-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading-state h5 {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.loading-state p {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   FAVORITOS - Lista y elementos
+   ======================================== */
+
+.favorites-list {
+    padding: 0.5rem;
+}
+
+.favorite-item {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: white;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.favorite-item:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
+    transform: translateY(-2px);
+}
+
+.favorite-item.selected {
+    border-color: #0d6efd;
+    background: #f0f7ff;
+}
+
+.favorite-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.favorite-item-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #212529;
+    margin: 0;
+    flex: 1;
+}
+
+.favorite-item-actions {
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.favorite-item:hover .favorite-item-actions {
+    opacity: 1;
+}
+
+.favorite-item-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.favorite-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.favorite-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.favorite-badge.badge-country {
+    background: #e7f3ff;
+    color: #0056b3;
+}
+
+.favorite-badge.badge-source {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.favorite-timestamp {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.favorite-item-info {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.favorite-item-info i {
+    margin-right: 0.25rem;
+}
+
+/* Empty state */
+.favorites-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.favorites-empty-state i {
+    font-size: 4rem;
+    opacity: 0.25;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Loading state */
+.favorite-item.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.favorite-item.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #0d6efd;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Contador de favoritos */
+#favorites-count-badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+}
+
+/* Animación de entrada */
+@keyframes favoriteSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.favorite-item {
+    animation: favoriteSlideIn 0.3s ease-out;
+}
+
+/* Scroll personalizado para lista */
+.favorites-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.favorites-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.favorites-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.favorites-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .favorite-item {
+        padding: 0.75rem;
+    }
+
+    .favorite-item-title {
+        font-size: 0.9rem;
+    }
+
+    .favorite-item-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .favorite-item-actions {
+        opacity: 1; /* Siempre visible en móvil */
+    }
+}
+
+/* ========================================
+   QUICK ACTIONS - Action cards
+   ======================================== */
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.action-card:hover {
+    border-color: #0d6efd;
+    background: #f8f9ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+}
+
+.action-card:active {
+    transform: translateY(0);
+}
+
+.action-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #212529;
+    margin: 0 0 0.25rem 0;
+}
+
+.action-description {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.action-arrow {
+    font-size: 1.5rem;
+    color: #adb5bd;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover .action-arrow {
+    color: #0d6efd;
+    transform: translateX(5px);
+}
+
+/* Gradiente en el header del modal */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .action-card {
+        padding: 1rem;
+    }
+
+    .action-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .action-title {
+        font-size: 1rem;
+    }
+
+    .action-description {
+        font-size: 0.85rem;
+    }
+}

@@ -1,0 +1,76 @@
+# Environment variables - NEVER commit sensitive credentials
+.env
+.env.local
+.env.*.local
+
+# Keep the example file
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Cache
+.cache/
+cache/
+
+# Configuration files with credentials - IMPORTANT!
+config.ini
+**/config.ini
+FlexStart/apps/reportes/backend/config.ini
+FlexStart/apps/prod_peru/backend/config.ini
+FlexStart/backend/config.ini
+
+# Port files
+.last_port
+**/.last_port
+
+# Data files (potentially large or sensitive)
+*.db
+*.duckdb
+*.parquet
+
+# Azure and cloud credentials
+azure_credentials.json
+credentials.json
+
+# Large media files (optional - uncomment if needed)
+# *.mp4
+# *.avi
+# *.mov

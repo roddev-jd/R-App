@@ -1,0 +1,153 @@
+{
+  "metadata": {
+    "last_updated": "2025-10-20",
+    "total_users": 18,
+    "version": "1.0"
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Felipe Aceituno",
+      "birthday": "02-09",
+      "email": "faceitunom@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--1.jpg",
+      "department": "Analista Gobierno de Datos"
+    },
+    {
+      "id": 2,
+      "name": "Carolina Lagos",
+      "birthday": "03-31",
+      "email": "clagosp@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Disenador E-commerce"
+    },
+    {
+      "id": 3,
+      "name": "Lilian Muñoz",
+      "birthday": "04-15",
+      "email": "lmunozl@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Disenador E-commerce"
+    },
+    {
+      "id": 4,
+      "name": "Constanza Tamayo",
+      "birthday": "04-24",
+      "email": "ctamayol@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Redactor Contenido E-commerce SR"
+    },
+    {
+      "id": 5,
+      "name": "Vania Sarmiento",
+      "birthday": "05-04",
+      "email": "vsarmientos@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Disenador E-commerce SR"
+    },
+    {
+      "id": 6,
+      "name": "Rodrigo Jara",
+      "birthday": "06-02",
+      "email": "rjarad@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--1.jpg",
+      "department": "Disenador E-commerce SR"
+    },
+    {
+      "id": 7,
+      "name": "Fernando Reyes",
+      "birthday": "06-06",
+      "email": "freyessa@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--1.jpg",
+      "department": "Analista Gobierno de Datos Senior"
+    },
+    {
+      "id": 8,
+      "name": "Mauricio Lledó",
+      "birthday": "06-27",
+      "email": "mlledoa@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--1.jpg",
+      "department": "Disenador E-commerce SR"
+    },
+    {
+      "id": 9,
+      "name": "Dominique Menanteau",
+      "birthday": "06-30",
+      "email": "dmenanteamu@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Redactor Contenido E-commerce"
+    },
+    {
+      "id": 10,
+      "name": "Natalia Sanchez",
+      "birthday": "07-04",
+      "email": "nsanchezp@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Redactor Contenido E-commerce"
+    },
+    {
+      "id": 11,
+      "name": "Geancarlo Delibero",
+      "birthday": "06-13",
+      "email": "gdeliberom@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--1.jpg",
+      "department": "Disenador E-commerce"
+    },
+    {
+      "id": 12,
+      "name": "Valentina Benavides",
+      "birthday": "08-24",
+      "email": "vbenavidesa@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Redactor Contenido E-commerce"
+    },
+    {
+      "id": 13,
+      "name": "Claudio Ceballos",
+      "birthday": "10-06",
+      "email": "cceballosn@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--1.jpg",
+      "department": "Coordinador Publicacion"
+    },
+    {
+      "id": 14,
+      "name": "Bárbara León",
+      "birthday": "10-12",
+      "email": "bleona@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Subgerente de Publicaciones E-commerce"
+    },
+    {
+      "id": 15,
+      "name": "Nicole Gática",
+      "birthday": "10-15",
+      "email": "ngaticac@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Redactor Contenido E-commerce SR"
+    },
+    {
+      "id": 16,
+      "name": "Francesca Placencia",
+      "birthday": "11-14",
+      "email": "fplacenciad@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Analista de Muestras Publicacion Internet"
+    },
+    {
+      "id": 17,
+      "name": "Constanza Fernandez",
+      "birthday": "12-20",
+      "email": "bfernandezm@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Redactor Contenido E-commerce SR"
+    },
+    {
+      "id": 18,
+      "name": "Fernanda Monsalves",
+      "birthday": "12-22",
+      "email": "fmonsalvesc@ripley.cl",
+      "photo": "/assets_flexstart/img/team/--2.jpg",
+      "department": "Disenador E-commerce"
+    }
+  ]
+}

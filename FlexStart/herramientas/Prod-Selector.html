@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Selector de Producción - P&C Suite</title>
+  <meta name="description" content="Selecciona productos para requerimientos específicos">
+  <meta name="keywords" content="Selector de Producción, Administración de Archivos, herramienta, automatización">
+
+  <!-- Favicons -->
+  <link href="/assets_flexstart/img/favicon.png" rel="icon">
+  <link href="/assets_flexstart/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/assets_flexstart/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="/assets_flexstart/css/main.css" rel="stylesheet">
+
+  <!-- Custom CSS for tool pages -->
+  <style>
+    .tool-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 0 50px;
+      margin-top: 60px;
+    }
+
+    .tool-content {
+      padding: 40px 0;
+    }
+
+    .tool-description {
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      /* 16:9 aspect ratio */
+      height: 0;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+
+    .video-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #6c757d;
+    }
+
+    .execute-section {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+
+    .btn-execute {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-execute:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+
+    .btn-execute:disabled {
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .btn-download {
+      background: #6c757d;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-download:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+      color: white;
+    }
+
+    .btn-download:disabled {
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .breadcrumb-custom {
+      background: transparent;
+      padding: 0;
+      margin-bottom: 10px;
+    }
+
+    .tool-header h1 {
+      margin-bottom: 0.5rem !important;
+    }
+
+    .tool-header .lead {
+      margin-bottom: 1rem !important;
+    }
+
+    .breadcrumb-custom .breadcrumb-item+.breadcrumb-item::before {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .breadcrumb-custom .breadcrumb-item a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+
+    .breadcrumb-custom .breadcrumb-item a:hover {
+      color: white;
+    }
+
+    .breadcrumb-custom .breadcrumb-item.active {
+      color: white;
+    }
+
+    .features-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .features-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #e9ecef;
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .features-list li:before {
+      content: "✓";
+      color: #667eea;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    .features-list li:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+
+<body class="tool-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="/" class="logo d-flex align-items-center me-auto">
+        <img src="/assets_flexstart/img/logo.png" alt="">
+        <h1 class="sitename">RIPLEY APPS</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/#hero">Inicio</a></li>
+          <li><a class="btn-getstarted flex-md-shrink-0" href="/reportes" target="_blank">Reportes</a></li>
+          <li><a href="/#diseno">Diseño</a></li>
+          <li><a href="/#redaccion">Redacción</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Tool Header Section -->
+    <section class="tool-header">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-custom">
+            <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/#diseno">Diseño</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Selector de Producción</li>
+          </ol>
+        </nav>
+
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h1 class="display-4 mb-3" data-aos="fade-up">Selector de Producción</h1>
+            <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">Selecciona productos para requerimientos
+              específicos</p>
+            <div class="d-flex align-items-center" data-aos="fade-up" data-aos-delay="200">
+              <span class="badge bg-light text-dark me-3">Administración de Archivos</span>
+              <span class="text-light">
+                <i class="bi bi-check2-circle me-2"></i>Herramienta Python
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-4 text-center" data-aos="fade-left" data-aos-delay="300">
+            <div class="tool-icon-large">
+              <i class="bi bi-check2-circle" style="font-size: 4rem; opacity: 0.3;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tool Content Section -->
+    <section class="tool-content">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+
+            <!-- Description -->
+            <div class="mb-5" data-aos="fade-up">
+              <h2 class="h3 mb-4">¿Qué hace esta herramienta?</h2>
+              <div class="tool-description">
+
+                <p>Herramienta especializada para seleccionar productos específicos basándose en requerimientos y
+                  criterios predefinidos.</p>
+                <p>Ideal para:</p>
+                <ul>
+                  <li>Filtrar productos por características específicas</li>
+                  <li>Generar listas de productos para campañas</li>
+                  <li>Automatizar la selección de inventario</li>
+                  <li>Crear reportes de productos seleccionados</li>
+                </ul>
+
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
+              <h3 class="h4 mb-4">Características principales:</h3>
+              <ul class="features-list">
+                <li>Filtrado avanzado de productos</li>
+                <li>Criterios de selección personalizables</li>
+                <li>Exportación de listas seleccionadas</li>
+                <li>Interfaz gráfica intuitiva</li>
+                <li>Reportes detallados</li>
+                <li>Integración con bases de datos</li>
+              </ul>
+            </div>
+
+            <!-- Video Section -->
+            <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
+              <h3 class="h4 mb-4">Video demostrativo</h3>
+              <div class="video-container">
+
+                <div class="video-placeholder">
+                  <i class="bi bi-play-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                  <h5>Video próximamente</h5>
+                  <p class="mb-0">El video demostrativo se agregará pronto</p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-lg-4">
+
+            <!-- Execute Section -->
+            <div class="execute-section sticky-top" style="top: 100px;" data-aos="fade-up" data-aos-delay="300">
+              <h4 class="mb-3">Ejecutar o Descargar</h4>
+              <p class="text-muted mb-4">Ejecuta la herramienta directamente o descárgala como ZIP.</p>
+
+              <div class="d-grid gap-3">
+                <button class="btn btn-execute" id="executeBtn" data-script-id="Prod-Selector">
+                  <i class="bi bi-play-circle me-2"></i>Ejecutar Herramienta
+                </button>
+                <button class="btn btn-download" id="downloadBtn" data-script-id="Prod-Selector">
+                  <i class="bi bi-download me-2"></i>Descargar ZIP
+                </button>
+              </div>
+
+              <div class="mt-4 text-center">
+                <small class="text-muted">
+                  <i class="bi bi-info-circle me-1"></i>
+                  Ejecuta ahora o descarga para usar después
+                </small>
+              </div>
+            </div>
+            <i class="bi bi-download me-2"></i>Descargar Selector de Producción
+            </button>
+          </div>
+
+          <div class="mt-4 text-center">
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Se descargará un archivo ZIP con todos los archivos necesarios
+            </small>
+          </div>
+        </div>
+
+        <!-- Quick Info -->
+        <div class="mt-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">Información rápida</h6>
+              <ul class="list-unstyled mb-0">
+                <li><strong>Categoría:</strong> Administración de Archivos</li>
+                <li><strong>Tipo:</strong> Herramienta Python</li>
+                <li><strong>Archivo:</strong> Prod-Selector.py</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Ripley APP</strong> <span>Todos los derechos
+          reservados</span></p>
+      <div class="credits">
+        Diseñado por <a href="https://rjresolve.cl/">Rodrigo Jara Duarte</a> y Publicación & contenido.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="/assets_flexstart/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets_flexstart/vendor/aos/aos.js"></script>
+  <script src="/assets_flexstart/vendor/glightbox/js/glightbox.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="/assets_flexstart/js/main.js"></script>
+
+  <!-- Custom JS for tool execution and download -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const executeBtn = document.getElementById('executeBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+
+      if (executeBtn) {
+        executeBtn.addEventListener('click', function () {
+          const scriptId = this.dataset.scriptId;
+          this.disabled = true;
+          const originalContent = this.innerHTML;
+          this.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Ejecutando...';
+
+          fetch('/api/run-script', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ script_id: scriptId })
+          })
+            .then(response => {
+              if (!response.ok) return response.json().then(err => { throw new Error(err.detail || 'Error al ejecutar la herramienta.') });
+              return response.json();
+            })
+            .then(data => {
+              this.innerHTML = '<i class="bi bi-check-circle me-2"></i>¡Ejecutado!';
+              setTimeout(() => { this.innerHTML = originalContent; this.disabled = false; }, 2000);
+            })
+            .catch(error => {
+              alert(`Error: ${error.message}`);
+              this.innerHTML = originalContent;
+              this.disabled = false;
+            });
+        });
+      }
+
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', function () {
+          const scriptId = this.dataset.scriptId;
+          this.disabled = true;
+          const originalContent = this.innerHTML;
+          this.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Preparando descarga...';
+
+          fetch(`/api/download-tool/${scriptId}`)
+            .then(response => {
+              if (!response.ok) return response.json().then(err => { throw new Error(err.detail || 'Error al descargar.') });
+              return response.blob();
+            })
+            .then(blob => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${scriptId}.zip`;
+              a.click();
+              window.URL.revokeObjectURL(url);
+              this.innerHTML = '<i class="bi bi-check-circle me-2"></i>¡Descargado!';
+              setTimeout(() => { this.innerHTML = originalContent; this.disabled = false; }, 2000);
+            })
+            .catch(error => {
+              alert(`Error: ${error.message}`);
+              this.innerHTML = originalContent;
+              this.disabled = false;
+            });
+        });
+      }
+    });
+  </script>
+
+  if (downloadBtn) {
+  downloadBtn.addEventListener('click', function() {
+  const scriptId = this.dataset.scriptId;
+
+  // Disable button and show spinner
+  this.disabled = true;
+  const originalContent = this.innerHTML;
+  this.innerHTML = '<div class="spinner-border spinner-border-sm me-2" role="status"></div>Preparando descarga...';
+
+  // Trigger download
+  const downloadUrl = `/api/download-tool/${scriptId}`;
+
+  fetch(downloadUrl)
+  .then(response => {
+  if (!response.ok) {
+  return response.json().then(err => { throw new Error(err.detail || 'Error al descargar la herramienta.') });
+  }
+  return response.blob();
+  })
+  .then(blob => {
+  // Create download link
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${scriptId}.zip`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.remove();
+
+  // Show success message
+  this.innerHTML = '<i class="bi bi-check-circle me-2"></i>¡Descargado!';
+  setTimeout(() => {
+  this.innerHTML = originalContent;
+  this.disabled = false;
+  }, 2000);
+  })
+  .catch(error => {
+  console.error('Error al descargar:', error);
+  alert(`Error al descargar la herramienta: ${error.message}`);
+  this.innerHTML = originalContent;
+  this.disabled = false;
+  });
+  });
+  }
+  });
+  </script>
+
+</body>
+
+</html>

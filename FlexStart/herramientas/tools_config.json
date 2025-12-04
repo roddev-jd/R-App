@@ -1,0 +1,359 @@
+{
+  "buscador_diseno": {
+    "name": "Buscador de Carpetas",
+    "subtitle": "Herramienta para buscar y copiar carpetas automáticamente",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-search",
+    "script_id": "buscador_diseno",
+    "long_description": "\n        <p>Esta herramienta te permite buscar carpetas específicas basándose en una planilla Excel o CSV y copiarlas automáticamente a un destino seleccionado.</p>\n        <p>Es especialmente útil para:</p>\n        <ul>\n            <li>Automatizar la búsqueda de carpetas por códigos SKU</li>\n            <li>Copiar múltiples carpetas de manera eficiente</li>\n            <li>Filtrar carpetas por departamentos específicos</li>\n            <li>Generar reportes de las operaciones realizadas</li>\n        </ul>\n        ",
+    "features": [
+      "Búsqueda automática basada en planillas Excel/CSV",
+      "Copia masiva de carpetas encontradas",
+      "Filtrado por departamentos",
+      "Interfaz gráfica intuitiva",
+      "Reportes detallados de operaciones",
+      "Soporte para múltiples formatos de archivo"
+    ],
+    "video_url": ""
+  },
+  "RipleyDownloader": {
+    "name": "Descargador Universal Ripley",
+    "subtitle": "Descarga automática de imágenes desde múltiples fuentes",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-cloud-download-fill",
+    "script_id": "RipleyDownloader",
+    "long_description": "\n        <p>Herramienta completa para la descarga automática de imágenes de productos desde diferentes fuentes de Ripley.</p>\n        <p>Características destacadas:</p>\n        <ul>\n            <li>Soporte para múltiples países (Chile, Perú)</li>\n            <li>Descarga desde planillas Excel con códigos SKU</li>\n            <li>Manejo inteligente de errores y reintentos</li>\n            <li>Interfaz moderna con progreso en tiempo real</li>\n        </ul>\n        ",
+    "features": [
+      "Descarga desde planillas Excel",
+      "Soporte multi-país (Chile/Perú)",
+      "Sistema de reintentos automáticos",
+      "Interfaz moderna con Bootstrap",
+      "Progreso en tiempo real",
+      "Manejo robusto de errores de conexión",
+      "Organización automática de archivos"
+    ],
+    "video_url": ""
+  },
+  "Dept": {
+    "name": "Organizador por Departamentos",
+    "subtitle": "Organiza archivos automáticamente por departamentos",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-archive-fill",
+    "script_id": "Dept",
+    "long_description": "\n        <p>Automatiza la organización de archivos clasificándolos por departamentos según códigos predefinidos.</p>\n        <p>Ideal para:</p>\n        <ul>\n            <li>Organizar grandes volúmenes de archivos por departamento</li>\n            <li>Clasificación automática basada en códigos SKU</li>\n            <li>Mantenimiento de estructura organizacional</li>\n        </ul>\n        ",
+    "features": [
+      "Clasificación automática por departamentos",
+      "Reconocimiento de códigos SKU",
+      "Creación automática de estructura de carpetas",
+      "Procesamiento por lotes",
+      "Interfaz gráfica simple"
+    ],
+    "video_url": ""
+  },
+  "Encarpetar": {
+    "name": "Monitor Encarpetador",
+    "subtitle": "Monitorea y organiza archivos automáticamente",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-eyeglasses",
+    "script_id": "Encarpetar",
+    "long_description": "\n        <p>Sistema de monitoreo que observa carpetas y organiza automáticamente los archivos que se agreguen.</p>\n        <p>Funcionalidades principales:</p>\n        <ul>\n            <li>Monitoreo en tiempo real de carpetas</li>\n            <li>Organización automática de archivos nuevos</li>\n            <li>Reglas personalizables de clasificación</li>\n        </ul>\n        ",
+    "features": [
+      "Monitoreo en tiempo real",
+      "Organización automática",
+      "Reglas personalizables",
+      "Notificaciones de actividad",
+      "Interfaz de control simple"
+    ],
+    "video_url": ""
+  },
+  "Indexar": {
+    "name": "Generador de Listados",
+    "subtitle": "Crea listados Excel de estructuras de carpetas",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-card-checklist",
+    "script_id": "Indexar",
+    "long_description": "\n        <p>Genera listados detallados en Excel de estructuras de carpetas, extrayendo códigos SKU y organizando la información.</p>\n        <p>Características:</p>\n        <ul>\n            <li>Escaneo completo de estructuras de carpetas</li>\n            <li>Extracción automática de códigos SKU</li>\n            <li>Exportación a formato Excel</li>\n            <li>Datos organizados y listos para análisis</li>\n        </ul>\n        ",
+    "features": [
+      "Escaneo recursivo de carpetas",
+      "Extracción de códigos SKU",
+      "Exportación a Excel",
+      "Interfaz moderna con CustomTkinter",
+      "Datos estructurados y organizados"
+    ],
+    "video_url": ""
+  },
+  "Scrapper": {
+    "name": "Descargador por Enlaces",
+    "subtitle": "Descarga archivos desde URLs específicas",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-binoculars-fill",
+    "script_id": "Scrapper",
+    "long_description": "\n        <p>Herramienta especializada para descargar archivos desde enlaces web específicos de manera automatizada.</p>\n        <p>Ideal para:</p>\n        <ul>\n            <li>Descarga masiva desde listas de URLs</li>\n            <li>Extracción de contenido web automatizada</li>\n            <li>Procesamiento de enlaces desde planillas</li>\n        </ul>\n        ",
+    "features": [
+      "Descarga desde listas de URLs",
+      "Manejo robusto de conexiones",
+      "Soporte para múltiples formatos",
+      "Sistema de reintentos",
+      "Progreso visual detallado"
+    ],
+    "video_url": ""
+  },
+  "miniaturas_diseno": {
+    "name": "Generador de Miniaturas",
+    "subtitle": "Crea miniaturas optimizadas de imágenes",
+    "category": "Gestión de Imágenes",
+    "type": "Herramienta Python",
+    "icon": "bi bi-aspect-ratio",
+    "script_id": "miniaturas_diseno",
+    "long_description": "\n        <p>Genera miniaturas de alta calidad para imágenes, optimizando el tamaño y manteniendo la calidad visual.</p>\n        <p>Funcionalidades:</p>\n        <ul>\n            <li>Procesamiento por lotes de imágenes</li>\n            <li>Múltiples tamaños de salida</li>\n            <li>Optimización automática de calidad</li>\n            <li>Preservación de proporciones</li>\n        </ul>\n        ",
+    "features": [
+      "Procesamiento por lotes",
+      "Múltiples tamaños personalizables",
+      "Optimización de calidad automática",
+      "Preservación de aspectos",
+      "Formatos de salida variados",
+      "Interfaz gráfica intuitiva"
+    ],
+    "video_url": ""
+  },
+  "Compresor": {
+    "name": "Compresor de Imágenes",
+    "subtitle": "Reduce el tamaño de archivos sin perder calidad",
+    "category": "Gestión de Imágenes",
+    "type": "Herramienta Python",
+    "icon": "bi bi-file-earmark-zip-fill",
+    "script_id": "Compresor",
+    "long_description": "\n        <p>Comprime imágenes de manera inteligente, reduciendo significativamente el tamaño de archivo mientras mantiene una calidad visual aceptable.</p>\n        <p>Características avanzadas:</p>\n        <ul>\n            <li>Algoritmos de compresión optimizados</li>\n            <li>Control granular de calidad</li>\n            <li>Procesamiento por lotes eficiente</li>\n            <li>Comparación antes/después</li>\n        </ul>\n        ",
+    "features": [
+      "Compresión inteligente",
+      "Control de calidad ajustable",
+      "Procesamiento por lotes",
+      "Vista previa de resultados",
+      "Múltiples algoritmos de compresión",
+      "Estadísticas de reducción de tamaño"
+    ],
+    "video_url": ""
+  },
+  "Prod-Selector": {
+    "name": "Selector de Producción",
+    "subtitle": "Selecciona productos para requerimientos específicos",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-check2-circle",
+    "script_id": "Prod-Selector",
+    "long_description": "\n        <p>Herramienta especializada para seleccionar productos específicos basándose en requerimientos y criterios predefinidos.</p>\n        <p>Ideal para:</p>\n        <ul>\n            <li>Filtrar productos por características específicas</li>\n            <li>Generar listas de productos para campañas</li>\n            <li>Automatizar la selección de inventario</li>\n            <li>Crear reportes de productos seleccionados</li>\n        </ul>\n        ",
+    "features": [
+      "Filtrado avanzado de productos",
+      "Criterios de selección personalizables",
+      "Exportación de listas seleccionadas",
+      "Interfaz gráfica intuitiva",
+      "Reportes detallados",
+      "Integración con bases de datos"
+    ],
+    "video_url": ""
+  },
+  "SVC-OK": {
+    "name": "Separador SVC",
+    "subtitle": "Separa y migra productos en estado OK",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-bookmarks-fill",
+    "script_id": "SVC-OK",
+    "long_description": "\n        <p>Herramienta que identifica y separa los productos SVC que están en estado OK para su posterior migración o procesamiento.</p>\n        <p>Funcionalidades principales:</p>\n        <ul>\n            <li>Análisis automático de estados SVC</li>\n            <li>Separación de productos OK</li>\n            <li>Migración automatizada a carpetas de producción</li>\n            <li>Generación de reportes de estado</li>\n        </ul>\n        ",
+    "features": [
+      "Detección automática de productos OK",
+      "Separación inteligente por estado",
+      "Migración automatizada",
+      "Reportes de procesamiento",
+      "Validación de integridad",
+      "Interfaz de monitoreo"
+    ],
+    "video_url": ""
+  },
+  "TeamSearch": {
+    "name": "Buscador de Equipo",
+    "subtitle": "Busca y gestiona información del equipo de trabajo",
+    "category": "Administración de Archivos",
+    "type": "Herramienta Python",
+    "icon": "bi bi-microsoft-teams",
+    "script_id": "TeamSearch",
+    "long_description": "\n        <p>Sistema de búsqueda que permite encontrar y gestionar información relacionada con el equipo de trabajo y sus asignaciones.</p>\n        <p>Características destacadas:</p>\n        <ul>\n            <li>Búsqueda avanzada de miembros del equipo</li>\n            <li>Gestión de asignaciones de trabajo</li>\n            <li>Consulta de disponibilidad</li>\n            <li>Reportes de productividad</li>\n        </ul>\n        ",
+    "features": [
+      "Búsqueda avanzada de team members",
+      "Gestión de asignaciones",
+      "Consulta de estados de trabajo",
+      "Reportes de productividad",
+      "Interfaz moderna y eficiente",
+      "Integración con sistemas de gestión"
+    ],
+    "video_url": ""
+  },
+  "Renamer-PH": {
+    "name": "Renombrador Padre-Hijo",
+    "subtitle": "Renombra archivos con relación padre-hijo",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-arrow-bar-right",
+    "script_id": "Renamer-PH",
+    "long_description": "\n        <p>Herramienta especializada en renombrar archivos manteniendo la relación jerárquica padre-hijo entre productos.</p>\n        <p>Funcionalidades clave:</p>\n        <ul>\n            <li>Reconocimiento de relaciones padre-hijo</li>\n            <li>Renombrado masivo con preservación de jerarquía</li>\n            <li>Validación de nomenclatura</li>\n            <li>Reportes de cambios realizados</li>\n        </ul>\n        ",
+    "features": [
+      "Detección automática de relaciones P-H",
+      "Renombrado masivo inteligente",
+      "Preservación de estructura jerárquica",
+      "Validación de nomenclatura",
+      "Reportes detallados de cambios",
+      "Interfaz gráfica moderna"
+    ],
+    "video_url": ""
+  },
+  "Renamer-Rimage": {
+    "name": "Renombrador Rimage",
+    "subtitle": "Renombrador específico para imágenes Rimage",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-arrows-expand-vertical",
+    "script_id": "Renamer-Rimage",
+    "long_description": "\n        <p>Renombrador especializado para imágenes del sistema Rimage, aplicando nomenclaturas específicas y estándares de la plataforma.</p>\n        <p>Características específicas:</p>\n        <ul>\n            <li>Nomenclatura específica para Rimage</li>\n            <li>Validación de formatos de imagen</li>\n            <li>Procesamiento por lotes</li>\n            <li>Integración con workflows Rimage</li>\n        </ul>\n        ",
+    "features": [
+      "Nomenclatura específica Rimage",
+      "Validación de formatos",
+      "Procesamiento masivo",
+      "Integración con workflows",
+      "Reportes de conversión",
+      "Interfaz optimizada"
+    ],
+    "video_url": ""
+  },
+  "Renamer-ImgFile": {
+    "name": "Renombrador de Imágenes",
+    "subtitle": "Renombra imágenes según estructura de carpetas",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-check2-square",
+    "script_id": "Renamer-ImgFile",
+    "long_description": "\n        <p>Herramienta que renombra imágenes automáticamente basándose en la estructura de carpetas donde se encuentran.</p>\n        <p>Funcionalidades principales:</p>\n        <ul>\n            <li>Renombrado automático por ubicación</li>\n            <li>Extracción de información de rutas</li>\n            <li>Mantenimiento de organización</li>\n            <li>Procesamiento recursivo</li>\n        </ul>\n        ",
+    "features": [
+      "Renombrado automático por carpeta",
+      "Extracción de metadata de rutas",
+      "Procesamiento recursivo",
+      "Preservación de organización",
+      "Validación de nombres",
+      "Reportes de procesamiento"
+    ],
+    "video_url": ""
+  },
+  "Renamer-Muestras": {
+    "name": "Renombrador de Muestras",
+    "subtitle": "Renombra archivos para columna Muestras",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-bookmark-check",
+    "script_id": "Renamer-Muestras",
+    "long_description": "\n        <p>Renombrador específico para archivos de muestras, aplicando nomenclatura compatible con sistemas de gestión de muestras.</p>\n        <p>Características especializadas:</p>\n        <ul>\n            <li>Nomenclatura específica para muestras</li>\n            <li>Integración con columnas de datos</li>\n            <li>Validación de formatos</li>\n            <li>Organización automática</li>\n        </ul>\n        ",
+    "features": [
+      "Nomenclatura específica de muestras",
+      "Integración con bases de datos",
+      "Validación automática",
+      "Organización inteligente",
+      "Reportes de procesamiento",
+      "Interfaz especializada"
+    ],
+    "video_url": ""
+  },
+  "lastImage": {
+    "name": "Monitor Última Imagen",
+    "subtitle": "Monitorea y añade la última imagen procesada",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-align-end",
+    "script_id": "lastImage",
+    "long_description": "\n        <p>Sistema de monitoreo que detecta y añade automáticamente la última imagen procesada a los conjuntos de trabajo.</p>\n        <p>Funcionalidades de monitoreo:</p>\n        <ul>\n            <li>Monitoreo en tiempo real</li>\n            <li>Detección de nuevas imágenes</li>\n            <li>Añadido automático al flujo</li>\n            <li>Notificaciones de actividad</li>\n        </ul>\n        ",
+    "features": [
+      "Monitoreo en tiempo real",
+      "Detección automática de imágenes",
+      "Integración automática al flujo",
+      "Notificaciones push",
+      "Historial de actividad",
+      "Interfaz de control intuitiva"
+    ],
+    "video_url": ""
+  },
+  "Insert": {
+    "name": "Monitor de Inserción",
+    "subtitle": "Inserta imágenes correlativas automáticamente",
+    "category": "Gestión de Mejoras",
+    "type": "Herramienta Python",
+    "icon": "bi bi-box-arrow-in-right",
+    "script_id": "Insert",
+    "long_description": "\n        <p>Monitor automatizado que inserta imágenes correlativas en secuencias de trabajo, manteniendo el orden y correlación apropiados.</p>\n        <p>Características avanzadas:</p>\n        <ul>\n            <li>Detección de secuencias correlativas</li>\n            <li>Inserción automática ordenada</li>\n            <li>Validación de correlaciones</li>\n            <li>Monitoreo continuo</li>\n        </ul>\n        ",
+    "features": [
+      "Detección de secuencias",
+      "Inserción automática ordenada",
+      "Validación de correlaciones",
+      "Monitoreo continuo",
+      "Reportes de inserción",
+      "Interfaz de supervisión"
+    ],
+    "video_url": ""
+  },
+  "Convertidor": {
+    "name": "Convertidor de Formato",
+    "subtitle": "Convierte imágenes entre diferentes formatos",
+    "category": "Gestión de Imágenes",
+    "type": "Herramienta Python",
+    "icon": "bi bi-columns",
+    "script_id": "Convertidor",
+    "long_description": "\n        <p>Convertidor versátil que transforma imágenes entre múltiples formatos manteniendo la calidad y optimizando para diferentes usos.</p>\n        <p>Capacidades de conversión:</p>\n        <ul>\n            <li>Múltiples formatos de entrada y salida</li>\n            <li>Optimización automática de calidad</li>\n            <li>Procesamiento por lotes</li>\n            <li>Preservación de metadatos</li>\n        </ul>\n        ",
+    "features": [
+      "Soporte para múltiples formatos",
+      "Optimización automática",
+      "Procesamiento por lotes",
+      "Preservación de metadatos",
+      "Control de calidad granular",
+      "Vista previa de conversiones"
+    ],
+    "video_url": ""
+  },
+  "RotateImg": {
+    "name": "Rotador de Imágenes",
+    "subtitle": "Rota imágenes automáticamente",
+    "category": "Gestión de Imágenes",
+    "type": "Herramienta Python",
+    "icon": "bi bi-arrow-counterclockwise",
+    "script_id": "RotateImg",
+    "long_description": "\n        <p>Herramienta especializada en rotar imágenes con precisión, tanto manual como automáticamente basándose en metadatos EXIF.</p>\n        <p>Funcionalidades de rotación:</p>\n        <ul>\n            <li>Rotación automática por EXIF</li>\n            <li>Rotación manual en ángulos específicos</li>\n            <li>Procesamiento por lotes</li>\n            <li>Preservación de calidad</li>\n        </ul>\n        ",
+    "features": [
+      "Rotación automática EXIF",
+      "Ángulos personalizables",
+      "Procesamiento masivo",
+      "Preservación de calidad",
+      "Vista previa en tiempo real",
+      "Corrección de orientación"
+    ],
+    "video_url": ""
+  },
+  "Multi-Tags-moda-producto": {
+    "name": "Asignador de Tags",
+    "subtitle": "Asigna tags automáticamente a productos de moda",
+    "category": "Gestión de Imágenes",
+    "type": "Herramienta Python",
+    "icon": "bi bi-postage-heart-fill",
+    "script_id": "Multi-Tags-moda-producto",
+    "long_description": "\n        <p>Sistema inteligente de etiquetado que asigna tags relevantes a productos de moda y otros productos de manera automática.</p>\n        <p>Capacidades de etiquetado:</p>\n        <ul>\n            <li>Reconocimiento automático de categorías</li>\n            <li>Tags específicos para moda y productos</li>\n            <li>Procesamiento por lotes</li>\n            <li>Base de datos de tags actualizable</li>\n        </ul>\n        ",
+    "features": [
+      "Etiquetado automático inteligente",
+      "Tags específicos por categoría",
+      "Procesamiento masivo",
+      "Base de datos actualizable",
+      "Validación de tags",
+      "Reportes de etiquetado"
+    ],
+    "video_url": ""
+  }
+}

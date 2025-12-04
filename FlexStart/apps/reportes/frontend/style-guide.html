@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Guide - Reportes | SUITE v2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .component-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+        }
+        .component-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--color-primary-700);
+        }
+        .component-subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-primary-600);
+        }
+        .code-block {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: var(--radius-base);
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            overflow-x: auto;
+        }
+        .color-swatch {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-base);
+            border: 2px solid var(--border-primary);
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        .spacing-example {
+            background: var(--color-primary-100);
+            border: 1px dashed var(--color-primary-300);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <header class="mb-4">
+            <h1 class="display-4">Style Guide - Reportes</h1>
+            <p class="lead">Sistema de diseño y componentes visuales v2.0</p>
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-sm btn-outline-secondary" id="toggle-theme">
+                    <i class="bi bi-moon-stars"></i> Cambiar tema
+                </button>
+                <select class="form-select form-select-sm" style="width: auto;" id="density-guide">
+                    <option value="compact">Compacta</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="comfortable">Espaciada</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- COLORES -->
+        <section class="component-section">
+            <h2 class="component-title">🎨 Colores</h2>
+
+            <div class="component-subtitle">Primarios - Azul Ripley</div>
+            <div class="mb-3">
+                <span class="color-swatch" style="background: var(--color-primary-50);" title="--color-primary-50"></span>
+                <span class="color-swatch" style="background: var(--color-primary-100);" title="--color-primary-100"></span>
+                <span class="color-swatch" style="background: var(--color-primary-200);" title="--color-primary-200"></span>
+                <span class="color-swatch" style="background: var(--color-primary-300);" title="--color-primary-300"></span>
+                <span class="color-swatch" style="background: var(--color-primary-400);" title="--color-primary-400"></span>
+                <span class="color-swatch" style="background: var(--color-primary-500);" title="--color-primary-500"></span>
+                <span class="color-swatch" style="background: var(--color-primary-600);" title="--color-primary-600"></span>
+                <span class="color-swatch" style="background: var(--color-primary-700);" title="--color-primary-700"></span>
+                <span class="color-swatch" style="background: var(--color-primary-800);" title="--color-primary-800"></span>
+                <span class="color-swatch" style="background: var(--color-primary-900);" title="--color-primary-900"></span>
+            </div>
+
+            <div class="component-subtitle">Acentos - Púrpura</div>
+            <div class="mb-3">
+                <span class="color-swatch" style="background: var(--color-accent-50);" title="--color-accent-50"></span>
+                <span class="color-swatch" style="background: var(--color-accent-100);" title="--color-accent-100"></span>
+                <span class="color-swatch" style="background: var(--color-accent-200);" title="--color-accent-200"></span>
+                <span class="color-swatch" style="background: var(--color-accent-300);" title="--color-accent-300"></span>
+                <span class="color-swatch" style="background: var(--color-accent-400);" title="--color-accent-400"></span>
+                <span class="color-swatch" style="background: var(--color-accent-500);" title="--color-accent-500"></span>
+                <span class="color-swatch" style="background: var(--color-accent-600);" title="--color-accent-600"></span>
+                <span class="color-swatch" style="background: var(--color-accent-700);" title="--color-accent-700"></span>
+                <span class="color-swatch" style="background: var(--color-accent-800);" title="--color-accent-800"></span>
+                <span class="color-swatch" style="background: var(--color-accent-900);" title="--color-accent-900"></span>
+            </div>
+
+            <div class="component-subtitle">Semánticos</div>
+            <div class="mb-3">
+                <span class="color-swatch" style="background: var(--color-success);" title="--color-success"></span>
+                <span class="color-swatch" style="background: var(--color-warning);" title="--color-warning"></span>
+                <span class="color-swatch" style="background: var(--color-danger);" title="--color-danger"></span>
+                <span class="color-swatch" style="background: var(--color-info);" title="--color-info"></span>
+            </div>
+        </section>
+
+        <!-- TIPOGRAFÍA -->
+        <section class="component-section">
+            <h2 class="component-title">📝 Tipografía</h2>
+
+            <div class="component-subtitle">Escala Tipográfica (Ratio 1.25)</div>
+            <div style="font-size: var(--font-size-xs);">Extra Small (xs) - 0.64rem</div>
+            <div style="font-size: var(--font-size-sm);">Small (sm) - 0.8rem</div>
+            <div style="font-size: var(--font-size-base);">Base - 1rem</div>
+            <div style="font-size: var(--font-size-md);">Medium (md) - 1.25rem</div>
+            <div style="font-size: var(--font-size-lg);">Large (lg) - 1.563rem</div>
+            <div style="font-size: var(--font-size-xl);">Extra Large (xl) - 1.953rem</div>
+            <div style="font-size: var(--font-size-2xl);">2X Large (2xl) - 2.441rem</div>
+
+            <div class="component-subtitle">Font Weights</div>
+            <div style="font-weight: var(--font-weight-normal);">Normal (400)</div>
+            <div style="font-weight: var(--font-weight-medium);">Medium (500)</div>
+            <div style="font-weight: var(--font-weight-semibold);">Semibold (600)</div>
+            <div style="font-weight: var(--font-weight-bold);">Bold (700)</div>
+        </section>
+
+        <!-- BOTONES -->
+        <section class="component-section">
+            <h2 class="component-title">🔘 Botones - Jerarquía</h2>
+
+            <div class="component-subtitle">Primarios - Acción principal</div>
+            <div class="mb-3">
+                <button class="btn btn-primary-action">
+                    <i class="bi bi-cloud-download me-1"></i>Cargar Datos
+                </button>
+                <button class="btn btn-primary-action" disabled>
+                    <i class="bi bi-cloud-download me-1"></i>Deshabilitado
+                </button>
+            </div>
+            <div class="code-block">
+                &lt;button class="btn btn-primary-action"&gt;Cargar Datos&lt;/button&gt;
+            </div>
+
+            <div class="component-subtitle">Secundarios - Acciones importantes</div>
+            <div class="mb-3">
+                <button class="btn btn-secondary-action">
+                    <i class="bi bi-check-circle me-1"></i>Aplicar Filtros
+                </button>
+                <button class="btn btn-secondary-action" disabled>Deshabilitado</button>
+            </div>
+            <div class="code-block">
+                &lt;button class="btn btn-secondary-action"&gt;Aplicar Filtros&lt;/button&gt;
+            </div>
+
+            <div class="component-subtitle">Terciarios - Acciones de apoyo</div>
+            <div class="mb-3">
+                <button class="btn btn-tertiary-action">
+                    <i class="bi bi-eraser me-1"></i>Limpiar
+                </button>
+                <button class="btn btn-tertiary-action" disabled>Deshabilitado</button>
+            </div>
+            <div class="code-block">
+                &lt;button class="btn btn-tertiary-action"&gt;Limpiar&lt;/button&gt;
+            </div>
+        </section>
+
+        <!-- ESPACIADO -->
+        <section class="component-section">
+            <h2 class="component-title">📏 Espaciado</h2>
+
+            <div class="component-subtitle">Escala (basada en 8px)</div>
+            <div class="mb-2">
+                <span class="spacing-example" style="width: var(--spacing-1); height: 20px;"></span>
+                <span class="ms-2">spacing-1 (4px)</span>
+            </div>
+            <div class="mb-2">
+                <span class="spacing-example" style="width: var(--spacing-2); height: 20px;"></span>
+                <span class="ms-2">spacing-2 (8px)</span>
+            </div>
+            <div class="mb-2">
+                <span class="spacing-example" style="width: var(--spacing-3); height: 20px;"></span>
+                <span class="ms-2">spacing-3 (12px)</span>
+            </div>
+            <div class="mb-2">
+                <span class="spacing-example" style="width: var(--spacing-4); height: 20px;"></span>
+                <span class="ms-2">spacing-4 (16px)</span>
+            </div>
+            <div class="mb-2">
+                <span class="spacing-example" style="width: var(--spacing-6); height: 20px;"></span>
+                <span class="ms-2">spacing-6 (24px)</span>
+            </div>
+            <div class="mb-2">
+                <span class="spacing-example" style="width: var(--spacing-8); height: 20px;"></span>
+                <span class="ms-2">spacing-8 (32px)</span>
+            </div>
+        </section>
+
+        <!-- SOMBRAS -->
+        <section class="component-section">
+            <h2 class="component-title">💫 Sombras y Elevaciones</h2>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-white" style="box-shadow: var(--shadow-sm); border-radius: var(--radius-md);">
+                        <strong>Shadow SM</strong>
+                        <div class="code-block mt-2">--shadow-sm</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white" style="box-shadow: var(--shadow-base); border-radius: var(--radius-md);">
+                        <strong>Shadow Base</strong>
+                        <div class="code-block mt-2">--shadow-base</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white" style="box-shadow: var(--shadow-md); border-radius: var(--radius-md);">
+                        <strong>Shadow MD</strong>
+                        <div class="code-block mt-2">--shadow-md</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white" style="box-shadow: var(--shadow-lg); border-radius: var(--radius-md);">
+                        <strong>Shadow LG</strong>
+                        <div class="code-block mt-2">--shadow-lg</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white" style="box-shadow: var(--shadow-xl); border-radius: var(--radius-md);">
+                        <strong>Shadow XL</strong>
+                        <div class="code-block mt-2">--shadow-xl</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPONENTES AGRUPADOS -->
+        <section class="component-section">
+            <h2 class="component-title">📦 Componentes Agrupados</h2>
+
+            <div class="component-subtitle">Control Group</div>
+            <div class="control-group" style="max-width: 400px;">
+                <label class="control-group-label">Fuente de Datos</label>
+                <div class="control-group-content">
+                    <select class="form-select form-select-sm">
+                        <option>Chile</option>
+                        <option>Perú</option>
+                    </select>
+                    <select class="form-select form-select-sm">
+                        <option>Seleccionar fuente...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="code-block mt-3">
+&lt;div class="control-group"&gt;
+    &lt;label class="control-group-label"&gt;Fuente de Datos&lt;/label&gt;
+    &lt;div class="control-group-content"&gt;
+        &lt;!-- Controles aquí --&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+            </div>
+        </section>
+
+        <footer class="text-center text-muted mt-5 pb-4">
+            <p>SUITE v2.0 - Sistema de Diseño Reportes</p>
+            <p class="small">Equipo Ripley Publishing & Content</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle de tema
+        const toggleBtn = document.getElementById('toggle-theme');
+        const densityGuide = document.getElementById('density-guide');
+
+        toggleBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+        });
+
+        // Densidad
+        densityGuide.addEventListener('change', (e) => {
+            document.documentElement.setAttribute('data-density', e.target.value);
+        });
+    </script>
+</body>
+</html>

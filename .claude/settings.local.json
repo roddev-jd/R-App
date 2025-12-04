@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "WebSearch",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(pkill:*)",
+      "Bash(/usr/local/bin/python3:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(launchctl getenv:*)",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
