@@ -1,0 +1,29 @@
+# App_SUITE Server Requirements
+# Main dependencies for FastAPI backend and launcher
+
+# FastAPI Framework
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.4.0
+python-multipart>=0.0.6
+
+# HTTP Client
+requests>=2.31.0
+
+# Data Processing
+pandas>=2.2.0
+duckdb>=0.9.0
+pyarrow>=14.0.0
+openpyxl>=3.1.0
+
+# Azure Storage
+azure-storage-blob>=12.19.0
+
+# SharePoint / Authentication
+msal>=1.24.0
+
+# Launcher UI Dependencies
+customtkinter>=5.2.0
+psutil>=5.9.0
+packaging>=23.0
+Pillow>=10.0.0

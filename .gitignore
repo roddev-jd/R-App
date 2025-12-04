@@ -45,6 +45,7 @@ Thumbs.db
 
 # Logs
 *.log
+launcher.log
 
 # Cache
 .cache/
@@ -56,6 +57,10 @@ config.ini
 FlexStart/apps/reportes/backend/config.ini
 FlexStart/apps/prod_peru/backend/config.ini
 FlexStart/backend/config.ini
+FlexStart/backend/launcher_config.ini
+
+# Launcher backups
+.backups/
 
 # Port files
 .last_port
