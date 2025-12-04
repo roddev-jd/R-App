@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>R-App Launcher</title>
+  <meta name="description" content="Web-based launcher for App_SUITE">
+
+  <!-- Favicons -->
+  <link href="/assets_flexstart/img/favicon.png" rel="icon">
+  <link href="/assets_flexstart/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts (same as FlexStart) -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files (from FlexStart) -->
+  <link href="/assets_flexstart/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="/static/css/launcher.css" rel="stylesheet">
+</head>
+
+<body class="launcher-page">
+
+  <!-- Fixed Header -->
+  <header id="header" class="launcher-header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      <a class="logo d-flex align-items-center">
+        <img src="/assets_flexstart/img/logo.png" alt="Logo">
+        <h1 class="sitename">RIPLEY APPS</h1>
+      </a>
+      <div class="version-badge">
+        v{{ version }}
+      </div>
+    </div>
+  </header>
+
+  <!-- Info Banner (shown when server is running) -->
+  <div id="info-banner" class="info-banner" style="display:none;">
+    <div class="container-fluid">
+      <i class="bi bi-info-circle"></i>
+      <span>Cerrar esta pestaña NO detiene el servidor. El lanzador seguirá activo en segundo plano.</span>
+      <button class="btn-close-banner" onclick="document.getElementById('info-banner').style.display='none'">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="launcher-main">
+    <div class="container">
+
+      <!-- Server Status Card -->
+      <section id="status-section" class="launcher-card">
+        <h2 class="section-title">
+          <i class="bi bi-circle-fill status-icon"></i>
+          ESTADO DEL SERVIDOR
+        </h2>
+        <div class="status-display">
+          <div class="status-indicator stopped" id="status-indicator"></div>
+          <div class="status-info">
+            <div class="status-text" id="status-text">Servidor detenido</div>
+            <div class="uptime-text" id="uptime-text">Uptime: --:--:--</div>
+            <a class="url-link" id="url-link" href="#" target="_blank" style="display:none;">
+              <i class="bi bi-box-arrow-up-right"></i>
+              <span id="url-display"></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Control Buttons -->
+      <section id="controls-section" class="controls-section">
+        <button id="start-stop-btn" class="btn-primary-pink btn-large">
+          <i class="bi bi-play-circle-fill"></i>
+          <span>Iniciar Servidor</span>
+        </button>
+        <button id="reopen-browser-btn" class="btn-secondary-cyan btn-medium" disabled>
+          <i class="bi bi-browser-chrome"></i>
+          <span>Abrir Aplicación</span>
+        </button>
+      </section>
+
+      <!-- System Monitor Card -->
+      <section id="monitor-section" class="launcher-card">
+        <h2 class="section-title">
+          <i class="bi bi-speedometer2"></i>
+          MONITOR DEL SISTEMA
+        </h2>
+        <div class="monitor-metrics">
+          <div class="metric-row">
+            <label class="metric-label">
+              <i class="bi bi-cpu"></i>
+              Uso de CPU:
+            </label>
+            <div class="progress-bar-container">
+              <div class="progress-bar low" id="cpu-bar" style="width: 0%"></div>
+            </div>
+            <span class="metric-value" id="cpu-value">0%</span>
+          </div>
+          <div class="metric-row">
+            <label class="metric-label">
+              <i class="bi bi-memory"></i>
+              Memoria:
+            </label>
+            <div class="progress-bar-container">
+              <div class="progress-bar low" id="mem-bar" style="width: 0%"></div>
+            </div>
+            <span class="metric-value" id="mem-value">0 MB</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Update Center Card -->
+      <section id="update-section" class="launcher-card">
+        <h2 class="section-title">
+          <i class="bi bi-cloud-download"></i>
+          CENTRO DE ACTUALIZACIONES
+        </h2>
+        <div class="update-info">
+          <div class="update-status-row">
+            <span class="update-label">Última verificación:</span>
+            <span id="last-checked" class="update-value">Nunca</span>
+          </div>
+          <div class="update-status-row">
+            <span class="update-label">Estado:</span>
+            <span id="update-status" class="badge-up-to-date">Actualizado</span>
+          </div>
+          <div id="update-available-panel" class="update-available-panel" style="display:none">
+            <div class="alert-info">
+              <i class="bi bi-info-circle-fill"></i>
+              ¡Versión <strong id="new-version"></strong> disponible!
+            </div>
+          </div>
+        </div>
+        <div class="update-actions">
+          <button id="check-updates-btn" class="btn-secondary-cyan btn-medium">
+            <i class="bi bi-arrow-repeat"></i>
+            <span>Verificar Actualizaciones</span>
+          </button>
+          <button id="install-update-btn" class="btn-install btn-medium" style="display:none">
+            <i class="bi bi-download"></i>
+            <span>Instalar Actualización</span>
+          </button>
+          <button id="rollback-btn" class="btn-warning btn-small" disabled>
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span>Rollback</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Server Logs Viewer (Collapsible) -->
+      <section id="logs-section" class="launcher-card">
+        <h2 class="section-title clickable" id="logs-header">
+          <i class="bi bi-chevron-right" id="logs-chevron"></i>
+          LOGS DEL SERVIDOR
+        </h2>
+        <div id="logs-content" class="logs-content" style="display:none">
+          <div class="logs-container">
+            <pre id="logs-output" class="logs-output"></pre>
+          </div>
+          <div class="logs-actions">
+            <button id="clear-logs-btn" class="btn-secondary-small">
+              <i class="bi bi-trash"></i>
+              Limpiar
+            </button>
+            <label class="auto-scroll-toggle">
+              <input type="checkbox" id="auto-scroll-checkbox" checked>
+              <span>Auto-scroll</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="launcher-footer">
+    <div class="container text-center">
+      <p>&copy; 2025 Ripley Product & Category Team | Web Launcher v1.0.0</p>
+    </div>
+  </footer>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loading-text">Procesando...</div>
+    </div>
+  </div>
+
+  <!-- Vendor JS Files -->
+  <script src="/assets_flexstart/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- App Scripts -->
+  <script src="/static/js/api-client.js"></script>
+  <script src="/static/js/sse-handler.js"></script>
+  <script src="/static/js/ui-components.js"></script>
+  <script src="/static/js/launcher.js"></script>
+</body>
+
+</html>

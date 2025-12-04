@@ -54,6 +54,8 @@ class SuiteLauncher:
         # UI update timers
         self.uptime_timer_id: Optional[str] = None
         self.monitor_timer_id: Optional[str] = None
+        self.logs_timer_id: Optional[str] = None
+        self.last_log_count: int = 0  # Track number of logs already displayed
 
         # Check for updates on startup (async)
         if self.config.should_check_for_updates():
@@ -322,7 +324,7 @@ class SuiteLauncher:
 
                         # Update UI
                         self.version = backup_version
-                        self.window.title(f"App_SUITE Launcher v{backup_version}")
+                        self.window.title(f"App SUITE Launcher v{backup_version}")
 
                         # Restart server if it was running
                         if was_running:
@@ -380,6 +382,7 @@ class SuiteLauncher:
         """Start periodic UI update timers"""
         self._update_uptime()
         self._update_system_monitor()
+        self._update_logs()
 
     def _stop_update_timers(self):
         """Stop periodic UI update timers"""
@@ -390,6 +393,11 @@ class SuiteLauncher:
         if self.monitor_timer_id:
             self.window.after_cancel(self.monitor_timer_id)
             self.monitor_timer_id = None
+
+        if self.logs_timer_id:
+            self.window.after_cancel(self.logs_timer_id)
+            self.logs_timer_id = None
+            self.last_log_count = 0
 
     def _update_uptime(self):
         """Update uptime display"""
@@ -415,6 +423,31 @@ class SuiteLauncher:
 
             # Schedule next update (every 2 seconds)
             self.monitor_timer_id = self.window.after(2000, self._update_system_monitor)
+
+    def _update_logs(self):
+        """Update logs display with new log lines"""
+        if self.server_manager.is_running():
+            try:
+                # Get current log count
+                current_count = self.server_manager.get_log_count()
+
+                # Only update if there are new logs
+                if current_count > self.last_log_count:
+                    # Get all logs and extract only new ones
+                    all_logs = self.server_manager.get_server_logs()
+                    new_logs = all_logs[self.last_log_count:]
+
+                    # Update UI with new logs
+                    self.window.update_logs(new_logs)
+
+                    # Update counter
+                    self.last_log_count = current_count
+
+            except Exception as e:
+                logger.warning(f"Failed to update logs: {e}")
+
+            # Schedule next update (every 1 second for more responsive logs)
+            self.logs_timer_id = self.window.after(1000, self._update_logs)
 
     # Utility methods
 

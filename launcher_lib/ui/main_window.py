@@ -36,6 +36,7 @@ class MainWindow(ctk.CTk):
         self.server_url: Optional[str] = None
         self.update_available = False
         self.backup_available = False
+        self.logs_expanded = False
 
         # Callbacks (to be set by SuiteLauncher)
         self.on_start_server: Optional[Callable] = None
@@ -94,8 +95,8 @@ class MainWindow(ctk.CTk):
 
     def _create_widgets(self):
         """Create all window widgets"""
-        # Main container
-        main_frame = ctk.CTkFrame(self, fg_color="transparent")
+        # Main container (scrollable)
+        main_frame = ctk.CTkScrollableFrame(self, fg_color="transparent")
         main_frame.pack(fill="both", expand=True, padx=15, pady=15)
 
         # Header
@@ -113,6 +114,9 @@ class MainWindow(ctk.CTk):
         # Update center
         self._create_update_center(main_frame)
 
+        # Server logs viewer (collapsible)
+        self._create_logs_viewer(main_frame)
+
     def _create_header(self, parent):
         """Create header with logo and title"""
         header_frame = ctk.CTkFrame(parent, fg_color="transparent", height=60)
@@ -127,7 +131,7 @@ class MainWindow(ctk.CTk):
         # Title
         title_label = ctk.CTkLabel(
             header_frame,
-            text="App_SUITE Launcher",
+            text="R-App",
             font=FONTS['title'],
             text_color=COLORS['primary_pink']
         )
@@ -407,6 +411,91 @@ class MainWindow(ctk.CTk):
         )
         self.rollback_button.pack(side="left")
 
+    def _create_logs_viewer(self, parent):
+        """Create collapsible server logs viewer section"""
+        # Section label with toggle button
+        logs_header_frame = ctk.CTkFrame(parent, fg_color="transparent")
+        logs_header_frame.pack(fill="x", pady=(DIMENSIONS['spacing_large'], 5))
+
+        self.logs_toggle_button = ctk.CTkButton(
+            logs_header_frame,
+            text="▶ SERVER LOGS (Click to expand)",
+            font=FONTS['heading'],
+            fg_color="transparent",
+            hover_color=COLORS['bg_gray'],
+            text_color=COLORS['text_heading'],
+            anchor="w",
+            command=self._toggle_logs_viewer,
+            height=30
+        )
+        self.logs_toggle_button.pack(fill="x")
+
+        # Logs card (initially hidden)
+        self.logs_card = ctk.CTkFrame(
+            parent,
+            fg_color=COLORS['bg_light'],
+            corner_radius=DIMENSIONS['corner_radius_medium'],
+            border_width=DIMENSIONS['border_width_thin'],
+            border_color=COLORS['border_light'],
+            height=0
+        )
+        self.logs_card.pack(fill="both", expand=False)
+        self.logs_card.pack_forget()  # Initially hidden
+
+        # Logs content
+        logs_content = ctk.CTkFrame(self.logs_card, fg_color="transparent")
+        logs_content.pack(fill="both", expand=True, padx=15, pady=15)
+
+        # Info label
+        info_label = ctk.CTkLabel(
+            logs_content,
+            text="Real-time server output (stdout/stderr) - Last 1000 lines",
+            font=FONTS['small'],
+            text_color=COLORS['gray_medium']
+        )
+        info_label.pack(anchor="w", pady=(0, 5))
+
+        # Logs text widget with scrollbar
+        self.logs_text = ctk.CTkTextbox(
+            logs_content,
+            font=('Courier New', 10),
+            fg_color=COLORS['bg_dark'],
+            text_color=COLORS['text_light'],
+            wrap="none",
+            height=300
+        )
+        self.logs_text.pack(fill="both", expand=True, pady=(0, 10))
+
+        # Control buttons
+        logs_button_frame = ctk.CTkFrame(logs_content, fg_color="transparent")
+        logs_button_frame.pack(fill="x")
+
+        # Clear logs button
+        self.clear_logs_button = ctk.CTkButton(
+            logs_button_frame,
+            text="Clear Logs",
+            font=FONTS['button'],
+            fg_color=COLORS['gray_medium'],
+            hover_color=COLORS['gray_dark'],
+            width=120,
+            height=DIMENSIONS['button_utility_height'],
+            corner_radius=DIMENSIONS['corner_radius_medium'],
+            command=self._clear_logs
+        )
+        self.clear_logs_button.pack(side="left", padx=(0, DIMENSIONS['spacing_small']))
+
+        # Auto-scroll toggle
+        self.auto_scroll_var = ctk.BooleanVar(value=True)
+        self.auto_scroll_checkbox = ctk.CTkCheckBox(
+            logs_button_frame,
+            text="Auto-scroll",
+            font=FONTS['default'],
+            variable=self.auto_scroll_var,
+            fg_color=COLORS['primary_pink'],
+            hover_color=COLORS['primary_pink_hover']
+        )
+        self.auto_scroll_checkbox.pack(side="left")
+
     # Event handlers
 
     def _on_start_stop_clicked(self):
@@ -442,6 +531,31 @@ class MainWindow(ctk.CTk):
         """Open server URL in browser"""
         if self.server_url:
             webbrowser.open(self.server_url)
+
+    def _toggle_logs_viewer(self):
+        """Toggle logs viewer visibility"""
+        self.logs_expanded = not self.logs_expanded
+
+        if self.logs_expanded:
+            # Show logs
+            self.logs_card.pack(fill="both", expand=True, pady=(0, DIMENSIONS['spacing_medium']))
+            self.logs_toggle_button.configure(text="▼ SERVER LOGS (Click to collapse)")
+
+            # Increase window height to accommodate logs
+            current_height = DIMENSIONS['window_height']
+            new_height = current_height + 350
+            self.geometry(f"{DIMENSIONS['window_width']}x{new_height}")
+        else:
+            # Hide logs
+            self.logs_card.pack_forget()
+            self.logs_toggle_button.configure(text="▶ SERVER LOGS (Click to expand)")
+
+            # Restore original window height
+            self.geometry(f"{DIMENSIONS['window_width']}x{DIMENSIONS['window_height']}")
+
+    def _clear_logs(self):
+        """Clear logs display"""
+        self.logs_text.delete("1.0", "end")
 
     # Public methods for updating UI state
 
@@ -580,6 +694,33 @@ class MainWindow(ctk.CTk):
                 self.rollback_button.configure(text=f"Rollback to v{version}")
         else:
             self.rollback_button.configure(state="disabled")
+
+    def update_logs(self, new_logs: list):
+        """
+        Update logs display with new log lines
+
+        Args:
+            new_logs: List of new log lines to append
+        """
+        if not new_logs:
+            return
+
+        # Get current scroll position
+        at_bottom = False
+        try:
+            # Check if scrolled to bottom (within 1 line)
+            yview = self.logs_text.yview()
+            at_bottom = yview[1] >= 0.99 or self.auto_scroll_var.get()
+        except:
+            at_bottom = True
+
+        # Append new logs
+        for log_line in new_logs:
+            self.logs_text.insert("end", log_line + "\n")
+
+        # Auto-scroll to bottom if enabled or was at bottom
+        if at_bottom:
+            self.logs_text.see("end")
 
     def _on_closing(self):
         """Handle window close event with confirmation"""
