@@ -4,10 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**App_SUITE v2.0.2** (also branded as "Ripley Apps" or "P&C Suite") is a comprehensive desktop/web hybrid application suite designed for Ripley Corporation's product management, design, and reporting workflows. The system integrates multiple specialized tools for inventory management, product design, workflow automation, and business intelligence reporting.
+**App_SUITE v2.0.3** (also branded as "Ripley Apps" or "P&C Suite") is a comprehensive desktop/web hybrid application suite designed for Ripley Corporation's product management, design, and reporting workflows. The system integrates multiple specialized tools for inventory management, product design, workflow automation, and business intelligence reporting.
 
 **Technology**: Python-based polyglot system with FastAPI backend, HTML5/Bootstrap frontend, and multiple desktop applications
-**Version**: 2.0.2
+**Version**: 2.0.3
 **Status**: Production system with active maintenance and updates
 
 ---
@@ -821,7 +821,7 @@ This codebase (R-App1) contains the core application logic but may not include:
 
 ---
 
-**Last Updated**: December 4, 2025
-**Architecture Version**: 2.0.2
+**Last Updated**: December 5, 2025
+**Architecture Version**: 2.0.3
 **Repository**: R-App1 (Core Application Codebase)
 **Maintainer**: Ripley Product & Category Team
