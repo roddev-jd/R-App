@@ -26,7 +26,8 @@
       "Bash(cd:*)",
       "Bash(curl:*)",
       "Bash(lsof:*)",
-      "Bash(timeout 10 python3:*)"
+      "Bash(timeout 10 python3:*)",
+      "Bash(git tag:*)"
     ],
     "deny": [],
     "ask": []
