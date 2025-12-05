@@ -7,7 +7,8 @@ Supports port range 8005-8050 with automatic availability detection.
 
 import socket
 import logging
-from typing import Optional
+import time
+from typing import Dict, Optional
 
 from .config_manager import ConfigManager
 
@@ -26,21 +27,69 @@ class PortManager:
         """
         self.config = config_manager
         self.min_port, self.max_port = self.config.get_port_range()
+        self.reserved_ports: Dict[int, float] = {}  # {port: expiration_timestamp}
         logger.info(f"PortManager initialized with range {self.min_port}-{self.max_port}")
 
-    def is_port_available(self, port: int) -> bool:
+    def _reserve_port(self, port: int, duration: Optional[float] = None):
         """
-        Check if a port is available for binding
+        Reserve a port to prevent race conditions during server startup
+
+        Args:
+            port: Port number to reserve
+            duration: Reservation duration in seconds (uses config default if None)
+        """
+        if duration is None:
+            duration = self.config.get_port_reservation_timeout()
+
+        expiration = time.time() + duration
+        self.reserved_ports[port] = expiration
+        logger.debug(f"Reserved port {port} for {duration}s (until {expiration:.2f})")
+
+    def _is_reserved(self, port: int) -> bool:
+        """
+        Check if a port is currently reserved
 
         Args:
             port: Port number to check
 
         Returns:
-            True if port is available, False otherwise
+            True if port is reserved and not expired, False otherwise
         """
+        if port not in self.reserved_ports:
+            return False
+
+        # Check if reservation expired
+        if time.time() > self.reserved_ports[port]:
+            # Cleanup expired reservation
+            del self.reserved_ports[port]
+            logger.debug(f"Port {port} reservation expired and removed")
+            return False
+
+        logger.debug(f"Port {port} is reserved until {self.reserved_ports[port]:.2f}")
+        return True
+
+    def is_port_available(self, port: int, strict: bool = False) -> bool:
+        """
+        Check if a port is available for binding
+
+        Args:
+            port: Port number to check
+            strict: If True, check without SO_REUSEADDR (stricter, matches uvicorn default)
+
+        Returns:
+            True if port is available and not reserved, False otherwise
+        """
+        # Check reservation status first (fast path)
+        if self._is_reserved(port):
+            logger.debug(f"Port {port} is reserved")
+            return False
+
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                if not strict:
+                    # Allow TIME_WAIT reuse (faster restarts)
+                    # This matches uvicorn's default behavior on most systems
+                    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 s.bind(('127.0.0.1', port))
                 logger.debug(f"Port {port} is available")
                 return True
@@ -86,9 +135,11 @@ class PortManager:
                 test_port = self.min_port + (test_port - self.max_port - 1)
 
             if self.is_port_available(test_port):
+                # Reserve port immediately to prevent race conditions
+                self._reserve_port(test_port)
                 # Save selected port
                 self.config.set_last_used_port(test_port)
-                logger.info(f"Found available port: {test_port}")
+                logger.info(f"Found and reserved available port: {test_port}")
                 return test_port
 
         # All ports occupied

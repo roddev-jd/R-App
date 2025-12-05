@@ -232,8 +232,8 @@ async def start_server() -> ServerStartResponse:
         # Find available port
         port = port_manager.find_available_port()
 
-        # Start server
-        if server_manager.start_server(port):
+        # Start server (now async with retry logic)
+        if await server_manager.start_server(port):
             pid = server_manager.get_pid()
             url = server_manager.get_url()
 
@@ -249,7 +249,11 @@ async def start_server() -> ServerStartResponse:
                 message=f"Server started on port {port}"
             )
         else:
-            raise HTTPException(500, "Failed to start server")
+            # Better error message with health check context
+            raise HTTPException(
+                500,
+                "Failed to start server: health check did not pass after dynamic polling with retries"
+            )
 
     except RuntimeError as e:
         # No ports available

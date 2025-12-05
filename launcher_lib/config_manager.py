@@ -56,7 +56,13 @@ class ConfigManager:
             'port_range_max': '8050',
             'auto_start_server': 'false',
             'auto_open_browser': 'true',
-            'server_startup_delay': '2.0',
+            'server_startup_delay': '2.0',  # Legacy - kept for compatibility
+            'server_startup_max_wait': '10.0',
+            'server_startup_initial_delay': '0.5',
+            'health_check_max_retries': '5',
+            'health_check_backoff_factor': '2.0',
+            'health_check_base_timeout': '2.0',
+            'port_reservation_timeout': '5.0',
         }
 
         self.config['UpdateSettings'] = {
@@ -246,5 +252,29 @@ class ConfigManager:
         return self.get_bool('Launcher', 'auto_open_browser', True)
 
     def get_server_startup_delay(self) -> float:
-        """Get server startup delay in seconds"""
+        """Get server startup delay in seconds (legacy)"""
         return self.get_float('Launcher', 'server_startup_delay', 2.0)
+
+    def get_server_startup_max_wait(self) -> float:
+        """Get maximum time to wait for server startup in seconds"""
+        return self.get_float('Launcher', 'server_startup_max_wait', 10.0)
+
+    def get_server_startup_initial_delay(self) -> float:
+        """Get initial delay before starting health check polls in seconds"""
+        return self.get_float('Launcher', 'server_startup_initial_delay', 0.5)
+
+    def get_health_check_max_retries(self) -> int:
+        """Get maximum number of health check retries"""
+        return self.get_int('Launcher', 'health_check_max_retries', 5)
+
+    def get_health_check_backoff_factor(self) -> float:
+        """Get exponential backoff factor for health check retries"""
+        return self.get_float('Launcher', 'health_check_backoff_factor', 2.0)
+
+    def get_health_check_base_timeout(self) -> float:
+        """Get base timeout for health checks in seconds"""
+        return self.get_float('Launcher', 'health_check_base_timeout', 2.0)
+
+    def get_port_reservation_timeout(self) -> float:
+        """Get port reservation timeout in seconds"""
+        return self.get_float('Launcher', 'port_reservation_timeout', 5.0)

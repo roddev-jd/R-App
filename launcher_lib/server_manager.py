@@ -15,6 +15,7 @@ import signal
 import logging
 import requests
 import threading
+import asyncio
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -68,9 +69,9 @@ class ServerManager:
         except Exception as e:
             logger.error(f"Error capturing output from {prefix}: {e}")
 
-    def start_server(self, port: int) -> bool:
+    async def start_server(self, port: int) -> bool:
         """
-        Start FastAPI server on specified port
+        Start FastAPI server on specified port (async)
 
         Args:
             port: Port number to bind server to
@@ -128,17 +129,13 @@ class ServerManager:
             self.log_threads = [stdout_thread, stderr_thread]
             logger.info("Log capture threads started")
 
-            # Wait for server startup
-            startup_delay = self.config.get_server_startup_delay()
-            logger.info(f"Waiting {startup_delay}s for server startup...")
-            time.sleep(startup_delay)
-
-            # Verify server health
-            if self.health_check():
+            # Wait for server startup with dynamic polling
+            logger.info(f"Waiting for server startup (max {self.config.get_server_startup_max_wait()}s)...")
+            if await self._wait_for_startup(port):
                 logger.info(f"Server started successfully on port {port} (PID: {self.process.pid})")
                 return True
             else:
-                logger.error("Server failed health check")
+                logger.error("Server failed to become ready within timeout")
                 self.stop_server()
                 return False
 
@@ -240,6 +237,113 @@ class ServerManager:
             logger.debug(f"Health check failed: {e}")
             return False
 
+    async def health_check_async(self, timeout: float = 2.0) -> bool:
+        """
+        Perform async health check on running server using aiohttp
+
+        Args:
+            timeout: Request timeout in seconds
+
+        Returns:
+            True if server is healthy, False otherwise
+        """
+        if not self.is_running() or self.port is None:
+            return False
+
+        try:
+            import aiohttp
+            url = f"http://127.0.0.1:{self.port}/"
+
+            timeout_obj = aiohttp.ClientTimeout(total=timeout)
+            async with aiohttp.ClientSession(timeout=timeout_obj) as session:
+                async with session.get(url) as response:
+                    is_healthy = response.status == 200
+
+                    if is_healthy:
+                        logger.debug(f"Async health check passed (status: {response.status})")
+                    else:
+                        logger.warning(f"Async health check failed (status: {response.status})")
+
+                    return is_healthy
+
+        except Exception as e:
+            logger.debug(f"Async health check failed: {e}")
+            return False
+
+    async def health_check_with_retry(self, max_retries: Optional[int] = None, base_timeout: Optional[float] = None) -> bool:
+        """
+        Health check with exponential backoff retry logic
+
+        Args:
+            max_retries: Maximum retry attempts (uses config default if None)
+            base_timeout: Base timeout for health checks (uses config default if None)
+
+        Returns:
+            True if health check eventually succeeds, False if all retries exhausted
+        """
+        if max_retries is None:
+            max_retries = self.config.get_health_check_max_retries()
+        if base_timeout is None:
+            base_timeout = self.config.get_health_check_base_timeout()
+
+        backoff_factor = self.config.get_health_check_backoff_factor()
+
+        for attempt in range(max_retries):
+            # Increase timeout on later attempts
+            timeout = base_timeout * (1 + attempt * 0.5)
+
+            if await self.health_check_async(timeout=timeout):
+                if attempt > 0:
+                    logger.info(f"Health check passed on attempt {attempt + 1}/{max_retries}")
+                return True
+
+            # Don't wait after last attempt
+            if attempt < max_retries - 1:
+                # Exponential backoff: 0.5s, 1s, 2s, 4s, 8s
+                backoff = 0.5 * (backoff_factor ** attempt)
+                logger.debug(f"Health check failed (attempt {attempt + 1}/{max_retries}), retrying in {backoff}s")
+                await asyncio.sleep(backoff)
+
+        logger.error(f"Health check failed after {max_retries} attempts")
+        return False
+
+    async def _wait_for_startup(self, port: int, max_wait: Optional[float] = None, initial_delay: Optional[float] = None) -> bool:
+        """
+        Poll health endpoint with dynamic backoff until server ready or timeout
+
+        Args:
+            port: Port to check
+            max_wait: Maximum wait time in seconds (uses config default if None)
+            initial_delay: Initial delay before first poll (uses config default if None)
+
+        Returns:
+            True if server becomes healthy within timeout, False otherwise
+        """
+        if max_wait is None:
+            max_wait = self.config.get_server_startup_max_wait()
+        if initial_delay is None:
+            initial_delay = self.config.get_server_startup_initial_delay()
+
+        # Wait initial delay before starting polls
+        await asyncio.sleep(initial_delay)
+
+        start_time = time.time()
+        poll_interval = 0.1  # Start with 100ms
+
+        while time.time() - start_time < max_wait:
+            if await self.health_check_async(timeout=2.0):
+                elapsed = time.time() - start_time
+                logger.info(f"Server ready after {elapsed:.2f}s")
+                return True
+
+            # Exponential backoff, capped at 1 second
+            await asyncio.sleep(poll_interval)
+            poll_interval = min(poll_interval * 1.5, 1.0)
+
+        elapsed = time.time() - start_time
+        logger.error(f"Server not ready after {elapsed:.2f}s (timeout: {max_wait}s)")
+        return False
+
     def get_pid(self) -> Optional[int]:
         """
         Get server process PID
@@ -310,9 +414,9 @@ class ServerManager:
             return self.process.poll()
         return None
 
-    def restart_server(self, port: Optional[int] = None) -> bool:
+    async def restart_server(self, port: Optional[int] = None) -> bool:
         """
-        Restart server (stop then start)
+        Restart server (stop then start) - async
 
         Args:
             port: Port to use (uses current port if None)
@@ -336,10 +440,10 @@ class ServerManager:
             return False
 
         # Wait a moment before restart
-        time.sleep(1)
+        await asyncio.sleep(1)
 
         # Start server again
-        return self.start_server(port)
+        return await self.start_server(port)
 
     def get_server_logs(self, lines: Optional[int] = None) -> list:
         """
