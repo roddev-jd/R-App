@@ -49,7 +49,7 @@ class ConfigManager:
     def _create_default_config(self):
         """Create default configuration"""
         self.config['Launcher'] = {
-            'current_version': '2.0.2',
+            'current_version': '2.0.3',
             'installation_date': datetime.now().isoformat(),
             'last_used_port': '8005',
             'port_range_min': '8005',
