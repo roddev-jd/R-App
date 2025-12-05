@@ -117,21 +117,44 @@ def main():
             stderr=subprocess.PIPE
         )
 
-        # Wait for server to start
+        # Wait for server to start with health check
         print("⏳ Waiting for server to initialize...")
-        time.sleep(2)
+        max_wait = 15  # Maximum wait time in seconds
+        check_interval = 0.5  # Check every 0.5 seconds
+        elapsed = 0
+        server_ready = False
 
-        # Check if process is still running
-        if proc.poll() is not None:
-            # Process died
-            stdout, stderr = proc.communicate()
-            print("❌ ERROR: Server failed to start")
+        while elapsed < max_wait:
+            # Check if process died
+            if proc.poll() is not None:
+                # Process died
+                stdout, stderr = proc.communicate()
+                print("❌ ERROR: Server failed to start")
+                print()
+                if stdout:
+                    print("STDOUT:", stdout.decode())
+                if stderr:
+                    print("STDERR:", stderr.decode())
+                return 1
+
+            # Check if server is responding
+            if check_server_health(port, timeout=1.0):
+                server_ready = True
+                break
+
+            time.sleep(check_interval)
+            elapsed += check_interval
+
+        if not server_ready:
+            print("❌ ERROR: Server did not respond within timeout")
             print()
-            if stdout:
-                print("STDOUT:", stdout.decode())
-            if stderr:
-                print("STDERR:", stderr.decode())
+            print("The server process is running but not responding to health checks.")
+            print("This might indicate a startup issue.")
+            proc.terminate()
             return 1
+
+        print("✅ Server is ready!")
+        print()
 
         # Open browser
         print(f"🌐 Opening browser to {url}")

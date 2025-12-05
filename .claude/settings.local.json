@@ -23,7 +23,10 @@
       "Bash(git -C \"/Users/rjarad/Library/Mobile Documents/com~apple~CloudDocs/Apps/App_SUITE/R-App1\" remote -v)",
       "WebFetch(domain:www.rjresolve.cl)",
       "Bash(chmod:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(timeout 10 python3:*)"
     ],
     "deny": [],
     "ask": []
