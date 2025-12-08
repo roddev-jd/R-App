@@ -733,7 +733,149 @@ def _parse_sharepoint_url(full_url: str) -> tuple:
     site_base_url = match.group(1)
     folder_path = match.group(2) if match.group(2) else 'root'
 
+    # Limpiar slashes finales que pueden causar problemas con Microsoft Graph API
+    if folder_path != 'root':
+        folder_path = folder_path.rstrip('/')
+
     return site_base_url, folder_path
+
+
+def list_sharepoint_directory_files(
+    sharepoint_folder_url: str,
+    file_pattern: str = "*.csv",
+    access_token: str = None
+):
+    """
+    Lista archivos en un directorio de SharePoint que coincidan con un patrón.
+
+    Args:
+        sharepoint_folder_url: URL completa de la carpeta SharePoint
+        file_pattern: Patrón glob (ej: "SABANA_part*.csv")
+        access_token: Token de autenticación (opcional)
+
+    Returns:
+        Lista de diccionarios con metadata de archivos:
+        [{'name': str, 'size': int, 'lastModifiedDateTime': str, 'download_url': str}, ...]
+    """
+    import fnmatch
+    import logging
+    from typing import List, Dict, Any
+
+    # Import absoluto para evitar problemas de módulos
+    import main_logic
+    from main_logic import (
+        _get_site_id_from_url,
+        _get_drive_id_from_site,
+        _list_folder_contents,
+        get_sharepoint_authenticator
+    )
+
+    # 1. Autenticación
+    if access_token is None:
+        auth = get_sharepoint_authenticator()
+        access_token = auth.get_token()
+
+    # 2. Parsear URL para obtener site base y ruta de carpeta completa
+    site_base_url, full_folder_path = _parse_sharepoint_url(sharepoint_folder_url)
+    logging.info(f"SharePoint - Site: {site_base_url}, Folder completa: {full_folder_path}")
+
+    # 3. Obtener site_id y drive_id
+    site_id = _get_site_id_from_url(site_base_url, access_token)
+    drive_id = _get_drive_id_from_site(site_id, access_token)
+    logging.info(f"SharePoint - site_id: {site_id}, drive_id: {drive_id}")
+
+    # 3.5. Ajustar la ruta relativa al drive
+    # Si la ruta comienza con "Documentos compartidos/" o "Documentos/", removerlo
+    # porque ya está incluido en el webUrl del drive
+    folder_path = full_folder_path
+    for prefix in ['Documentos compartidos/', 'Documentos/', 'Shared Documents/', 'Documents/']:
+        if folder_path.startswith(prefix):
+            folder_path = folder_path[len(prefix):]
+            logging.info(f"SharePoint - Ruta ajustada (removiendo prefijo del drive): {folder_path}")
+            break
+
+    # 4. Listar contenido de la carpeta
+    contents = _list_folder_contents(drive_id, folder_path, access_token)
+    logging.info(f"SharePoint - {len(contents)} items encontrados en carpeta")
+
+    # 5. Filtrar archivos por patrón
+    files = []
+    for item in contents:
+        # Solo procesar archivos (ignorar subcarpetas)
+        if 'file' in item:
+            item_name = item['name']
+            # Aplicar filtro de patrón
+            if fnmatch.fnmatch(item_name, file_pattern):
+                files.append({
+                    'name': item_name,
+                    'size': item.get('size', 0),
+                    'lastModifiedDateTime': item.get('lastModifiedDateTime'),
+                    'id': item.get('id'),
+                    # URL de descarga directa (Graph API endpoint)
+                    'download_url': f"https://graph.microsoft.com/v1.0/drives/{drive_id}/items/{item['id']}/content"
+                })
+
+    # Ordenar por nombre para procesamiento determinístico
+    files.sort(key=lambda f: f['name'])
+
+    logging.info(f"SharePoint - {len(files)} archivos coinciden con patrón '{file_pattern}'")
+    return files
+
+
+def get_sharepoint_partition_metadata(
+    sharepoint_folder_url: str,
+    file_pattern: str,
+    access_token: str = None
+):
+    """
+    Obtiene metadata de particiones SharePoint para verificación de caché.
+
+    Returns:
+        {
+            'files': List[Dict],  # Lista de archivos con metadata
+            'latest_modified': datetime,  # Última modificación de cualquier partición
+            'total_size': int,  # Tamaño total de todas las particiones
+            'file_count': int  # Número de particiones
+        }
+    """
+    from datetime import datetime
+    import logging
+    from typing import Dict, Any
+
+    # Listar archivos
+    files = list_sharepoint_directory_files(sharepoint_folder_url, file_pattern, access_token)
+
+    if not files:
+        raise FileNotFoundError(
+            f"No se encontraron archivos con patrón '{file_pattern}' en:\n"
+            f"  {sharepoint_folder_url}\n"
+            f"Verifique permisos y validez de la URL."
+        )
+
+    # Encontrar última modificación (más reciente de todas las particiones)
+    latest_modified = None
+    for file_info in files:
+        modified_str = file_info.get('lastModifiedDateTime')
+        if modified_str:
+            # Convertir de ISO8601 a datetime
+            modified_dt = datetime.fromisoformat(modified_str.replace('Z', '+00:00'))
+            if latest_modified is None or modified_dt > latest_modified:
+                latest_modified = modified_dt
+
+    total_size = sum(f.get('size', 0) for f in files)
+
+    logging.info(
+        f"Metadata particiones: {len(files)} archivos, "
+        f"{total_size / (1024**2):.1f} MB total, "
+        f"última modificación: {latest_modified}"
+    )
+
+    return {
+        'files': files,
+        'latest_modified': latest_modified,
+        'total_size': total_size,
+        'file_count': len(files)
+    }
 
 
 # Instancia global para fácil acceso

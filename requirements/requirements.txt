@@ -1,0 +1,113 @@
+# App_SUITE Requirements (Main Project)
+# Dependencias principales para el backend central, reportes, prod_peru y launcher
+# Versión: 2.0.3
+# EXCLUYE: Herramientas de diseño específicas (diseno/BUSCADOR, MINIATURAS, etc.)
+
+# ============================================
+# FastAPI Framework & Web Server
+# ============================================
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+starlette>=0.27.0
+python-multipart>=0.0.6
+jinja2>=3.1.2
+
+# ============================================
+# HTTP Client & Web
+# ============================================
+requests>=2.31.0
+urllib3>=2.0.0
+aiohttp>=3.9.0
+
+# ============================================
+# Data Processing & Database
+# ============================================
+pandas>=2.2.0
+duckdb>=0.9.0
+pyarrow>=14.0.0
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0
+
+# ============================================
+# Cloud Storage & Services
+# ============================================
+# Azure Storage (para reportes - Azure Blob)
+azure-storage-blob>=12.19.0
+
+# AWS S3 (para prod_peru - S3)
+boto3>=1.34.0
+botocore>=1.34.0
+
+# SharePoint / Microsoft Authentication
+msal>=1.24.0
+
+# ============================================
+# Image Processing
+# ============================================
+Pillow>=10.0.0
+numpy>=1.24.3
+
+# ============================================
+# System & Utilities
+# ============================================
+# Credentials management
+keyring>=24.0.0
+
+# Process management
+psutil>=5.9.0
+
+# Version handling
+packaging>=23.0
+
+# Caching
+cachetools>=5.3.0
+
+# ============================================
+# Desktop UI (Launcher)
+# ============================================
+customtkinter>=5.2.0
+
+# ============================================
+# Development & Testing
+# ============================================
+pytest>=7.4.0
+
+# ============================================
+# Optional Dependencies
+# ============================================
+# File watching (opcional, usado en algunos módulos)
+# watchdog>=3.0.0
+
+# Web scraping (opcional, usado en algunos servicios compartidos)
+# beautifulsoup4>=4.12.0
+
+# ============================================
+# NOTAS DE INSTALACIÓN
+# ============================================
+#
+# Instalación básica:
+#   pip install -r requirements.txt
+#
+# Instalación completa con opcionales:
+#   pip install -r requirements.txt watchdog beautifulsoup4
+#
+# Para desarrollo con auto-reload:
+#   uvicorn FlexStart.backend.app:app --reload --port 8005
+#
+# Para producción:
+#   uvicorn FlexStart.backend.app:app --host 0.0.0.0 --port 8005 --workers 4
+#
+# ============================================
+# DEPENDENCIAS EXCLUIDAS
+# ============================================
+#
+# Las siguientes herramientas tienen sus propios requirements.txt:
+# - FlexStart/apps/diseno/INDEXAR/requirements.txt
+# - FlexStart/apps/diseno/MULTITAG/requirements.txt
+# - FlexStart/apps/diseno/APP_CARGAS_CHILE/requirements.txt
+# - FlexStart/apps/diseno/APP_CARGAS_PERU/requirements.txt
+#
+# Si necesitas ejecutar esas herramientas específicas, instala sus
+# dependencias individuales con:
+#   pip install -r FlexStart/apps/diseno/[HERRAMIENTA]/requirements.txt

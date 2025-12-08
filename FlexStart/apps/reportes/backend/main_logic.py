@@ -791,6 +791,86 @@ def load_blob_data(param_from_frontend_url: str, selected_columns_from_api: Opti
                         f"Usando caché SIN VERIFICAR"
                     )
 
+            elif source_type == "sharepoint_partitioned":
+                # Verificar actualizaciones para CSV particionados en SharePoint
+                try:
+                    progress_tracker.update_progress(2, "verifying", "Verificando particiones SharePoint...")
+
+                    logging.info(f"🔍 Verificando actualizaciones SharePoint particionado: {param_from_frontend_url}")
+
+                    # Autenticación
+                    auth = get_sharepoint_authenticator()
+                    access_token = auth.get_token()
+
+                    # Configuración
+                    folder_url = found_blob_attrs.get("value")
+                    file_pattern = found_blob_attrs.get("file_pattern", "*.csv")
+
+                    # Verificar actualización
+                    update_info = persistent_cache.check_remote_update(
+                        param_from_frontend_url,
+                        source_url=folder_url,
+                        auth_headers={"Authorization": f"Bearer {access_token}"},
+                        source_type="sharepoint_partitioned",
+                        azure_config={
+                            'folder_url': folder_url,
+                            'file_pattern': file_pattern
+                        }
+                    )
+
+                    # Tomar decisión basada en resultado
+                    if update_info.get('error'):
+                        # Error en verificación → usar caché sin verificar (safe fallback)
+                        logging.warning(f"⚠️ Error verificación SharePoint: {update_info.get('error')}")
+                        cache_decision = "using_cache"
+                        cache_verification_status = {
+                            'verified': False,
+                            'status': 'verification_failed',
+                            'message': f"⚠️ Error verificación: {update_info['error']}. Usando caché sin verificar.",
+                            'last_check': datetime.now(timezone.utc).isoformat(),
+                            'error_detail': update_info.get('error'),
+                            'comparison_details': update_info.get('comparison_details', '')
+                        }
+
+                    elif update_info.get('update_available'):
+                        # Actualización disponible → limpiar caché y descargar fresh
+                        logging.info(f"📥 Actualización detectada: {update_info.get('reason')}")
+                        persistent_cache.clear_cache(param_from_frontend_url)
+                        cache_decision = "downloading_fresh"
+                        cache_verification_status = {
+                            'verified': True,
+                            'status': 'verified_stale',
+                            'message': f"Actualización disponible en SharePoint - recargando datos frescos",
+                            'last_check': datetime.now(timezone.utc).isoformat(),
+                            'reason': update_info.get('reason'),
+                            'comparison_details': update_info.get('comparison_details', '')
+                        }
+
+                    else:
+                        # Caché verificado como fresco → usar caché
+                        logging.info(f"✅ Caché válido: {update_info.get('reason')}")
+                        cache_decision = "using_cache"
+                        cache_verification_status = {
+                            'verified': True,
+                            'status': 'verified_fresh',
+                            'message': f"✅ Caché verificado como actualizado al {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+                            'last_check': datetime.now(timezone.utc).isoformat(),
+                            'reason': update_info.get('reason'),
+                            'comparison_details': update_info.get('comparison_details', '')
+                        }
+
+                except Exception as e:
+                    # Excepción durante verificación → usar caché (safe fallback)
+                    logging.warning(f"⚠️ Excepción verificando SharePoint particionado: {e}")
+                    cache_decision = "using_cache"
+                    cache_verification_status = {
+                        'verified': False,
+                        'status': 'verification_failed',
+                        'message': f"⚠️ Error inesperado: {str(e)}. Usando caché sin verificar.",
+                        'last_check': datetime.now(timezone.utc).isoformat(),
+                        'error_detail': str(e)
+                    }
+
             else:
                 # Fuentes no-SharePoint y no-Azure (FTP, CSV local, etc.): usar caché sin verificación
                 cache_decision = "using_cache"
@@ -927,6 +1007,42 @@ def load_blob_data(param_from_frontend_url: str, selected_columns_from_api: Opti
                 25, "loaded",
                 f"✓ Cargadas {len(df_loaded):,} filas desde particiones"
             )
+
+        elif source_type == 'sharepoint_partitioned':
+            # Nuevo tipo de fuente: CSV particionados en SharePoint
+            logging.info(f"📦 Cargando particiones SharePoint desde: {filename}")
+            logging.info(f"📋 Patrón de archivos: {found_blob_attrs.get('file_pattern', '*.csv')}")
+
+            sharepoint_folder_url = filename  # filename contiene la URL de SharePoint
+            file_pattern = found_blob_attrs.get("file_pattern", "*.csv")
+
+            # Progreso: descubrimiento
+            progress_tracker.update_progress(
+                10, "discovery",
+                "Listando archivos SharePoint..."
+            )
+
+            # Validar que la URL sea válida
+            if not sharepoint_folder_url.startswith('https://'):
+                raise ValueError(
+                    f"URL SharePoint inválida: {sharepoint_folder_url}\n"
+                    f"Debe comenzar con 'https://'"
+                )
+
+            # Cargar datos particionados utilizando la nueva función SharePoint
+            df_loaded = csv_utils.read_partitioned_csv_from_sharepoint(
+                sharepoint_folder_url=sharepoint_folder_url,
+                file_pattern=file_pattern,
+                usecols=selected_columns,  # Optimización de RAM
+                log_prefix=param_from_frontend_url
+            )
+
+            progress_tracker.update_progress(
+                25, "loaded",
+                f"✅ {len(df_loaded):,} filas cargadas desde SharePoint"
+            )
+
+            logging.info(f"✅ SharePoint particionado cargado: {len(df_loaded):,} filas, {len(df_loaded.columns)} columnas")
 
         else:
             raise ValueError(f"Tipo de fuente ('_source_type') desconocido: '{source_type}'")
@@ -2901,9 +3017,26 @@ def _get_drive_id_from_site(site_id: str, access_token: str, drive_name: str = N
         logging.error(f"Bibliotecas disponibles: {available_drives}")
         raise ValueError(f"No se encontró la biblioteca de documentos '{drive_name}'. Bibliotecas disponibles: {available_drives}")
     else:
-        # Retornar el primer drive (por defecto)
+        # Buscar el drive "Documentos" o "Documents" como preferido
+        # (evitar usar "Biblioteca de suspensiones de conservación")
+        preferred_names = ['Documentos', 'Documents', 'Documentos compartidos', 'Shared Documents']
+
+        for preferred_name in preferred_names:
+            for drive in drives:
+                if drive.get('name', '').lower() == preferred_name.lower():
+                    logging.info(f"Usando biblioteca preferida: ID={drive['id']}, Name='{drive.get('name')}'")
+                    return drive['id']
+
+        # Si no se encuentra ninguna preferida, buscar la primera que NO sea de suspensión
+        for drive in drives:
+            drive_name = drive.get('name', '').lower()
+            if 'suspension' not in drive_name and 'preservation' not in drive_name and 'hold' not in drive_name:
+                logging.info(f"Usando primera biblioteca no-suspensión: ID={drive['id']}, Name='{drive.get('name')}'")
+                return drive['id']
+
+        # Como último recurso, retornar el primer drive
         default_drive = drives[0]
-        logging.info(f"Usando biblioteca por defecto: ID={default_drive['id']}, Name='{default_drive.get('name')}'")
+        logging.warning(f"Usando primer drive disponible (sin mejor opción): ID={default_drive['id']}, Name='{default_drive.get('name')}'")
         return default_drive['id']
 
 def _list_folder_contents(drive_id: str, folder_path: str, access_token: str) -> list:
@@ -2914,8 +3047,10 @@ def _list_folder_contents(drive_id: str, folder_path: str, access_token: str) ->
     if folder_path == 'root':
         graph_url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root/children"
     else:
+        # Limpiar slashes finales que pueden causar problemas con la API de Microsoft Graph
+        clean_path = folder_path.rstrip('/')
         # Codificar la ruta para URL
-        encoded_path = quote(folder_path)
+        encoded_path = quote(clean_path)
         graph_url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:/{encoded_path}:/children"
     
     headers = {'Authorization': f'Bearer {access_token}'}
@@ -3273,7 +3408,9 @@ def _list_sharepoint_list_contents(list_id: str, folder_path: str, access_token:
         graph_url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/drive/root/children"
     else:
         # Para subcarpetas en listas
-        encoded_path = quote(folder_path)
+        # Limpiar slashes finales que pueden causar problemas con la API de Microsoft Graph
+        clean_path = folder_path.rstrip('/')
+        encoded_path = quote(clean_path)
         graph_url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/lists/{list_id}/drive/root:/{encoded_path}:/children"
     
     headers = {'Authorization': f'Bearer {access_token}'}
@@ -3502,8 +3639,10 @@ async def _download_folder_from_url(folder_path: str, access_token: str, local_b
     
     try:
         from urllib.parse import quote
-        encoded_path = quote(folder_path)
-        
+        # Limpiar slashes finales que pueden causar problemas con la API de Microsoft Graph
+        clean_path = folder_path.rstrip('/')
+        encoded_path = quote(clean_path)
+
         graph_url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/drive/root:/{encoded_path}:/children"
         headers = {'Authorization': f'Bearer {access_token}'}
         

@@ -57,11 +57,11 @@ class ConfigManager:
             'auto_start_server': 'false',
             'auto_open_browser': 'true',
             'server_startup_delay': '2.0',  # Legacy - kept for compatibility
-            'server_startup_max_wait': '10.0',
-            'server_startup_initial_delay': '0.5',
-            'health_check_max_retries': '5',
+            'server_startup_max_wait': '300.0',  # Increased from 10.0 to 300.0 (5 minutes) for slower systems
+            'server_startup_initial_delay': '1.0',  # Increased from 0.5 to 1.0 second
+            'health_check_max_retries': '60',  # Increased from 5 to 60 attempts
             'health_check_backoff_factor': '2.0',
-            'health_check_base_timeout': '2.0',
+            'health_check_base_timeout': '5.0',  # Increased from 2.0 to 5.0 seconds
             'port_reservation_timeout': '5.0',
         }
 
