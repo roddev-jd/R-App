@@ -5,6 +5,7 @@ import os
 import queue
 import subprocess
 import sys
+import threading
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
@@ -135,6 +136,9 @@ app.add_middleware(ConfigValidationMiddleware)
 
 # Pool de threads para scripts
 script_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="script_worker")
+
+# Lista para rastrear tareas en background
+background_tasks = []
 
 # Inicialización de servicios
 data_service = None  # Se inicializará en startup o lazy
@@ -269,23 +273,107 @@ async def startup_event():
     ]
     logging.info(f"ThreadPoolExecutors iniciados - {', '.join(pools_info)}")
 
-    # Inicializar SharePoint authentication en background
-    asyncio.create_task(initialize_sharepoint_auth())
+    # Inicializar SharePoint authentication en background y rastrear la tarea
+    task = asyncio.create_task(initialize_sharepoint_auth())
+    background_tasks.append(task)
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Limpia recursos al cerrar la aplicación."""
+    import time
+
+    # Iniciar watchdog de timeout para forzar salida si el apagado toma demasiado
+    def shutdown_watchdog(timeout: int = 10):
+        """Force exit si el apagado toma demasiado tiempo"""
+        time.sleep(timeout)
+        logging.error("¡TIMEOUT DE APAGADO! Forzando salida después de 10 segundos...")
+        os._exit(1)
+
+    watchdog = threading.Thread(
+        target=shutdown_watchdog,
+        args=(10,),
+        daemon=True
+    )
+    watchdog.start()
+    logging.info("[SHUTDOWN] Watchdog iniciado (timeout: 10 segundos)")
+
+    # Paso 1/5: Cancelar tareas en background
+    logging.info("[SHUTDOWN] Paso 1/5: Cancelando tareas en background...")
+    for task in background_tasks:
+        if not task.done():
+            task.cancel()
+            try:
+                await asyncio.wait_for(task, timeout=2.0)
+                logging.info("[SHUTDOWN] Tarea en background cancelada exitosamente")
+            except asyncio.TimeoutError:
+                logging.warning("[SHUTDOWN] Tarea en background no se canceló dentro del timeout")
+            except asyncio.CancelledError:
+                logging.info("[SHUTDOWN] Tarea en background fue cancelada")
+
+    # Paso 2/5: Vaciar colas SSE
+    logging.info("[SHUTDOWN] Paso 2/5: Vaciando colas SSE...")
+    try:
+        # Vaciar cola asyncio de progreso de búsqueda
+        while not search_progress_queue.empty():
+            try:
+                search_progress_queue.get_nowait()
+            except:
+                break
+
+        # Vaciar cola thread-safe de progreso de carga de datos
+        while not data_load_progress_queue.empty():
+            try:
+                data_load_progress_queue.get_nowait()
+            except:
+                break
+
+        # Enviar señal de terminación
+        try:
+            data_load_progress_queue.put_nowait({"type": "shutdown"})
+        except:
+            pass
+
+        logging.info("[SHUTDOWN] Colas SSE vaciadas correctamente")
+    except Exception as e:
+        logging.warning(f"[SHUTDOWN] Error vaciando colas SSE: {e}")
+
+    # Paso 3/5: Cerrar conexión DuckDB
+    logging.info("[SHUTDOWN] Paso 3/5: Cerrando conexiones de base de datos...")
+    if main_logic.duckdb_conn:
+        try:
+            main_logic.duckdb_conn.close()
+            main_logic.duckdb_conn = None
+            logging.info("[SHUTDOWN] Conexión DuckDB cerrada correctamente")
+        except Exception as e:
+            logging.warning(f"[SHUTDOWN] Error cerrando DuckDB: {e}")
+
+    # Paso 4/5: Cerrar ThreadPoolExecutors con timeout
+    logging.info("[SHUTDOWN] Paso 4/5: Cerrando ThreadPoolExecutors...")
     executors = [
         ("Scripts", script_executor),
         ("I/O", main_logic.io_executor),
         ("SharePoint", main_logic.sharepoint_executor)
     ]
-    
+
     for name, executor in executors:
-        logging.info(f"Cerrando ThreadPoolExecutor para {name}...")
-        executor.shutdown(wait=True)
-    
-    logging.info("Aplicación FastAPI cerrada correctamente.")
+        logging.info(f"[SHUTDOWN] Cerrando ThreadPoolExecutor para {name}...")
+
+        # Ejecutar shutdown en un thread separado con timeout
+        shutdown_thread = threading.Thread(
+            target=lambda: executor.shutdown(wait=True, cancel_futures=True),
+            daemon=False
+        )
+        shutdown_thread.start()
+        shutdown_thread.join(timeout=3.0)
+
+        if shutdown_thread.is_alive():
+            logging.warning(f"[SHUTDOWN] {name} executor no se cerró limpiamente dentro del timeout")
+        else:
+            logging.info(f"[SHUTDOWN] {name} executor cerrado correctamente")
+
+    # Paso 5/5: Limpieza completa
+    logging.info("[SHUTDOWN] Paso 5/5: Limpieza completa")
+    logging.info("[SHUTDOWN] Aplicación FastAPI cerrada correctamente")
 
 # Rutas principales
 @app.get("/", include_in_schema=False)
