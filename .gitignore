@@ -54,14 +54,6 @@ launcher.log
 .cache/
 cache/
 
-# Configuration files with credentials - IMPORTANT!
-config.ini
-**/config.ini
-FlexStart/apps/reportes/backend/config.ini
-FlexStart/apps/prod_peru/backend/config.ini
-FlexStart/backend/config.ini
-FlexStart/backend/launcher_config.ini
-
 # Launcher backups
 .backups/
 
