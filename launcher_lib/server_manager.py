@@ -222,7 +222,7 @@ class ServerManager:
             return False
 
         try:
-            url = f"http://127.0.0.1:{self.port}/"
+            url = f"http://127.0.0.1:{self.port}/health"
             response = requests.get(url, timeout=timeout)
             is_healthy = response.status_code == 200
 
@@ -252,7 +252,7 @@ class ServerManager:
 
         try:
             import aiohttp
-            url = f"http://127.0.0.1:{self.port}/"
+            url = f"http://127.0.0.1:{self.port}/health"
 
             timeout_obj = aiohttp.ClientTimeout(total=timeout)
             async with aiohttp.ClientSession(timeout=timeout_obj) as session:
@@ -331,6 +331,17 @@ class ServerManager:
         poll_interval = 0.1  # Start with 100ms
 
         while time.time() - start_time < max_wait:
+            # Check if process is still alive
+            if self.process and self.process.poll() is not None:
+                logger.error("Server process died during startup")
+                # Get exit code and logs for debugging
+                exit_code = self.process.poll()
+                recent_logs = self.get_server_logs(lines=10)
+                logger.error(f"Process exit code: {exit_code}")
+                if recent_logs:
+                    logger.error(f"Last logs:\n" + "\n".join(recent_logs))
+                return False
+
             if await self.health_check_async(timeout=2.0):
                 elapsed = time.time() - start_time
                 logger.info(f"Server ready after {elapsed:.2f}s")

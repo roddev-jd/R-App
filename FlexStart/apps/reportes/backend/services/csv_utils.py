@@ -435,6 +435,153 @@ def read_partitioned_csv_from_directory(
     return df_combined
 
 
+def read_partitioned_csv_from_sharepoint(
+    sharepoint_folder_url: str,
+    file_pattern: str,
+    usecols: Optional[List[str]] = None,
+    log_prefix: str = "sharepoint_partitioned"
+) -> pd.DataFrame:
+    """
+    Lee múltiples archivos CSV particionados desde SharePoint y los concatena.
+    Replica la lógica de read_partitioned_csv_from_directory pero usando Graph API.
+
+    Args:
+        sharepoint_folder_url: URL de la carpeta SharePoint
+        file_pattern: Patrón para filtrar archivos (ej: "SABANA_part*.csv")
+        usecols: Columnas a leer (optimización de RAM)
+        log_prefix: Prefijo para logs
+
+    Returns:
+        DataFrame con todas las particiones concatenadas
+    """
+    import logging
+
+    # Imports absolutos para evitar problemas de módulos
+    from services import storage_utils
+    from main_logic import get_sharepoint_authenticator
+    import requests
+
+    logging.info(f"[{log_prefix}] 📦 Iniciando descarga particionada desde SharePoint")
+    logging.info(f"[{log_prefix}]   URL: {sharepoint_folder_url}")
+    logging.info(f"[{log_prefix}]   Patrón: {file_pattern}")
+
+    # 1. Autenticación
+    auth = get_sharepoint_authenticator()
+    access_token = auth.get_token()
+
+    # 2. Listar archivos que coincidan con el patrón
+    files = storage_utils.list_sharepoint_directory_files(
+        sharepoint_folder_url,
+        file_pattern,
+        access_token
+    )
+
+    if not files:
+        raise FileNotFoundError(
+            f"No se encontraron archivos con patrón '{file_pattern}' en:\n"
+            f"  {sharepoint_folder_url}\n"
+            f"Verifique permisos y validez de la URL."
+        )
+
+    logging.info(f"[{log_prefix}] 📋 {len(files)} particiones encontradas")
+
+    # Helper function para descargar desde Graph API directamente
+    def _download_from_graph_api(download_url: str, access_token: str) -> bytes:
+        """Descarga un archivo directamente desde Graph API."""
+        headers = {'Authorization': f'Bearer {access_token}'}
+        response = requests.get(download_url, headers=headers, stream=True, timeout=300, verify=False)
+        response.raise_for_status()
+
+        content_chunks = []
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                content_chunks.append(chunk)
+
+        return b''.join(content_chunks)
+
+    # 3. Descargar y parsear primera partición (establecer esquema de referencia)
+    first_file = files[0]
+    logging.info(
+        f"[{log_prefix}] ⬇️  Descargando partición 1/{len(files)}: "
+        f"{first_file['name']} ({first_file['size'] / 1024:.0f} KB)"
+    )
+
+    first_bytes = _download_from_graph_api(first_file['download_url'], access_token)
+    df_first = read_csv_from_bytes(
+        blob_content_bytes=first_bytes,
+        filename_for_log=first_file['name'],
+        usecols=usecols
+    )
+
+    first_schema = set(df_first.columns)
+    first_filename = first_file['name']
+    logging.info(
+        f"[{log_prefix}] ✓ Partición 1: {len(df_first):,} filas, "
+        f"{len(df_first.columns)} columnas"
+    )
+
+    chunks = [df_first]
+
+    # 4. Descargar y parsear particiones restantes (con validación de esquema)
+    for idx, file_info in enumerate(files[1:], start=2):
+        logging.info(
+            f"[{log_prefix}] ⬇️  Descargando partición {idx}/{len(files)}: "
+            f"{file_info['name']} ({file_info['size'] / 1024:.0f} KB)"
+        )
+
+        try:
+            # Descargar archivo
+            file_bytes = _download_from_graph_api(file_info['download_url'], access_token)
+
+            # Parsear CSV
+            df_chunk = read_csv_from_bytes(
+                blob_content_bytes=file_bytes,
+                filename_for_log=file_info['name'],
+                usecols=usecols
+            )
+
+            # Validación de esquema (mismo que local_partitioned_csv)
+            chunk_schema = set(df_chunk.columns)
+            if chunk_schema != first_schema:
+                missing = first_schema - chunk_schema
+                extra = chunk_schema - first_schema
+                raise ValueError(
+                    f"Schema mismatch en partición '{file_info['name']}':\n"
+                    f"  Columnas faltantes: {sorted(missing)}\n"
+                    f"  Columnas adicionales: {sorted(extra)}\n"
+                    f"  Partición de referencia: '{first_filename}'"
+                )
+
+            logging.info(f"[{log_prefix}] ✓ Partición {idx}: {len(df_chunk):,} filas")
+            chunks.append(df_chunk)
+
+        except ValueError as ve:
+            # Error de esquema - crítico, detener proceso
+            logging.error(f"[{log_prefix}] ✗ Error de esquema en '{file_info['name']}': {ve}")
+            raise
+        except Exception as e:
+            # Otros errores - registrar y continuar (permite partial success)
+            logging.warning(
+                f"[{log_prefix}] ⚠️  Error procesando '{file_info['name']}': {e}"
+            )
+            logging.warning(f"[{log_prefix}] ⚠️  Saltando partición corrupta y continuando...")
+            continue
+
+    # 5. Concatenar todas las particiones
+    if not chunks:
+        raise ValueError("No se pudieron cargar particiones válidas")
+
+    logging.info(f"[{log_prefix}] 🔗 Concatenando {len(chunks)} particiones válidas...")
+    df_combined = pd.concat(chunks, ignore_index=True)
+
+    logging.info(
+        f"[{log_prefix}] ✅ Carga completa: {len(df_combined):,} filas totales, "
+        f"{len(df_combined.columns)} columnas"
+    )
+
+    return df_combined
+
+
 # Clase contenedora para todas las utilidades CSV
 class CSVUtils:
     """Clase contenedora para todas las utilidades de CSV."""
@@ -471,6 +618,19 @@ class CSVUtils:
         Sigue el mismo patrón que los otros métodos de CSVUtils.
         """
         return read_partitioned_csv_from_directory(base_directory, file_pattern, usecols, log_prefix)
+
+    @staticmethod
+    def read_partitioned_csv_from_sharepoint(
+        sharepoint_folder_url: str,
+        file_pattern: str,
+        usecols: Optional[List[str]] = None,
+        log_prefix: str = "sharepoint_partitioned"
+    ) -> pd.DataFrame:
+        """
+        Método estático wrapper para read_partitioned_csv_from_sharepoint.
+        Sigue el mismo patrón que los otros métodos de CSVUtils.
+        """
+        return read_partitioned_csv_from_sharepoint(sharepoint_folder_url, file_pattern, usecols, log_prefix)
 
 
 def process_sku_file_upload(file_content: bytes, filename: Optional[str] = None) -> List[str]:

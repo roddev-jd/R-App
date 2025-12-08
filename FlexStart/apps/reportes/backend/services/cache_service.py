@@ -579,6 +579,77 @@ class PersistentCache:
                     result['error'] = f'Error HTTP: {response.status_code}'
                     result['comparison_details'] = f'Respuesta inesperada del servidor SharePoint'
 
+            # BRANCH 2.5: SharePoint Partitioned (NUEVO)
+            elif source_type == "sharepoint_partitioned":
+                from services.storage_utils import get_sharepoint_partition_metadata
+                from datetime import datetime, timezone
+
+                logger.info(f"🔍 Verificando actualizaciones SharePoint particionado: {base_display_name}")
+
+                # Obtener configuración
+                folder_url = azure_config.get('folder_url') if azure_config else None
+                file_pattern = azure_config.get('file_pattern', '*.csv') if azure_config else '*.csv'
+
+                if not folder_url:
+                    result['error'] = 'Falta configuración folder_url en azure_config'
+                    result['comparison_details'] = 'No se puede verificar sin URL de carpeta'
+                    return result
+
+                # Obtener token de acceso
+                access_token = None
+                if auth_headers:
+                    auth_header = auth_headers.get('Authorization', '')
+                    if auth_header.startswith('Bearer '):
+                        access_token = auth_header.replace('Bearer ', '')
+
+                try:
+                    # Obtener metadata de todas las particiones
+                    partition_meta = get_sharepoint_partition_metadata(
+                        folder_url,
+                        file_pattern,
+                        access_token
+                    )
+
+                    latest_modified = partition_meta['latest_modified']
+                    cache_time = datetime.fromisoformat(metadata['cached_at'].replace('Z', '+00:00'))
+
+                    # Calcular diferencia
+                    time_diff = (latest_modified - cache_time).total_seconds() / 60.0
+
+                    # Comparar con tolerancia (mismo que local_partitioned_csv)
+                    if latest_modified > (cache_time + self.TIMESTAMP_TOLERANCE):
+                        result['update_available'] = True
+                        result['reason'] = (
+                            f'Partición actualizada hace {time_diff:.1f} minutos. '
+                            f'Caché: {cache_time.strftime("%Y-%m-%d %H:%M:%S")}, '
+                            f'SharePoint: {latest_modified.strftime("%Y-%m-%d %H:%M:%S")}'
+                        )
+                        result['comparison_details'] = (
+                            f'{partition_meta["file_count"]} particiones verificadas. '
+                            f'Tamaño total: {partition_meta["total_size"] / (1024**2):.1f} MB'
+                        )
+                        logger.info(f"📥 Actualización disponible para '{base_display_name}' ({time_diff:.1f} min)")
+                    else:
+                        result['update_available'] = False
+                        result['reason'] = (
+                            f'Caché dentro del margen de tolerancia ({-time_diff:.1f} min de antigüedad). '
+                            f'{partition_meta["file_count"]} particiones verificadas.'
+                        )
+                        result['comparison_details'] = (
+                            f'Última modificación: {latest_modified.strftime("%Y-%m-%d %H:%M:%S")}. '
+                            f'Tamaño total: {partition_meta["total_size"] / (1024**2):.1f} MB'
+                        )
+                        logger.info(f"✅ Caché válido para '{base_display_name}'")
+
+                except FileNotFoundError as e:
+                    result['error'] = f'Archivos no encontrados: {str(e)}'
+                    result['comparison_details'] = 'Verifique permisos y URL de carpeta SharePoint'
+                    logger.warning(f"⚠️ Archivos no encontrados para '{base_display_name}': {e}")
+                except Exception as e:
+                    result['error'] = f'Error verificación: {str(e)}'
+                    result['comparison_details'] = f'Excepción: {type(e).__name__}'
+                    logger.warning(f"⚠️ Error verificando SharePoint particionado: {e}")
+
             # BRANCH 2: Azure Blob Storage (NUEVO - HITO 1.4)
             elif source_type == "azure":
                 from azure.storage.blob import BlobServiceClient

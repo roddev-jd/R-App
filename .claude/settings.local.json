@@ -27,7 +27,14 @@
       "Bash(curl:*)",
       "Bash(lsof:*)",
       "Bash(timeout 10 python3:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Bash(git commit:*)",
+      "Bash(gh:*)",
+      "Bash(ssh:*)",
+      "Bash(ssh-add:*)",
+      "Bash(git fetch:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,48 @@
+# App_SUITE Minimal Requirements (Production)
+# Dependencias mínimas solo para ejecutar el servidor FastAPI en producción
+# Sin launcher UI, sin tools de desarrollo
+# Versión: 2.0.3
+
+# ============================================
+# FastAPI Framework & Web Server (CORE)
+# ============================================
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+starlette>=0.27.0
+python-multipart>=0.0.6
+jinja2>=3.1.2
+
+# ============================================
+# HTTP Client
+# ============================================
+requests>=2.31.0
+aiohttp>=3.9.0
+
+# ============================================
+# Data Processing & Database
+# ============================================
+pandas>=2.2.0
+duckdb>=0.9.0
+pyarrow>=14.0.0
+openpyxl>=3.1.0
+
+# ============================================
+# Cloud Storage & Services
+# ============================================
+azure-storage-blob>=12.19.0
+boto3>=1.34.0
+msal>=1.24.0
+
+# ============================================
+# System Utilities
+# ============================================
+keyring>=24.0.0
+psutil>=5.9.0
+packaging>=23.0
+
+# ============================================
+# Image Processing (si se necesita)
+# ============================================
+Pillow>=10.0.0
+numpy>=1.24.3
