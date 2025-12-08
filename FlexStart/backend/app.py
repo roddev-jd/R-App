@@ -142,6 +142,32 @@ def _execute_script_sync(script_path: str, script_dir: str) -> dict:
             text=True
         )
 
+        # Consumir pipes en background para prevenir deadlocks
+        # Si el proceso escribe más de 64KB a stdout/stderr, se bloqueará esperando
+        # que alguien lea del pipe. Estos threads daemon consumen la salida.
+        def consume_pipe(pipe, pipe_name):
+            """Consume output from a pipe to prevent deadlock"""
+            try:
+                for line in iter(pipe.readline, ''):
+                    pass  # Descartar la salida
+            except Exception:
+                pass
+
+        import threading
+        stdout_thread = threading.Thread(
+            target=consume_pipe,
+            args=(process.stdout, "stdout"),
+            daemon=True
+        )
+        stdout_thread.start()
+
+        stderr_thread = threading.Thread(
+            target=consume_pipe,
+            args=(process.stderr, "stderr"),
+            daemon=True
+        )
+        stderr_thread.start()
+
         # Esperar un momento breve para detectar fallos inmediatos
         import time
         time.sleep(0.5)
@@ -150,21 +176,19 @@ def _execute_script_sync(script_path: str, script_dir: str) -> dict:
         poll_result = process.poll()
         if poll_result is not None:
             # El proceso ya terminó - probablemente un error
-            stdout, stderr = process.communicate()
-            error_msg = f"El script falló al iniciar.\n"
-            if stderr:
-                error_msg += f"Error: {stderr[:500]}"  # Limitar longitud
-            if stdout:
-                error_msg += f"\nSalida: {stdout[:500]}"
+            # Dar tiempo a los threads consumidores para capturar toda la salida
+            time.sleep(0.2)
 
-            logger.error(f"Script {os.path.basename(script_path)} failed: {stderr}")
+            error_msg = f"El script falló al iniciar con código de salida {poll_result}.\n"
+            logger.error(f"Script {os.path.basename(script_path)} failed with exit code {poll_result}")
             return {
                 "success": False,
                 "message": error_msg
             }
 
         # No esperamos a que termine el proceso para permitir scripts GUI de larga duración
-        # El script se inició correctamente
+        # El script se inició correctamente, y los threads consumidores seguirán
+        # leyendo stdout/stderr en background
         return {
             "success": True,
             "pid": process.pid,

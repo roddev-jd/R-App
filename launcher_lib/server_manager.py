@@ -16,6 +16,7 @@ import logging
 import requests
 import threading
 import asyncio
+import select
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -52,20 +53,47 @@ class ServerManager:
 
     def _capture_output(self, stream, prefix: str):
         """
-        Capture output from stdout/stderr stream in background thread
+        Capture output from stdout/stderr stream in background thread with non-blocking reads
 
         Args:
             stream: The stream to read from (stdout or stderr)
             prefix: Prefix for log lines (e.g., "[STDOUT]" or "[STDERR]")
         """
         try:
-            for line in iter(stream.readline, ''):
-                if self.stop_log_capture.is_set():
-                    break
-                if line:
+            # Use select for non-blocking reads with timeout
+            while not self.stop_log_capture.is_set():
+                # Check if stream has data available with 0.5s timeout
+                # On Windows, select only works with sockets, so we fallback to regular reads
+                if platform.system() == "Windows":
+                    # Windows: Use short readline with try/except
+                    try:
+                        line = stream.readline()
+                        if not line:  # EOF
+                            break
+                        if line:
+                            timestamp = datetime.now().strftime("%H:%M:%S")
+                            log_line = f"[{timestamp}] {prefix} {line.rstrip()}"
+                            self.log_buffer.append(log_line)
+                    except Exception:
+                        break
+                else:
+                    # Unix/Mac: Use select for non-blocking check
+                    ready, _, _ = select.select([stream], [], [], 0.5)
+
+                    if not ready:
+                        # No data available, check stop signal and continue
+                        continue
+
+                    line = stream.readline()
+                    if not line:  # EOF
+                        break
+
                     timestamp = datetime.now().strftime("%H:%M:%S")
                     log_line = f"[{timestamp}] {prefix} {line.rstrip()}"
                     self.log_buffer.append(log_line)
+
+            logger.debug(f"{prefix} capture thread stopping cleanly")
+
         except Exception as e:
             logger.error(f"Error capturing output from {prefix}: {e}")
 
@@ -177,8 +205,18 @@ class ServerManager:
                 # Force kill if not stopped
                 logger.warning("Server did not stop gracefully, forcing termination...")
                 self.process.kill()
-                self.process.wait()
-                logger.info("Server force stopped")
+
+                # Wait for force kill with timeout (2 seconds)
+                try:
+                    self.process.wait(timeout=2)
+                    logger.info("Server force stopped")
+                except subprocess.TimeoutExpired:
+                    logger.error("Server did not respond to SIGKILL! Process may be in uninterruptible state.")
+                    # Last resort: orphan the process and continue
+                    self.process = None
+                    self.port = None
+                    self.start_time = None
+                    return False
 
             # Wait for log threads to finish (with timeout)
             for thread in self.log_threads:
