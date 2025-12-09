@@ -34,7 +34,10 @@
       "Bash(ssh-add:*)",
       "Bash(git fetch:*)",
       "Bash(git remote set-url:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(kill:*)",
+      "Bash(\"/Users/rjarad/Library/Mobile Documents/com~apple~CloudDocs/Apps/R-App/R-App/test_full_flow.sh\")",
+      "Bash(xargs kill -9)"
     ],
     "deny": [],
     "ask": []
