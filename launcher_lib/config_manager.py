@@ -57,11 +57,11 @@ class ConfigManager:
             'auto_start_server': 'false',
             'auto_open_browser': 'true',
             'server_startup_delay': '2.0',  # Legacy - kept for compatibility
-            'server_startup_max_wait': '300.0',  # Increased from 10.0 to 300.0 (5 minutes) for slower systems
-            'server_startup_initial_delay': '1.0',  # Increased from 0.5 to 1.0 second
-            'health_check_max_retries': '60',  # Increased from 5 to 60 attempts
+            'server_startup_max_wait': '60.0',  # Balanced timeout for most systems (1 minute)
+            'server_startup_initial_delay': '2.0',  # Initial delay before health checks
+            'health_check_max_retries': '30',  # Sufficient retries with exponential backoff
             'health_check_backoff_factor': '2.0',
-            'health_check_base_timeout': '5.0',  # Increased from 2.0 to 5.0 seconds
+            'health_check_base_timeout': '5.0',  # Generous timeout per health check
             'port_reservation_timeout': '5.0',
         }
 
@@ -257,15 +257,15 @@ class ConfigManager:
 
     def get_server_startup_max_wait(self) -> float:
         """Get maximum time to wait for server startup in seconds"""
-        return self.get_float('Launcher', 'server_startup_max_wait', 10.0)
+        return self.get_float('Launcher', 'server_startup_max_wait', 60.0)
 
     def get_server_startup_initial_delay(self) -> float:
         """Get initial delay before starting health check polls in seconds"""
-        return self.get_float('Launcher', 'server_startup_initial_delay', 0.5)
+        return self.get_float('Launcher', 'server_startup_initial_delay', 2.0)
 
     def get_health_check_max_retries(self) -> int:
         """Get maximum number of health check retries"""
-        return self.get_int('Launcher', 'health_check_max_retries', 5)
+        return self.get_int('Launcher', 'health_check_max_retries', 30)
 
     def get_health_check_backoff_factor(self) -> float:
         """Get exponential backoff factor for health check retries"""
@@ -273,7 +273,7 @@ class ConfigManager:
 
     def get_health_check_base_timeout(self) -> float:
         """Get base timeout for health checks in seconds"""
-        return self.get_float('Launcher', 'health_check_base_timeout', 2.0)
+        return self.get_float('Launcher', 'health_check_base_timeout', 5.0)
 
     def get_port_reservation_timeout(self) -> float:
         """Get port reservation timeout in seconds"""
