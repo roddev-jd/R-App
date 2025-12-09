@@ -13,6 +13,7 @@ import subprocess
 import socket
 import requests
 from pathlib import Path
+from launcher_lib.process_utils import cleanup_port, find_process_on_port
 
 
 def is_port_in_use(port: int) -> bool:
@@ -96,13 +97,65 @@ def main():
             print("=" * 70)
             return 0  # Success
         else:
-            # Port occupied by another process
-            print(f"❌ ERROR: Port {port} is occupied by another process")
+            # Port occupied by stale process - attempt cleanup
+            print(f"⚠️  Port {port} is occupied by a stale process")
+            print(f"🔧 Attempting automatic cleanup...")
             print()
-            print("Please stop the other process or check if it's a stale launcher process.")
-            print(f"You can find the process using: lsof -i :{port}")
-            print()
-            return 1  # Error
+
+            # Find process details first (for user feedback)
+            process_info = find_process_on_port(port)
+            if process_info:
+                print(f"   Found: {process_info.process_name} (PID {process_info.pid})")
+                print(f"   Terminating process...")
+                print()
+
+            # Attempt cleanup
+            cleanup_result = cleanup_port(port, timeout=3.0)
+
+            if cleanup_result.success:
+                print(f"✅ Cleanup successful!")
+                if cleanup_result.pid:
+                    print(f"   Killed process {cleanup_result.pid} using {cleanup_result.method} termination")
+                print()
+
+                # Wait for port to be fully released
+                print(f"⏳ Waiting for port {port} to be released...")
+                time.sleep(2)
+
+                # Verify port is now free
+                if not is_port_in_use(port):
+                    print(f"✅ Port {port} is now available!")
+                    print(f"🚀 Proceeding with launcher startup...")
+                    print()
+                    # Fall through to normal startup below
+                else:
+                    print(f"❌ ERROR: Port {port} is still occupied after cleanup")
+                    print()
+                    print("This may indicate:")
+                    print("  - Another process quickly bound to the port")
+                    print("  - System delay in releasing the port")
+                    print()
+                    print(f"Please wait a moment and try again, or manually check: lsof -i :{port}")
+                    print()
+                    return 1
+            else:
+                # Cleanup failed
+                print(f"❌ Automatic cleanup failed: {cleanup_result.message}")
+                if cleanup_result.error:
+                    print(f"   Error: {cleanup_result.error}")
+                print()
+                print("Manual intervention required:")
+                print(f"  Mac/Linux: lsof -i :{port}  (then kill -9 <PID>)")
+                print(f"  Windows:   Use Task Manager to end the process")
+                print()
+
+                # Check for permission issues
+                if "Access denied" in cleanup_result.message:
+                    print("⚠️  The process may be owned by another user or require elevated privileges")
+                    print("   Try running the launcher with elevated permissions")
+                    print()
+
+                return 1
 
     # Port is free - proceed with normal startup
     print(f"🚀 Starting launcher web server on port {port}...")
