@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>P&C Suite</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="/assets_flexstart/img/favicon.png" rel="icon">
+  <link href="/assets_flexstart/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/assets_flexstart/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/assets_flexstart/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="/assets_flexstart/css/main.css" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a class="logo d-flex align-items-center me-auto">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <img src="/assets_flexstart/img/logo.png" alt="">
+        <h1 class="sitename">RIPLEY APPS</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Inicio<br></a></li>
+          <li><a id="reportes-btn" class="btn-reportes flex-md-shrink-0" href="/reportes/" target="_blank">
+            <span>Reportes</span>
+            <div class="icon-animated">
+              <i class="bi bi-graph-up"></i>
+            </div>
+          </a></li>
+          <li><a id="prod-peru-btn" class="btn-prod-peru flex-md-shrink-0" href="/prod_peru" target="_blank">
+            <span>Declarador</span>
+            <div class="icon-animated">
+              <i class="bi bi-flag-fill"></i>
+            </div>
+          </a></li>
+          <li><a href="#diseno">Diseno</a></li>
+          <li><a href="#redaccion">Redaccion</a></li>
+          <li><a href="#about">Manuales</a></li>
+          <li><a id="birthday-btn" class="btn-birthday flex-md-shrink-0" href="/birthdays.html">
+            <div class="cake-icon">
+              <i class="bi bi-cake2-fill"></i>
+            </div>
+          </a></li>
+          <!--<li><a href="#services">Services</a></li>-->
+          <!--<li><a href="#portfolio">Portfolio</a></li>-->
+          <!--<li><a href="#team">Team</a></li>-->
+          <!--<li><a href="blog.html">Blog</a></li>-->
+          <!--<li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="#">Dropdown 1</a></li>
+              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                <ul>
+                  <li><a href="#">Deep Dropdown 1</a></li>
+                  <li><a href="#">Deep Dropdown 2</a></li>
+                  <li><a href="#">Deep Dropdown 3</a></li>
+                  <li><a href="#">Deep Dropdown 4</a></li>
+                  <li><a href="#">Deep Dropdown 5</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Dropdown 2</a></li>
+              <li><a href="#">Dropdown 3</a></li>
+              <li><a href="#">Dropdown 4</a></li>
+            </ul>
+          </li>-->
+          <!--<li class="listing-dropdown"><a href="#"><span>Listing Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li>
+                <a href="#">Column 1 link 1</a>
+                <a href="#">Column 1 link 2</a>
+                <a href="#">Column 1 link 3</a>
+              </li>
+              <li>
+                <a href="#">Column 2 link 1</a>
+                <a href="#">Column 2 link 2</a>
+                <a href="#">Column 3 link 3</a>
+              </li>
+              <li>
+                <a href="#">Column 3 link 1</a>
+                <a href="#">Column 3 link 2</a>
+                <a href="#">Column 3 link 3</a>
+              </li>
+              <li>
+                <a href="#">Column 4 link 1</a>
+                <a href="#">Column 4 link 2</a>
+                <a href="#">Column 4 link 3</a>
+              </li>
+              <li>
+                <a href="#">Column 5 link 1</a>
+                <a href="#">Column 5 link 2</a>
+                <a href="#">Column 5 link 3</a>
+              </li>
+            </ul>
+          </li>-->
+          <!--<li><a href="#contact">Contact</a></li>-->
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+            <h1 data-aos="fade-up">Soluciones para la optimización de tu flujo de trabajo</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Haz mas sencillo y eficiente tu día a día</p>
+            <div class="d-flex flex-column flex-md-row" data-aos="fade-up" data-aos-delay="200">
+              <a href="#about" class="btn-get-started">Descubre más<i class="bi bi-arrow-right"></i></a>
+              <!--<a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center justify-content-center ms-0 ms-md-4 mt-4 mt-md-0"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>-->
+            </div>
+          </div>
+          <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out">
+            <img src="/assets_flexstart/img/hero-img.png" class="img-fluid animated" alt="">
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+
+<!-- Services Section -->
+    <section id="diseno" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Diseño</h2>
+        <p>Herramientas para diseñadores</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item item-cyan position-relative">
+              <i class="bi bi-activity icon"></i>
+              <h3>Administración de archivos</h3>
+              <p>Grupo de herramientas python enfocadas en la administración de archivos automatizada.</p>
+              <div class="tool-buttons-grid">
+                <button class="tool-button" onclick="window.open('/herramientas/buscador_diseno.html', '_blank')" data-title="Buscador">
+                  <i class="bi bi-search"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Dept.html', '_blank')" data-title="Ordenar por departamentos">
+                  <i class="bi bi-archive-fill"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Encarpetar.html', '_blank')" data-title="Monitor encarpetador">
+                  <i class="bi bi-eyeglasses"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Indexar.html', '_blank')" data-title="Listador de carpetas a planilla">
+                  <i class="bi bi-card-checklist"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Prod-Selector.html', '_blank')" data-title="Selector de producción para requerimientos">
+                  <i class="bi bi-check2-circle"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/SVC-OK.html', '_blank')" data-title="Separador de de los SVC que esten OK">
+                  <i class="bi bi-bookmarks-fill"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/TeamSearch.html', '_blank')" data-title="Buscador de team">
+                  <i class="bi bi-microsoft-teams"></i>
+                </button>
+              </div>
+              <div class="tool-tooltip" id="tooltip-admin"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item item-orange position-relative">
+              <i class="bi bi-broadcast icon"></i>
+              <h3>Gestión de Mejoras</h3>
+              <p>Grupo de herramientas python enfocadas en automatizar la gestión de mejoras en diseño.</p>
+              <div class="tool-buttons-grid">
+                <button class="tool-button" onclick="window.open('/herramientas/Scrapper.html', '_blank')" data-title="Descargas por Link">
+                  <i class="bi bi-binoculars-fill"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Renamer-PH.html', '_blank')" data-title="Renombrador Padre Hijo">
+                  <i class="bi bi-arrow-bar-right"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Renamer-Rimage.html', '_blank')" data-title="Renombrador Rimage">
+                  <i class="bi bi-arrows-expand-vertical"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Renamer-ImgFile.html', '_blank')" data-title="Renombrador de imagenes según carpeta">
+                  <i class="bi bi-check2-square"></i>
+                </button>
+
+                <button class="tool-button" onclick="window.open('/herramientas/Renamer-Muestras.html', '_blank')" data-title="Renombrador a columna Muestras">
+                  <i class="bi bi-bookmark-check"></i>
+                </button>
+
+                <button class="tool-button" onclick="window.open('/herramientas/lastImage.html', '_blank')" data-title="Monitor para añadir ultima imagen">
+                  <i class="bi bi-align-end"></i>
+                </button>
+
+                <button class="tool-button" onclick="window.open('/herramientas/Insert.html', '_blank')" data-title="Monitor para insertar imagenes correlativas">
+                  <i class="bi bi-box-arrow-in-right"></i>
+                </button>
+              </div>
+              <div class="tool-tooltip" id="tooltip-mejoras"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item item-teal position-relative">
+              <i class="bi bi-easel icon"></i>
+              <h3>Gestión de Imágenes</h3>
+              <p>Modulo de herramientas python enfocadas en optimizar, comprimir, editar, etc.</p>
+              <div class="tool-buttons-grid">
+                <button class="tool-button" onclick="window.open('/herramientas/miniaturas_diseno.html', '_blank')" data-title="Miniaturas">
+                  <i class="bi bi-aspect-ratio"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Compresor.html', '_blank')" data-title="Compresor">
+                  <i class="bi bi-file-earmark-zip-fill"></i>
+                </button>
+
+                <button class="tool-button" onclick="window.open('/herramientas/Convertidor.html', '_blank')" data-title="Convertidor de formato">
+                  <i class="bi bi-columns"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/RotateImg.html', '_blank')" data-title="Rotador de imágenes">
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Multi-Tags-moda-producto.html', '_blank')" data-title="Asignador de Tags">
+                  <i class="bi bi-postage-heart-fill"></i>
+                </button>
+                <button class="tool-button" onclick="window.open('/herramientas/Validador_tamano.html', '_blank')" data-title="Validador de tamaño de imágenes">
+                  <i class="bi bi-rulers"></i>
+                </button>
+              </div>
+              <div class="tool-tooltip" id="tooltip-imagenes"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item item-indigo position-relative">
+              <i class="bi bi-box-seam icon"></i>
+              <h3>Ripley Image Tools</h3>
+              <p>Modulo de descarga y conversión de imagenes entre sistemas de codificación para CHILE y PERU.</p>
+
+              <!-- Single Download Button -->
+              <div class="download-button-container">
+                <button class="btn-download-package" onclick="downloadRipleyImageTools()">
+                  <i class="bi bi-download"></i>
+                  <span>Descargar Herramienta</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+          <!--<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item item-red position-relative">
+              <i class="bi bi-bounding-box-circles icon"></i>
+              <h3>Asperiores Commodit</h3>
+              <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
+              <a href="#" class="read-more stretched-link"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="service-item item-indigo position-relative">
+              <i class="bi bi-calendar4-week icon"></i>
+              <h3>Velit Doloremque</h3>
+              <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
+              <a href="#" class="read-more stretched-link"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+            <div class="service-item item-pink position-relative">
+              <i class="bi bi-chat-square-text icon"></i>
+              <h3>Dolori Architecto</h3>
+              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti recusandae ducimus enim.</p>
+              <a href="#" class="read-more stretched-link"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>-->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Services Section -->
+
+    <!-- Values Section -->
+    <section id="redaccion" class="values section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Redacción</h2>
+        <p>Herramientas para Redactores<br></p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card">
+              <img src="/assets_flexstart/img/values-1.png" class="img-fluid" alt="">
+              <h3>Modulo SVC</h3>
+              <p>Herramienta Python para generar los archivos para SVC</p>
+            </div>
+          </div>
+
+          <!--<div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card">
+              <img src="/assets_flexstart/img/values-2.png" class="img-fluid" alt="">
+              <h3>Voluptatem voluptatum alias</h3>
+              <p>Repudiandae amet nihil natus in distinctio suscipit id. Doloremque ducimus ea sit non.</p>
+            </div>
+          </div>-->
+
+          <!--<div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card">
+              <img src="/assets_flexstart/img/values-3.png" class="img-fluid" alt="">
+              <h3>Fugit cupiditate alias nobis.</h3>
+              <p>Eius est ratione doloremque quia maiores aut sinus occaecati repudiandae. Sit dignissimos sit..</p>
+            </div>
+          </div>-->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Values Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container" data-aos="fade-up">
+        <div class="row gx-0">
+
+          <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="content">
+              <h3>Misión del equipo</h3>
+              <h2>La misión de publicación & contenido es publicar todos los productos que tiene Ripley para ofrecer a sus clientes asegurando calidad tanto a nivel visual como informativo.</h2>
+              <p>
+                Somos un equipo con un fuerte caracter colaborativo enfocado al cumplimiento de objetivos y metas.
+              </p>
+              <div class="text-center text-lg-start">
+                <a href="#" id="manuales-toggle-btn" class="btn-read-more d-inline-flex align-items-center justify-content-center align-self-center">
+                  <span>Manuales</span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 d-flex align-items-center position-relative" data-aos="zoom-out" data-aos-delay="200">
+            <img src="/assets_flexstart/img/about.jpg" class="img-fluid about-image" alt="" id="about-image">
+
+            <!-- Contenedor de botones de manuales -->
+            <div class="manuales-buttons-container" id="manuales-buttons">
+              <a href="/manuales/MHD Manual 2025.pdf" target="_blank" class="manual-button">
+                <span>Mujer, Hombre e Infantil</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+              <a href="/assets_flexstart/manuales/manual_2.pdf" target="_blank" class="manual-button">
+                <span>Proximamente</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+              <a href="/assets_flexstart/manuales/manual_3.pdf" target="_blank" class="manual-button">
+                <span>Proximamente</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+              <a href="/assets_flexstart/manuales/manual_4.pdf" target="_blank" class="manual-button">
+                <span>Proximamente</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+              <a href="/assets_flexstart/manuales/manual_5.pdf" target="_blank" class="manual-button">
+                <span>Proximamente</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section><!-- /About Section -->
+
+    
+
+    
+
+    
+    <!--<section id="faq" class="faq section">
+
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>F.A.Q</h2>
+        <p>Preguntas Frecuentes</p>
+      </div>
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="faq-container">
+
+              <div class="faq-item faq-active">
+                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+                <div class="faq-content">
+                  <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h3>
+                <div class="faq-content">
+                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+                <div class="faq-content">
+                  <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="faq-container">
+
+              <div class="faq-item">
+                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
+                <div class="faq-content">
+                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor consequat?</h3>
+                <div class="faq-content">
+                  <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3>Perspiciatis quod quo quos nulla quo illum ullam?</h3>
+                <div class="faq-content">
+                  <p>Enim ea facilis quaerat voluptas quidem et dolorem. Quis et consequatur non sed in suscipit sequi. Distinctio ipsam dolore et.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section id="portfolio" class="portfolio section">
+
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Portfolio</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+      </div>
+
+      <div class="container">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+
+          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-app">App</li>
+            <li data-filter=".filter-product">Product</li>
+            <li data-filter=".filter-branding">Branding</li>
+            <li data-filter=".filter-books">Books</li>
+          </ul>
+
+          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/app-1.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>App 1</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/app-1.jpg" title="App 1" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/product-1.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Product 1</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/product-1.jpg" title="Product 1" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/branding-1.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Branding 1</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/branding-1.jpg" title="Branding 1" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/books-1.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Books 1</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/books-1.jpg" title="Branding 1" data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/app-2.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>App 2</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/app-2.jpg" title="App 2" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/product-2.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Product 2</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/product-2.jpg" title="Product 2" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/branding-2.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Branding 2</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/branding-2.jpg" title="Branding 2" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/books-2.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Books 2</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/books-2.jpg" title="Branding 2" data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/app-3.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>App 3</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/app-3.jpg" title="App 3" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-product">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/product-3.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Product 3</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/product-3.jpg" title="Product 3" data-gallery="portfolio-gallery-product" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-branding">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/branding-3.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Branding 3</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/branding-3.jpg" title="Branding 3" data-gallery="portfolio-gallery-branding" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-books">
+              <div class="portfolio-content h-100">
+                <img src="/assets_flexstart/img/portfolio/books-3.jpg" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  <h4>Books 3</h4>
+                  <p>Lorem ipsum, dolor sit amet consectetur</p>
+                  <a href="/assets_flexstart/img/portfolio/books-3.jpg" title="Branding 3" data-gallery="portfolio-gallery-book" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                  <a href="portfolio-details.html" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>-->
+
+
+    <!--<section id="team" class="team section">
+
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Team</h2>
+        <p>Nuestro equipo de trabajo</p>
+      </div>
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="/assets_flexstart/img/team/team-1.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Walter White</h4>
+                <span>Chief Executive Officer</span>
+                <p>Velit aut quia fugit et et. Dolorum ea voluptate vel tempore tenetur ipsa quae aut. Ipsum exercitationem iure minima enim corporis et voluptate.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="/assets_flexstart/img/team/team-2.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Sarah Jhonson</h4>
+                <span>Product Manager</span>
+                <p>Quo esse repellendus quia id. Est eum et accusantium pariatur fugit nihil minima suscipit corporis. Voluptate sed quas reiciendis animi neque sapiente.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="/assets_flexstart/img/team/team-3.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>William Anderson</h4>
+                <span>CTO</span>
+                <p>Vero omnis enim consequatur. Voluptas consectetur unde qui molestiae deserunt. Voluptates enim aut architecto porro aspernatur molestiae modi.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
+            <div class="team-member">
+              <div class="member-img">
+                <img src="/assets_flexstart/img/team/team-4.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Amanda Jepson</h4>
+                <span>Accountant</span>
+                <p>Rerum voluptate non adipisci animi distinctio et deserunt amet voluptas. Quia aut aliquid quod aut adversarial dignissimos numquid consem psum et.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>-->
+
+  </main>
+
+  <footer id="footer" class="footer">
+
+    <div class="container footer-top">
+      <!-- Botón de Métricas alineado a la izquierda -->
+      <!--<div class="row mb-3">
+        <div class="col-12">
+          <a id="metricas-btn-footer" class="btn-metricas flex-md-shrink-0" href="/metricas.html" style="display: inline-flex; align-items: center; text-decoration: none;">
+            <span style="margin-right: 8px;">Métricas</span>
+            <div class="icon-animated">
+              <i class="bi bi-bar-chart-fill"></i>
+            </div>
+          </a>
+        </div>
+      </div>-->
+      <!--<div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">Ripley APPS</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>Alonso de Córdova 5320</p>
+            <p>Las Condes</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Accesos directos</h4>
+          <ul>
+            <li><a href="#hero">Inicio</a></li>
+            <li><a href="/reportes/">Reportes</a></li>
+            <li><a href="#diseno">Diseño</a></li>
+            <li><a href="#redaccion">Redacción</a></li>
+            <li><a href="#">Acerda de</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12 footer-newsletter">
+          <h4>Our Newsletter</h4>
+          <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+          <form action="forms/newsletter.php" method="post" class="php-email-form">
+            <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your subscription has been received. Thank you!</div>
+          </form>
+        </div>-->
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Ripley APP</strong> <span>Todos los derechos reservados</span></p>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/flexstart-bootstrap-startup-template/ -->
+        Deseñado por <a href="https://rjresolve.cl/">Rodrigo Jara Duarte</a> y Publicación E-Commerce Ripley.
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="/assets_flexstart/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets_flexstart/vendor/php-email-form/validate.js"></script>
+  <script src="/assets_flexstart/vendor/aos/aos.js"></script>
+  <script src="/assets_flexstart/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="/assets_flexstart/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="/assets_flexstart/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="/assets_flexstart/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="/assets_flexstart/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="/assets_flexstart/js/main.js"></script>
+
+  <!-- Tooltip functionality for tool buttons -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tooltip functionality for tool buttons
+      const serviceItems = document.querySelectorAll('.service-item');
+
+      serviceItems.forEach(function(serviceItem, index) {
+        const toolButtons = serviceItem.querySelectorAll('.tool-button');
+        const tooltip = serviceItem.querySelector('.tool-tooltip');
+
+        if (!tooltip) return;
+
+        toolButtons.forEach(function(button) {
+          button.addEventListener('mouseenter', function() {
+            const title = this.getAttribute('data-title');
+            if (title) {
+              tooltip.textContent = title;
+            }
+          });
+
+          button.addEventListener('mouseleave', function() {
+            tooltip.textContent = '';
+          });
+        });
+      });
+    });
+
+    // Download handler for Ripley Image Tools package
+    async function downloadRipleyImageTools() {
+      const button = event.currentTarget;
+      const originalHTML = button.innerHTML;
+
+      try {
+        // Disable button and show loading state
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i><span>Descargando...</span>';
+
+        // Fetch the ZIP file
+        const response = await fetch('/api/download-package/ripley-image-tools');
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        // Get blob and create download link
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'RIPLEY_IMAGE_TOOLS.zip';
+        document.body.appendChild(a);
+        a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        // Show success state
+        button.innerHTML = '<i class="bi bi-check-circle-fill"></i><span>Descargado</span>';
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+          button.disabled = false;
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error descargando Ripley Image Tools:', error);
+        alert('Error al descargar la herramienta. Por favor, intente nuevamente.');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+      }
+    }
+  </script>
+
+</body>
+
+</html>
