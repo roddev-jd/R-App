@@ -10,6 +10,9 @@ import logging
 import subprocess
 import asyncio
 import json
+import atexit
+import time
+import threading
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from fastapi import FastAPI, HTTPException
@@ -26,6 +29,14 @@ logging.basicConfig(
     datefmt='%H:%M:%S'
 )
 logger = logging.getLogger(__name__)
+
+# Import psutil for process management (cross-platform)
+try:
+    import psutil
+    HAS_PSUTIL = True
+except ImportError:
+    HAS_PSUTIL = False
+    logger.warning("psutil not available - child process cleanup will be limited")
 
 # Crear aplicación FastAPI principal
 app = FastAPI(
@@ -49,6 +60,66 @@ if SHARED_DIR not in sys.path:
 
 # ThreadPoolExecutor para ejecución de scripts
 script_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ScriptExec")
+
+# Tracking de child processes para cleanup
+_child_processes = set()
+
+def track_child_process(pid: int):
+    """Registrar child process para cleanup."""
+    _child_processes.add(pid)
+    logger.info(f"[PROCESS] Tracking child process: {pid}")
+
+def cleanup_child_processes(timeout: float = 3.0):
+    """
+    Kill all tracked child processes con SIGTERM → SIGKILL.
+    Cross-platform usando psutil.
+    """
+    if not _child_processes:
+        return
+
+    logger.info(f"[SHUTDOWN] Cleaning up {len(_child_processes)} child processes")
+
+    if not HAS_PSUTIL:
+        logger.warning("[SHUTDOWN] psutil not available - cannot cleanup child processes")
+        return
+
+    # Paso 1: SIGTERM a todos los procesos
+    for pid in list(_child_processes):
+        try:
+            process = psutil.Process(pid)
+            if process.is_running():
+                logger.info(f"[SHUTDOWN] Sending SIGTERM to process {pid}")
+                process.terminate()
+        except psutil.NoSuchProcess:
+            _child_processes.discard(pid)
+        except Exception as e:
+            logger.error(f"[SHUTDOWN] Error terminating process {pid}: {e}")
+
+    # Paso 2: Esperar timeout
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        alive = [pid for pid in _child_processes if psutil.pid_exists(pid)]
+        if not alive:
+            logger.info("[SHUTDOWN] All child processes terminated cleanly")
+            return
+        time.sleep(0.1)
+
+    # Paso 3: SIGKILL a sobrevivientes
+    alive = [pid for pid in _child_processes if psutil.pid_exists(pid)]
+    if alive:
+        logger.warning(f"[SHUTDOWN] Force killing {len(alive)} processes")
+        for pid in alive:
+            try:
+                process = psutil.Process(pid)
+                # Kill recursivo (descendientes también)
+                for child in process.children(recursive=True):
+                    logger.warning(f"[SHUTDOWN] Killing child process {child.pid}")
+                    child.kill()
+                logger.warning(f"[SHUTDOWN] Sending SIGKILL to process {pid}")
+                process.kill()
+                process.wait(timeout=1.0)
+            except Exception as e:
+                logger.error(f"[SHUTDOWN] Error killing process {pid}: {e}")
 
 # Modelo para solicitudes de scripts
 class ScriptRequest(BaseModel):
@@ -189,6 +260,9 @@ def _execute_script_sync(script_path: str, script_dir: str) -> dict:
         # No esperamos a que termine el proceso para permitir scripts GUI de larga duración
         # El script se inició correctamente, y los threads consumidores seguirán
         # leyendo stdout/stderr en background
+        # Track child process para cleanup en shutdown
+        track_child_process(process.pid)
+
         return {
             "success": True,
             "pid": process.pid,
@@ -609,7 +683,85 @@ async def download_tool(script_id: str):
         raise HTTPException(status_code=500, detail=f"Error al preparar la descarga: {str(e)}")
 
 
+@app.get("/api/download-package/ripley-image-tools",
+         summary="Descargar paquete Ripley Image Tools")
+async def download_ripley_image_tools():
+    """
+    Descarga el paquete completo de Ripley Image Tools como archivo ZIP.
+    Este endpoint sirve un ZIP pre-construido desde el sistema de archivos.
+    """
+    zip_path = os.path.join(APPS_DIR, "RIPLEY_IMAGE_TOOLS.zip")
 
+    # Verificar que el archivo existe
+    if not os.path.exists(zip_path):
+        logging.error(f"Paquete Ripley Image Tools no encontrado en: {zip_path}")
+        raise HTTPException(
+            status_code=404,
+            detail="El paquete Ripley Image Tools no está disponible en el servidor."
+        )
+
+    # Verificar que es un archivo (no directorio)
+    if not os.path.isfile(zip_path):
+        logging.error(f"La ruta no es un archivo: {zip_path}")
+        raise HTTPException(
+            status_code=500,
+            detail="La ruta del paquete no es válida."
+        )
+
+    try:
+        logging.info("Iniciando descarga de RIPLEY_IMAGE_TOOLS.zip")
+
+        # Retornar el archivo directamente
+        return FileResponse(
+            path=zip_path,
+            media_type="application/zip",
+            filename="RIPLEY_IMAGE_TOOLS.zip",
+            headers={
+                "Content-Disposition": "attachment; filename=RIPLEY_IMAGE_TOOLS.zip",
+                "Cache-Control": "no-cache"
+            }
+        )
+
+    except Exception as e:
+        logging.error(f"Error al servir RIPLEY_IMAGE_TOOLS.zip: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al preparar la descarga: {str(e)}"
+        )
+
+
+# Shutdown handler para gateway central
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Shutdown handler para el gateway central."""
+    logger.info("[SHUTDOWN] Gateway central shutting down")
+
+    # Paso 1: Stop accepting new scripts
+    global script_executor
+    if script_executor:
+        logger.info("[SHUTDOWN] Shutting down script executor")
+        script_executor.shutdown(wait=False, cancel_futures=True)
+
+    # Paso 2: Kill child processes (scripts activos)
+    cleanup_child_processes(timeout=3.0)
+
+    # Paso 3: Final cleanup de executor con timeout corto
+    def force_executor_shutdown():
+        if script_executor:
+            try:
+                # Final wait con timeout cortísimo
+                script_executor.shutdown(wait=True, cancel_futures=True)
+            except Exception as e:
+                logger.error(f"[SHUTDOWN] Error in executor shutdown: {e}")
+
+    shutdown_thread = threading.Thread(target=force_executor_shutdown, daemon=True)
+    shutdown_thread.start()
+    shutdown_thread.join(timeout=2.0)
+
+    logger.info("[SHUTDOWN] Gateway shutdown complete")
+
+# Registrar cleanup en atexit (backup si shutdown event falla)
+atexit.register(cleanup_child_processes, timeout=1.0)
 
 # Configurar todas las integraciones
 setup_static_routes()

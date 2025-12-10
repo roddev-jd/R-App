@@ -34,7 +34,11 @@
       "Bash(ssh-add:*)",
       "Bash(git fetch:*)",
       "Bash(git remote set-url:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(ps:*)",
+      "Bash(pgrep:*)",
+      "Bash(kill:*)"
     ],
     "deny": [],
     "ask": []

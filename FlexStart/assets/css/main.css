@@ -3272,6 +3272,60 @@ section,
   transform: translateY(0);
 }
 
+/*--------------------------------------------------------------
+# Download Package Button
+--------------------------------------------------------------*/
+.download-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 0 10px;
+}
+
+.btn-download-package {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid;
+  border-radius: 8px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+.btn-download-package i {
+  font-size: 20px;
+}
+
+.btn-download-package:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-download-package:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Color-specific styling for indigo card */
+.service-item.item-indigo .btn-download-package {
+  border-color: #6610f2;
+  color: #6610f2;
+}
+
+.service-item.item-indigo .btn-download-package:hover {
+  background-color: #6610f2;
+  color: #fff;
+}
+
+.service-item.item-indigo .btn-download-package:hover i {
+  color: #fff;
+}
+
 .display-4 {
     font-weight: bold;
     color: white;

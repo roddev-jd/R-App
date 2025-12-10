@@ -253,6 +253,22 @@
             </div>
           </div>
 
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item item-indigo position-relative">
+              <i class="bi bi-box-seam icon"></i>
+              <h3>Ripley Image Tools</h3>
+              <p>Modulo de descarga y conversión de imagenes entre sistemas de codificación para CHILE y PERU.</p>
+
+              <!-- Single Download Button -->
+              <div class="download-button-container">
+                <button class="btn-download-package" onclick="downloadRipleyImageTools()">
+                  <i class="bi bi-download"></i>
+                  <span>Descargar Herramienta</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
 
           <!--<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
             <div class="service-item item-red position-relative">
@@ -871,6 +887,51 @@
         });
       });
     });
+
+    // Download handler for Ripley Image Tools package
+    async function downloadRipleyImageTools() {
+      const button = event.currentTarget;
+      const originalHTML = button.innerHTML;
+
+      try {
+        // Disable button and show loading state
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i><span>Descargando...</span>';
+
+        // Fetch the ZIP file
+        const response = await fetch('/api/download-package/ripley-image-tools');
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        // Get blob and create download link
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'RIPLEY_IMAGE_TOOLS.zip';
+        document.body.appendChild(a);
+        a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        // Show success state
+        button.innerHTML = '<i class="bi bi-check-circle-fill"></i><span>Descargado</span>';
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+          button.disabled = false;
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error descargando Ripley Image Tools:', error);
+        alert('Error al descargar la herramienta. Por favor, intente nuevamente.');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+      }
+    }
   </script>
 
 </body>
