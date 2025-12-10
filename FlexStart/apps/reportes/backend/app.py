@@ -6,6 +6,8 @@ import queue
 import subprocess
 import sys
 import threading
+import ctypes
+import time
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
@@ -280,22 +282,56 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """Limpia recursos al cerrar la aplicación."""
-    import time
 
-    # Iniciar watchdog de timeout para forzar salida si el apagado toma demasiado
-    def shutdown_watchdog(timeout: int = 10):
-        """Force exit si el apagado toma demasiado tiempo"""
+    # Watchdog NON-DAEMON con force kill de threads bloqueados
+    def force_exit_watchdog(timeout: int = 10):
+        """
+        Watchdog que garantiza exit después de timeout.
+        NON-DAEMON para que Python no lo ignore cuando hay threads bloqueados.
+        """
         time.sleep(timeout)
-        logging.error("¡TIMEOUT DE APAGADO! Forzando salida después de 10 segundos...")
+
+        logging.critical(f"[WATCHDOG] Shutdown exceeded {timeout}s. Force killing application.")
+
+        # Intento 1: Matar threads bloqueados de ThreadPoolExecutor con ctypes (CPython only)
+        try:
+            killed_any = False
+            for thread in threading.enumerate():
+                if "ThreadPoolExecutor" in thread.name or "ScriptExec" in thread.name:
+                    logging.warning(f"[WATCHDOG] Force killing thread: {thread.name}")
+                    try:
+                        if hasattr(ctypes, 'pythonapi'):
+                            result = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                                ctypes.c_long(thread.ident),
+                                ctypes.py_object(SystemExit)
+                            )
+                            if result == 1:
+                                killed_any = True
+                            elif result > 1:
+                                # Rollback si afectó múltiples threads
+                                ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                                    ctypes.c_long(thread.ident), None
+                                )
+                    except Exception as e:
+                        logging.error(f"[WATCHDOG] Error killing thread {thread.name}: {e}")
+
+            if killed_any:
+                logging.info("[WATCHDOG] Waiting 1s for threads to die...")
+                time.sleep(1.0)
+        except Exception as e:
+            logging.error(f"[WATCHDOG] Error in thread killing phase: {e}")
+
+        # Intento 2: Force exit (último recurso)
+        logging.critical("[WATCHDOG] Executing os._exit(1) - immediate termination")
         os._exit(1)
 
     watchdog = threading.Thread(
-        target=shutdown_watchdog,
+        target=force_exit_watchdog,
         args=(10,),
-        daemon=True
+        daemon=False  # ← CRÍTICO: Non-daemon para que Python no lo ignore
     )
     watchdog.start()
-    logging.info("[SHUTDOWN] Watchdog iniciado (timeout: 10 segundos)")
+    logging.info("[SHUTDOWN] Watchdog non-daemon iniciado (timeout: 10 segundos)")
 
     # Paso 1/5: Cancelar tareas en background
     logging.info("[SHUTDOWN] Paso 1/5: Cancelando tareas en background...")
@@ -347,7 +383,7 @@ async def shutdown_event():
         except Exception as e:
             logging.warning(f"[SHUTDOWN] Error cerrando DuckDB: {e}")
 
-    # Paso 4/5: Cerrar ThreadPoolExecutors con timeout
+    # Paso 4/5: Cerrar ThreadPoolExecutors con force kill si necesario
     logging.info("[SHUTDOWN] Paso 4/5: Cerrando ThreadPoolExecutors...")
     executors = [
         ("Scripts", script_executor),
@@ -355,21 +391,80 @@ async def shutdown_event():
         ("SharePoint", main_logic.sharepoint_executor)
     ]
 
+    def force_shutdown_executor(name: str, executor: ThreadPoolExecutor, timeout: float):
+        """
+        Shutdown executor con force kill de threads bloqueados.
+        1. Cancel pending futures
+        2. Esperar timeout
+        3. Force kill threads con ctypes si no terminan
+        """
+        logging.info(f"[SHUTDOWN] Shutting down executor: {name}")
+
+        # Paso 1: Cancel pending futures
+        executor.shutdown(wait=False, cancel_futures=True)
+
+        # Paso 2: Esperar con timeout
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            # Check si hay threads activos del executor
+            executor_threads = [
+                t for t in threading.enumerate()
+                if ("ThreadPoolExecutor" in t.name or "ScriptExec" in t.name) and t.is_alive()
+            ]
+            if not executor_threads:
+                logging.info(f"[SHUTDOWN] {name} executor shutdown cleanly")
+                return True
+            time.sleep(0.1)
+
+        # Paso 3: Force kill threads que no terminaron
+        logging.warning(f"[SHUTDOWN] {name} executor did not shutdown in {timeout}s, force killing")
+        executor_threads = [
+            t for t in threading.enumerate()
+            if ("ThreadPoolExecutor" in t.name or "ScriptExec" in t.name) and t.is_alive()
+        ]
+
+        for thread in executor_threads:
+            logging.warning(f"[SHUTDOWN] Force killing thread: {thread.name}")
+            try:
+                if hasattr(ctypes, 'pythonapi'):
+                    result = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                        ctypes.c_long(thread.ident),
+                        ctypes.py_object(SystemExit)
+                    )
+                    if result == 0:
+                        logging.error(f"[SHUTDOWN] Invalid thread ID: {thread.ident}")
+                    elif result > 1:
+                        # Rollback si afectó múltiples threads
+                        ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                            ctypes.c_long(thread.ident), None
+                        )
+                        logging.error(f"[SHUTDOWN] Failed to kill thread {thread.name}")
+            except Exception as e:
+                logging.error(f"[SHUTDOWN] Error killing thread {thread.name}: {e}")
+
+        return False
+
+    # Ejecutar shutdown en threads DAEMON (no bloquean watchdog)
+    shutdown_threads = []
     for name, executor in executors:
-        logging.info(f"[SHUTDOWN] Cerrando ThreadPoolExecutor para {name}...")
-
-        # Ejecutar shutdown en un thread separado con timeout
-        shutdown_thread = threading.Thread(
-            target=lambda: executor.shutdown(wait=True, cancel_futures=True),
-            daemon=False
+        t = threading.Thread(
+            target=force_shutdown_executor,
+            args=(name, executor, 3.0),
+            daemon=True  # ← CRÍTICO: Daemon para no bloquear watchdog
         )
-        shutdown_thread.start()
-        shutdown_thread.join(timeout=3.0)
+        t.start()
+        shutdown_threads.append(t)
 
-        if shutdown_thread.is_alive():
-            logging.warning(f"[SHUTDOWN] {name} executor no se cerró limpiamente dentro del timeout")
-        else:
-            logging.info(f"[SHUTDOWN] {name} executor cerrado correctamente")
+    # Esperar máximo 4s total
+    for t in shutdown_threads:
+        t.join(timeout=4.0)
+
+    # Log final status
+    alive_threads = [t for t in shutdown_threads if t.is_alive()]
+    if alive_threads:
+        logging.error(f"[SHUTDOWN] {len(alive_threads)} executor shutdowns still running")
+    else:
+        logging.info("[SHUTDOWN] All executors shutdown successfully")
 
     # Paso 5/5: Limpieza completa
     logging.info("[SHUTDOWN] Paso 5/5: Limpieza completa")
