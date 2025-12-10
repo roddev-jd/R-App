@@ -21,6 +21,10 @@ from datetime import datetime
 from typing import Optional, Dict, Callable
 from packaging import version as pkg_version
 import requests
+import urllib3
+
+# Disable SSL warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from .config_manager import ConfigManager
 
@@ -60,7 +64,7 @@ class UpdateManager:
 
             # Make request
             headers = {'Accept': 'application/vnd.github.v3+json'}
-            response = requests.get(api_url, headers=headers, timeout=10)
+            response = requests.get(api_url, headers=headers, timeout=10, verify=False)
             response.raise_for_status()
 
             release = response.json()
@@ -166,7 +170,7 @@ class UpdateManager:
             download_path = temp_dir / "update.zip"
 
             # Stream download with progress
-            response = requests.get(download_url, stream=True, timeout=30)
+            response = requests.get(download_url, stream=True, timeout=30, verify=False)
             response.raise_for_status()
 
             total_size = int(response.headers.get('content-length', 0))
