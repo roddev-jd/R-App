@@ -17,6 +17,7 @@ import requests
 import threading
 import asyncio
 import select
+import queue
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -51,6 +52,62 @@ class ServerManager:
 
         logger.info("ServerManager initialized")
 
+    def _capture_output_windows(self, stream, prefix: str):
+        """
+        Windows-specific log capture usando queue con timeout.
+
+        Strategy:
+        1. Reader thread lee del stream y pone líneas en queue
+        2. Main thread lee de queue con timeout 0.5s
+        3. Stop signal revisado cada 0.5s
+
+        Args:
+            stream: The stream to read from
+            prefix: Prefix for log lines
+        """
+        line_queue = queue.Queue(maxsize=1000)
+
+        def reader_thread():
+            """Thread que lee del pipe sin bloquear el main thread."""
+            try:
+                for line in iter(stream.readline, ''):
+                    if not line:
+                        break
+                    try:
+                        line_queue.put(line, timeout=0.1)
+                    except queue.Full:
+                        # Queue llena, descartar línea vieja
+                        try:
+                            line_queue.get_nowait()
+                            line_queue.put(line, timeout=0.1)
+                        except:
+                            pass
+            except Exception as e:
+                logger.error(f"[LOG_CAPTURE] Reader thread error ({prefix}): {e}")
+            finally:
+                line_queue.put(None)  # Sentinel para indicar EOF
+
+        # Start reader thread (daemon para auto-cleanup)
+        reader = threading.Thread(target=reader_thread, daemon=True)
+        reader.start()
+
+        # Main loop con timeout
+        while not self.stop_log_capture.is_set():
+            try:
+                line = line_queue.get(timeout=0.5)
+                if line is None:  # Sentinel (EOF)
+                    break
+                if isinstance(line, str) and line.strip():
+                    timestamp = datetime.now().strftime("%H:%M:%S")
+                    log_line = f"[{timestamp}] {prefix} {line.rstrip()}"
+                    self.log_buffer.append(log_line)
+            except queue.Empty:
+                continue  # Timeout, check stop signal
+            except Exception as e:
+                logger.error(f"[LOG_CAPTURE] Error processing line ({prefix}): {e}")
+
+        logger.debug(f"[LOG_CAPTURE] {prefix} capture stopped cleanly")
+
     def _capture_output(self, stream, prefix: str):
         """
         Capture output from stdout/stderr stream in background thread with non-blocking reads
@@ -60,24 +117,12 @@ class ServerManager:
             prefix: Prefix for log lines (e.g., "[STDOUT]" or "[STDERR]")
         """
         try:
-            # Use select for non-blocking reads with timeout
-            while not self.stop_log_capture.is_set():
-                # Check if stream has data available with 0.5s timeout
-                # On Windows, select only works with sockets, so we fallback to regular reads
-                if platform.system() == "Windows":
-                    # Windows: Use short readline with try/except
-                    try:
-                        line = stream.readline()
-                        if not line:  # EOF
-                            break
-                        if line:
-                            timestamp = datetime.now().strftime("%H:%M:%S")
-                            log_line = f"[{timestamp}] {prefix} {line.rstrip()}"
-                            self.log_buffer.append(log_line)
-                    except Exception:
-                        break
-                else:
-                    # Unix/Mac: Use select for non-blocking check
+            # Windows uses queue-based approach, Unix/Mac uses select
+            if platform.system() == "Windows":
+                self._capture_output_windows(stream, prefix)
+            else:
+                # Unix/Mac: Use select for non-blocking check
+                while not self.stop_log_capture.is_set():
                     ready, _, _ = select.select([stream], [], [], 0.5)
 
                     if not ready:
@@ -92,7 +137,7 @@ class ServerManager:
                     log_line = f"[{timestamp}] {prefix} {line.rstrip()}"
                     self.log_buffer.append(log_line)
 
-            logger.debug(f"{prefix} capture thread stopping cleanly")
+                logger.debug(f"{prefix} capture thread stopping cleanly")
 
         except Exception as e:
             logger.error(f"Error capturing output from {prefix}: {e}")
