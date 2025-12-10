@@ -248,16 +248,13 @@ def integrate_prod_peru():
         # Primero configurar archivos estáticos de prod_peru
         prod_peru_frontend_dir = os.path.join(APPS_DIR, "prod_peru", "frontend")
         if os.path.exists(prod_peru_frontend_dir):
-            # Montar CSS, JS y assets de prod_peru ANTES de montar la app
-            app.mount("/prod_peru/css", 
-                     StaticFiles(directory=os.path.join(prod_peru_frontend_dir, "css")), 
+            # Montar CSS y JS de prod_peru ANTES de montar la app
+            app.mount("/prod_peru/css",
+                     StaticFiles(directory=os.path.join(prod_peru_frontend_dir, "css")),
                      name="prod_peru_css")
-            app.mount("/prod_peru/js", 
-                     StaticFiles(directory=os.path.join(prod_peru_frontend_dir, "js")), 
+            app.mount("/prod_peru/js",
+                     StaticFiles(directory=os.path.join(prod_peru_frontend_dir, "js")),
                      name="prod_peru_js")
-            app.mount("/prod_peru/assets", 
-                     StaticFiles(directory=os.path.join(prod_peru_frontend_dir, "assets")), 
-                     name="prod_peru_assets")
             logging.info(f"Archivos estáticos de prod_peru montados desde: {prod_peru_frontend_dir}")
         else:
             logging.warning(f"No se encontró directorio frontend de prod_peru en: {prod_peru_frontend_dir}")
