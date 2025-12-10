@@ -12,6 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 from contextlib import asynccontextmanager
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import StreamingResponse, HTMLResponse
@@ -19,6 +20,13 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import uvicorn
+
+# Import psutil for force kill fallback (cross-platform)
+try:
+    import psutil
+    HAS_PSUTIL = True
+except ImportError:
+    HAS_PSUTIL = False
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -267,16 +275,86 @@ async def start_server() -> ServerStartResponse:
 
 @app.post("/api/server/stop")
 async def stop_server():
-    """Stop the main FastAPI server"""
+    """
+    Stop the main FastAPI server con external timeout y force kill fallback.
+
+    Strategy:
+    1. Execute stop_server() in thread pool con timeout 12s
+    2. Si timeout, force kill del proceso uvicorn
+    3. Siempre retorna respuesta (nunca cuelga)
+    """
     try:
         if not server_manager.is_running():
             raise HTTPException(400, "Server is not running")
 
-        if server_manager.stop_server():
-            system_monitor.detach()
-            return {"success": True, "message": "Server stopped"}
-        else:
-            raise HTTPException(500, "Failed to stop server")
+        logger.info("[API] Stop server request received")
+
+        # Ejecutar stop_server() en thread pool con timeout 12s (2s más que watchdog interno 10s)
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(server_manager.stop_server)
+
+            try:
+                result = future.result(timeout=12.0)
+
+                if result:
+                    logger.info("[API] Server stopped successfully")
+                    system_monitor.detach()
+                    return {"success": True, "message": "Servidor detenido correctamente"}
+                else:
+                    logger.warning("[API] Server stop returned False")
+                    system_monitor.detach()
+                    return {
+                        "success": False,
+                        "message": "Error al detener servidor (ver logs)"
+                    }
+
+            except FuturesTimeoutError:
+                logger.error("[API] Stop server timeout exceeded (12s), attempting force kill")
+
+                # Force kill del proceso uvicorn si aún está vivo
+                if server_manager.process and server_manager.process.poll() is None:
+                    pid = server_manager.process.pid
+                    logger.critical(f"[API] Force killing uvicorn process {pid}")
+
+                    try:
+                        if HAS_PSUTIL:
+                            process = psutil.Process(pid)
+
+                            # Kill recursivo (child processes también)
+                            children = process.children(recursive=True)
+                            for child in children:
+                                logger.warning(f"[API] Killing child process {child.pid}")
+                                child.kill()
+
+                            process.kill()
+                            process.wait(timeout=3.0)
+                            logger.info(f"[API] Process {pid} killed successfully")
+                        else:
+                            # Fallback sin psutil
+                            import signal
+                            import platform
+                            if platform.system() == "Windows":
+                                server_manager.process.kill()
+                            else:
+                                server_manager.process.send_signal(signal.SIGKILL)
+                            server_manager.process.wait(timeout=3.0)
+
+                    except Exception as e:
+                        logger.error(f"[API] Error force killing process: {e}")
+
+                    # Limpiar estado interno del server_manager
+                    server_manager.process = None
+                    server_manager.stop_log_capture.set()
+                    server_manager.port = None
+                    server_manager.start_time = None
+
+                system_monitor.detach()
+
+                return {
+                    "success": True,
+                    "message": "Servidor detenido por timeout (force kill)",
+                    "warning": "Shutdown forzado - verificar logs para posibles problemas"
+                }
 
     except HTTPException:
         raise

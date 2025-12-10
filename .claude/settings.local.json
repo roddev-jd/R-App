@@ -37,7 +37,9 @@
       "Bash(ls:*)",
       "Bash(kill:*)",
       "Bash(\"/Users/rjarad/Library/Mobile Documents/com~apple~CloudDocs/Apps/R-App/R-App/test_full_flow.sh\")",
-      "Bash(xargs kill -9)"
+      "Bash(xargs kill -9)",
+      "Bash(git merge --no-commit --no-ff HEAD)",
+      "Bash(git merge-base main desarrollo)"
     ],
     "deny": [],
     "ask": []
