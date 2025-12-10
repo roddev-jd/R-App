@@ -115,11 +115,6 @@ USER_INFO = {
     "dbernal_redaccion": {"name": "chicos", "gender": "male"},
 }
 
-# Montar archivos estáticos (rutas relativas para cuando la app se monta en un path)
-app.mount("/css", StaticFiles(directory=FRONTEND_DIR / "css"), name="css")
-app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
-app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
-
 # Modelos de datos
 class DeclarationRequest(BaseModel):
     """Modelo para solicitudes de declaración"""
