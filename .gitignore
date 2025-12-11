@@ -69,7 +69,7 @@ cache/
 # Azure and cloud credentials
 azure_credentials.json
 credentials.json
-.md
+*.md
 
 # Large media files (optional - uncomment if needed)
 # *.mp4
