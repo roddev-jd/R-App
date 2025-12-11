@@ -9,6 +9,7 @@ Manages FastAPI server lifecycle including:
 """
 
 import sys
+import os
 import subprocess
 import time
 import signal
@@ -167,6 +168,10 @@ class ServerManager:
 
             logger.info(f"Starting server on port {port}: {' '.join(cmd)}")
 
+            # Copiar entorno actual para heredar todas las variables
+            # Funciona en Windows, macOS y Linux
+            env = os.environ.copy()
+
             # Start process
             self.process = subprocess.Popen(
                 cmd,
@@ -174,7 +179,8 @@ class ServerManager:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                bufsize=1
+                bufsize=1,
+                env=env
             )
 
             self.port = port

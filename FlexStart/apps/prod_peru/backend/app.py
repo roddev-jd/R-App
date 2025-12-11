@@ -4,6 +4,15 @@ API independiente para la gestión de producción PERÚ con autenticación de us
 """
 
 import logging
+
+# CRÍTICO: Configurar logging PRIMERO, antes de cualquier uso
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Ahora sí podemos importar y usar logging
 import sys
 import configparser
 import os
@@ -17,6 +26,7 @@ import pandas as pd
 import io
 import boto3
 from botocore.exceptions import ClientError
+import keyring
 
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
@@ -38,14 +48,10 @@ sys.path.insert(0, str(shared_services_dir))
 try:
     import sharepoint_service as sharepoint_auth
 except ImportError as e:
-    logging.error("Error importando sharepoint_auth desde shared/services: %s", e)
+    logger.error("Error importando sharepoint_auth desde shared/services: %s", e)
     sharepoint_auth = None
 
 app = FastAPI(title="Producción PERÚ API", version="1.0.0")
-
-# Configuración de logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 # Directorio base de la aplicación
 BASE_DIR = Path(__file__).parent.parent
@@ -62,6 +68,9 @@ else:
 
 # Autenticador SharePoint global
 sharepoint_authenticator = None
+
+# Nombre del servicio en macOS Keychain para credenciales S3
+S3_KEYRING_SERVICE = "ProdPeruS3"
 
 # Cliente S3 global
 s3_client = None
@@ -204,73 +213,102 @@ def get_sharepoint_authenticator():
     return sharepoint_authenticator
 
 def get_s3_client():
-    """Obtener cliente S3 configurado"""
+    """
+    Obtener cliente S3 configurado usando credenciales desde macOS Keychain.
+
+    Las credenciales AWS se leen desde macOS Keychain usando el servicio 'ProdPeruS3'.
+    Bucket y región se configuran en config.ini o variables de entorno.
+
+    Returns:
+        boto3.client: Cliente S3 configurado
+
+    Raises:
+        ValueError: Si las credenciales no están en keyring
+    """
     global s3_client, S3_BUCKET, S3_REGION
 
     if s3_client is None:
-        # Priorizar variables de entorno
-        aws_access_key = os.getenv('AWS_ACCESS_KEY_ID')
-        aws_secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-        S3_BUCKET = os.getenv('AWS_S3_BUCKET')
-        S3_REGION = os.getenv('AWS_S3_REGION', 'us-east-1')
+        try:
+            # Leer credenciales desde macOS Keychain
+            aws_access_key = keyring.get_password(S3_KEYRING_SERVICE, "AWS_ACCESS_KEY_ID")
+            aws_secret_key = keyring.get_password(S3_KEYRING_SERVICE, "AWS_SECRET_ACCESS_KEY")
 
-        credentials_source = "variables de entorno"
+            if not all([aws_access_key, aws_secret_key]):
+                logger.error("❌ Credenciales AWS no encontradas en macOS Keychain")
+                logger.error("   Ejecute el script de configuración: python setup_s3_credentials.py")
+                raise ValueError(
+                    "Credenciales AWS no encontradas en Keychain. "
+                    "Ejecute 'python setup_s3_credentials.py' para configurarlas."
+                )
 
-        # Fallback a config.ini si no hay variables de entorno completas
-        if not all([aws_access_key, aws_secret_key, S3_BUCKET]):
-            credentials_source = "config.ini"
-            if config_parser.has_section('S3'):
-                aws_access_key = aws_access_key or config_parser.get('S3', 'aws_access_key_id', fallback=None)
-                aws_secret_key = aws_secret_key or config_parser.get('S3', 'aws_secret_access_key', fallback=None)
-                S3_BUCKET = S3_BUCKET or config_parser.get('S3', 'bucket', fallback=None)
-                S3_REGION = S3_REGION or config_parser.get('S3', 'region', fallback='us-east-1')
-                logging.info("Credenciales AWS cargadas desde config.ini (fallback)")
-            else:
-                logging.warning("Sección [S3] no encontrada en config.ini y variables de entorno no configuradas")
+            # Bucket y región de variables de entorno o config.ini
+            S3_BUCKET = os.getenv('AWS_S3_BUCKET')
+            S3_REGION = os.getenv('AWS_S3_REGION', 'us-east-1')
 
-        if aws_access_key and aws_secret_key and S3_BUCKET:
+            # Fallback a config.ini
+            if not S3_BUCKET and config_parser.has_section('S3'):
+                S3_BUCKET = config_parser.get('S3', 'bucket', fallback=None)
+                S3_REGION = config_parser.get('S3', 'region', fallback='us-east-1')
+
+            if not S3_BUCKET:
+                logger.error("❌ AWS_S3_BUCKET no configurado")
+                raise ValueError("Bucket S3 no configurado")
+
+            # Crear cliente S3
             s3_client = boto3.client(
                 's3',
-                aws_access_key_id=aws_access_key,
-                aws_secret_access_key=aws_secret_key,
+                aws_access_key_id=aws_access_key.strip(),
+                aws_secret_access_key=aws_secret_key.strip(),
                 region_name=S3_REGION
             )
-            logging.info(f"Cliente S3 inicializado desde {credentials_source}. Bucket: {S3_BUCKET}, Region: {S3_REGION}")
-        else:
-            logging.warning("Configuración de S3 incompleta. Verifique variables de entorno o config.ini")
+
+            logger.info(f"✅ Cliente S3 inicializado desde macOS Keychain. Bucket: {S3_BUCKET}, Region: {S3_REGION}")
+
+        except Exception as e:
+            logger.error(f"❌ Error al inicializar cliente S3: {e}")
+            s3_client = None
+            raise
 
     return s3_client
 
 def _read_file_from_s3(s3_key: str) -> pd.DataFrame:
     """Leer archivo Excel desde S3"""
-    try:
-        s3 = get_s3_client()
-        if not s3:
-            raise ValueError("Cliente S3 no disponible")
+    s3 = get_s3_client()
+    if not s3:
+        logger.error(f"❌ Cliente S3 no disponible. No se puede leer {s3_key}")
+        logger.error("Verifique que las credenciales AWS estén configuradas correctamente")
+        raise ValueError("Cliente S3 no disponible. Verifique configuración de credenciales AWS.")
 
-        logging.info(f"Leyendo archivo desde S3: {S3_BUCKET}/{s3_key}")
+    try:
+        logger.info(f"Leyendo archivo desde S3: {S3_BUCKET}/{s3_key}")
 
         response = s3.get_object(Bucket=S3_BUCKET, Key=s3_key)
         file_content = response['Body'].read()
 
         return pd.read_excel(io.BytesIO(file_content))
 
-    except s3.exceptions.NoSuchKey:
-        logging.warning(f"Archivo no existe en S3: {s3_key}. Retornando DataFrame vacío.")
-        return pd.DataFrame()
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchKey':
+            logger.warning(f"Archivo no existe en S3: {s3_key}. Retornando DataFrame vacío.")
+            return pd.DataFrame()
+        else:
+            logger.error(f"Error de S3 al leer archivo {s3_key}: {e}")
+            raise
 
     except Exception as e:
-        logging.error(f"Error leyendo archivo desde S3: {e}")
+        logger.error(f"Error leyendo archivo desde S3: {e}")
         raise
 
 def _upload_file_to_s3(s3_key: str, file_path: str) -> bool:
     """Subir archivo a S3"""
-    try:
-        s3 = get_s3_client()
-        if not s3:
-            raise ValueError("Cliente S3 no disponible")
+    s3 = get_s3_client()
+    if not s3:
+        logger.error(f"❌ Cliente S3 no disponible. No se puede subir {s3_key}")
+        logger.error("Verifique que las credenciales AWS estén configuradas correctamente")
+        raise ValueError("Cliente S3 no disponible. Verifique configuración de credenciales AWS.")
 
-        logging.info(f"Subiendo archivo a S3: {S3_BUCKET}/{s3_key}")
+    try:
+        logger.info(f"Subiendo archivo a S3: {S3_BUCKET}/{s3_key}")
 
         s3.upload_file(
             file_path,
@@ -279,11 +317,11 @@ def _upload_file_to_s3(s3_key: str, file_path: str) -> bool:
             ExtraArgs={'ContentType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
         )
 
-        logging.info(f"Archivo subido exitosamente a S3")
+        logger.info(f"✅ Archivo subido exitosamente a S3")
         return True
 
     except Exception as e:
-        logging.error(f"Error subiendo archivo a S3: {e}")
+        logger.error(f"❌ Error subiendo archivo a S3: {e}")
         raise
 
 def get_team_members() -> List[Dict[str, str]]:

@@ -22,6 +22,9 @@ azure-storage-blob>=12.19.0
 # SharePoint / Authentication
 msal>=1.24.0
 
+# Configuration
+python-dotenv>=1.0.0
+
 # Launcher UI Dependencies
 customtkinter>=5.2.0
 psutil>=5.9.0
