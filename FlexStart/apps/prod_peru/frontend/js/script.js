@@ -611,24 +611,87 @@ function hideAuthError() {
     document.getElementById('auth-error').classList.add('d-none');
 }
 
-function showSuccess(elementId, message) {
-    const element = document.getElementById(elementId);
-    element.innerHTML = `<div class="alert alert-success p-2 small"><i class="bi bi-check-circle me-1"></i>${message}</div>`;
-    element.style.display = 'block';
+/**
+ * Show notification modal with success or error styling
+ * @param {string} type - 'success' or 'error'
+ * @param {string} message - Message to display
+ */
+function showNotificationModal(type, message) {
+    const modal = document.getElementById('notificationModal');
+    const header = document.getElementById('notificationModalHeader');
+    const titleText = document.getElementById('notificationModalTitleText');
+    const headerIcon = document.getElementById('notificationModalIcon');
+    const bodyIcon = document.getElementById('notificationModalBodyIcon');
+    const messageElement = document.getElementById('notificationModalMessage');
+    const button = document.getElementById('notificationModalButton');
 
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-        element.style.display = 'none';
-    }, 5000);
+    // Determine configuration based on type
+    const isSuccess = type === 'success';
+    const config = {
+        headerClass: isSuccess ? 'modal-header-success' : 'modal-header-error',
+        title: isSuccess ? 'Operación Exitosa' : 'Error en Operación',
+        headerIconClass: isSuccess ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill',
+        bodyIconClass: isSuccess ? 'bi-check-circle-fill icon-success' : 'bi-exclamation-triangle-fill icon-error',
+        buttonClass: isSuccess ? 'btn-success-custom' : 'btn-danger-custom'
+    };
+
+    // Reset all classes
+    header.className = 'modal-header';
+    headerIcon.className = 'me-2';
+    bodyIcon.className = 'notification-icon';
+    button.className = 'btn btn-lg w-100';
+
+    // Apply new classes
+    header.classList.add(config.headerClass);
+    headerIcon.classList.add(config.headerIconClass);
+    bodyIcon.classList.add(...config.bodyIconClass.split(' '));
+    button.classList.add(config.buttonClass);
+
+    // Set content
+    titleText.textContent = config.title;
+    messageElement.textContent = message;
+
+    // Show modal
+    const bsModal = new bootstrap.Modal(modal, {
+        backdrop: 'static',
+        keyboard: true
+    });
+    bsModal.show();
+
+    // Focus button after modal is shown for accessibility
+    modal.addEventListener('shown.bs.modal', () => {
+        button.focus();
+    }, { once: true });
 }
 
-function showError(elementId, message) {
+/**
+ * Show success message in modal
+ * @param {string} elementId - DEPRECATED - kept for backward compatibility
+ * @param {string} message - Success message to display
+ */
+function showSuccess(elementId, message) {
+    // Hide the inline status element (if it exists)
     const element = document.getElementById(elementId);
-    element.innerHTML = `<div class="alert alert-danger p-2 small"><i class="bi bi-exclamation-triangle me-1"></i>${message}</div>`;
-    element.style.display = 'block';
-
-    // Auto-hide after 8 seconds
-    setTimeout(() => {
+    if (element) {
         element.style.display = 'none';
-    }, 8000);
+    }
+
+    // Show modal notification
+    showNotificationModal('success', message);
+}
+
+/**
+ * Show error message in modal
+ * @param {string} elementId - DEPRECATED - kept for backward compatibility
+ * @param {string} message - Error message to display
+ */
+function showError(elementId, message) {
+    // Hide the inline status element (if it exists)
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.display = 'none';
+    }
+
+    // Show modal notification
+    showNotificationModal('error', message);
 }

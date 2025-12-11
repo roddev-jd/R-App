@@ -432,6 +432,74 @@ section,
   padding: 20px 30px;
 }
 
+/* Notification Modal - Custom Styling */
+#notificationModal .modal-header.modal-header-success {
+  background: var(--success-color);
+}
+
+#notificationModal .modal-header.modal-header-error {
+  background: var(--danger-color);
+}
+
+#notificationModal .notification-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+#notificationModal .notification-icon.icon-success {
+  color: var(--success-color);
+}
+
+#notificationModal .notification-icon.icon-error {
+  color: var(--danger-color);
+}
+
+#notificationModal .btn.btn-success-custom {
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: var(--contrast-color);
+}
+
+#notificationModal .btn.btn-success-custom:hover {
+  background: color-mix(in srgb, var(--success-color), transparent 15%);
+  border-color: color-mix(in srgb, var(--success-color), transparent 15%);
+  box-shadow: 0 8px 28px rgba(5, 150, 82, 0.3);
+}
+
+#notificationModal .btn.btn-danger-custom {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+  color: var(--contrast-color);
+}
+
+#notificationModal .btn.btn-danger-custom:hover {
+  background: color-mix(in srgb, var(--danger-color), transparent 15%);
+  border-color: color-mix(in srgb, var(--danger-color), transparent 15%);
+  box-shadow: 0 8px 28px rgba(223, 21, 41, 0.3);
+}
+
+#notificationModal .modal-body p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--default-color);
+}
+
+#notificationModal.show .modal-dialog {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Alerts - FlexStart Style */
 .alert {
   border-radius: 4px;

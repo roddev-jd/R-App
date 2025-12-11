@@ -125,7 +125,7 @@
                                                 </button>
                                             </div>
                                             
-                                            <div id="declaration-status" class="alert alert-info p-2 small" style="display: none;"></div>
+                                            <div id="declaration-status" class="alert alert-info p-2 small d-none" aria-live="polite" aria-atomic="true"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -161,7 +161,7 @@
                                                 </button>
                                             </div>
                                             
-                                            <div id="rejection-status" class="alert alert-info p-2 small" style="display: none;"></div>
+                                            <div id="rejection-status" class="alert alert-info p-2 small d-none" aria-live="polite" aria-atomic="true"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                                             </button>
                                         </div>
 
-                                        <div id="pending-design-status" class="alert alert-info p-2 small" style="display: none;"></div>
+                                        <div id="pending-design-status" class="alert alert-info p-2 small d-none" aria-live="polite" aria-atomic="true"></div>
                                     </div>
                                 </div>
                             </div>
@@ -224,7 +224,7 @@
                                             </button>
                                         </div>
 
-                                        <div id="pending-design-peru-status" class="alert alert-info p-2 small" style="display: none;"></div>
+                                        <div id="pending-design-peru-status" class="alert alert-info p-2 small d-none" aria-live="polite" aria-atomic="true"></div>
                                     </div>
                                 </div>
                             </div>
@@ -245,6 +245,31 @@
             </div>
             <h4 class="loading-title text-white mt-3">Procesando...</h4>
             <p class="loading-message text-light" id="loading-message">Enviando información al servidor</p>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalTitle" aria-describedby="notificationModalMessage" data-bs-backdrop="static" data-bs-keyboard="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" id="notificationModalHeader">
+                    <h5 class="modal-title text-white" id="notificationModalTitle">
+                        <i id="notificationModalIcon" class="me-2"></i>
+                        <span id="notificationModalTitleText"></span>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center" id="notificationModalBody">
+                        <i id="notificationModalBodyIcon" class="notification-icon"></i>
+                        <p class="mt-3 mb-0" id="notificationModalMessage" role="alert"></p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-lg w-100" id="notificationModalButton" data-bs-dismiss="modal">
+                        <i class="bi bi-check-lg me-2"></i>Entendido
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
